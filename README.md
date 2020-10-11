@@ -15,7 +15,7 @@ activity level, etc depends on what you think would be a good factor to estimate
 the gathered information will be used to estimate the user’s physical fitness level. You can design and define your 
 own set of levels. I would say probably at least 3 or 4 levels.
 2. The second feature, the app can retrieve all nearby hiking trails information such as name, distance, difficult 
-level (easy, medium, hard), hiking time estimation, and trailhead location and display them as a list.
+level (easy, medium, hard), and trailhead location and display them as a list.
 3. Next, I would like to have any kind of UI, that you will be the one who design, allows the user to interact to 
 enable the “best choice” feature. This will filter the result with the user’s physical fitness level and show only 
 the matched trails. Users can also choose how they want to feel during their hike; “easy and chill”, “best match 
