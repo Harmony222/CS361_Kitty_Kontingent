@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0", shrink-to-fit=no>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <script src="https://kit.fontawesome.com/452079d2c6.js" crossorigin="anonymous"></script>
+  {% if title %}
+    <title>Hiking Trails - {{ title }}</title>
+  {% else %}
+    <title>Hiking Trails for You</title>
+  {% endif %}
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/"><i class="fas fa-hiking"></i></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarToggler">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link {% if active.index %}active{% endif %}" href="/">Home</i></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if active.find_trails %}active{% endif %}" href="/find_trails">Find Hiking Trails</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if active.map_trail %}active{% endif %}" href="/map_trail">Map Trail</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if active.match_me %}active{% endif %}" href="/match_me">Match Me With A Trail</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if active.gear %}active{% endif %}" href="/gear">Find Hiking Gear</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link {% if active.my_info %}active{% endif %}" href="/my_info">My Info</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if active.signin %}active{% endif %}" href="/signin">Sign In</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+    {% block content %}{% endblock %}
+
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+</body>
+</html>
