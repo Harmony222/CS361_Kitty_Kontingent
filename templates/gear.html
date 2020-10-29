@@ -1,4 +1,57 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h4>Find Hiking Gear</h4>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      Hike Info
+      {% if trail_data %}
+        <div class="row">
+          <div class="col">Trail Name: {{ trail_data.name }}</div>
+        </div>
+        <div class="row">
+          <div class="col">{{ trail_data.summary }}</div>
+        </div>
+        <div class="row">
+          <div class="col">Distance {{ trail_data.length }} miles</div>
+        </div>
+        <div class="row">
+          <div class="col">Elevation gain: {{ trail_data.ascent }}</div>
+        </div>
+        <div class="row">
+          <div class="col">Condition: {{ trail_data.conditionStatus }} - {{ trail_data.conditionDetails }}</div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-9">
+      Gear List
+    </div>
+    <div class="col">
+      Current Weather Conditions
+      {% if weather_data %}
+      <table>
+        <tr>
+          <td>Current temp: {{ weather_data.temperature }} &#176F</td>
+        </tr>
+        <tr>
+          <td>Precipitation: {{ weather_data.precip24Hour }} %</td>
+        </tr>
+        <tr>
+          <td>Humidity: {{ weather_data.relativeHumidity }} %</td>
+        </tr>
+        <tr>
+          <td>Wind: {{ weather_data.windSpeed }} mph {{ weather_data.windDirectionCardinal }}</td>
+        </tr>
+        <tr>
+          <td>Sunrise: {{ weather_data.sunriseTimeLocal[11:16] }} </td>
+        </tr>
+        <tr>
+          <td>Sunset: {{ weather_data.sunsetTimeLocal[11:16] }}</td>
+        </tr>
+      </table>
+      {% endif %}
+    </div>
+  </div>
+</div>
 {% endblock content %}

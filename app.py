@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, redirect
+from gear_functions import get_weather_data, get_trail_data
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -19,7 +21,14 @@ def match_me():
 
 @app.route('/gear')
 def gear():
-    return render_template('gear.html', title='Find Hiking Gear', active={'gear':True})
+    trail_id = 7022927
+    trail_data = get_trail_data(trail_id)
+    latitude = trail_data["trails"][0]["latitude"]
+    longitude = trail_data["trails"][0]["longitude"]
+    weather_data = get_weather_data(latitude, longitude)
+    return render_template('gear.html', title='Find Hiking Gear', 
+                            active={'gear':True}, weather_data=weather_data,
+                            trail_data=trail_data["trails"][0])
 
 @app.route('/my_info')
 def my_info():
