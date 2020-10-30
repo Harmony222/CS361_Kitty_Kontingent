@@ -1,2 +1,11 @@
 config.py
 __pycache__
+credentials.py
+gear_data.json
+Pipfile
+Pipfile.lock
+test_code.py
+trail_data.json
+weather.json
+weather2.json
+weather3.json
