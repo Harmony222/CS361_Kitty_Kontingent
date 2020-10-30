@@ -1,0 +1,38 @@
+{
+    "freezing": {
+        "description": "Temperature < 31 \u00b0F",
+        "gear": ["Warm, insulated jacket", "Warm boots", "Gloves", "Warm hat", "Long underwear", "Warm socks"]
+    },
+    "cold": {
+        "description": "Temperature 31-45 \u00b0F",
+        "gear": ["Light-medium jacket", "Gloves", "Warm hat"]
+    },
+    "cool": {
+        "description": "Temperature 46-65 \u00b0F",
+        "gear": ["Light jacket", "Hiking shoes"]
+    },
+    "moderate": {
+        "description": "Temperature 66-80 \u00b0F",
+        "gear": ["Hiking shoes or boots", "Moisture-wicking clothing"]
+    },
+    "warm": {
+        "description": "Temperature 81-90 \u00b0F",
+        "gear": ["Moisture-wicking t-shirt", "Shorts", "Hiking sandals"]
+    },
+    "hot": {
+        "description": "Temperature >91 \u00b0F",
+        "gear": ["Moisture-wicking t-shirt", "Shorts", "Hiking sandals", "Sun hat"]
+    },
+    "all": {
+        "description": "All hikers should bring this!",
+        "gear": ["Daypack", "Water", "Snacks", "Hiking boots or shoes", "Map/GPS device", "Sun protection", "First aid kit"]
+    },
+    "rain": {
+        "description": "Chance of rain!",
+        "gear": ["Rainwear (jacket and pants)", "Waterproof shoes", "Gaiters"]
+    },
+    "long": {
+        "description": "This will be a long hike.",
+        "gear": ["Lunch", "Extra food and water"]
+    }
+}

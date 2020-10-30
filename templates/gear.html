@@ -26,6 +26,24 @@
   <div class="row">
     <div class="col-md-9">
       Gear List
+      {% if gear_data %}
+        <table>
+          <tr>
+            <th>Gear Item</th>
+            <th>description (this will go in hoverable icon)</th>
+          </tr>
+          {% for attribute in gear_data %}
+            {% for gear_item in attribute.gear %}
+            <tr>
+              <td>{{ gear_item }}</td>
+              <td>{{ attribute.description }}</td>
+            </tr>
+            <!-- <td>{{ attribute.gear }}</td>
+            <td>{{ attribute.description }}</td> -->
+            {% endfor %}
+          {% endfor %}
+        </table>
+      {% endif %}
     </div>
     <div class="col">
       Current Weather Conditions

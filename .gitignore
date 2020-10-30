@@ -1,7 +1,6 @@
 config.py
 __pycache__
 credentials.py
-gear_data.json
 Pipfile
 Pipfile.lock
 test_code.py

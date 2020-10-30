@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect
-from gear_functions import get_weather_data, get_trail_data
+from gear_functions import get_weather_data, get_trail_data, gear_evaluation
 
 app = Flask(__name__)
 
@@ -26,9 +26,11 @@ def gear():
     latitude = trail_data["trails"][0]["latitude"]
     longitude = trail_data["trails"][0]["longitude"]
     weather_data = get_weather_data(latitude, longitude)
+    gear_data = gear_evaluation(trail_data, weather_data)
     return render_template('gear.html', title='Find Hiking Gear', 
                             active={'gear':True}, weather_data=weather_data,
-                            trail_data=trail_data["trails"][0])
+                            trail_data=trail_data["trails"][0], 
+                            gear_data=gear_data)
 
 @app.route('/my_info')
 def my_info():
