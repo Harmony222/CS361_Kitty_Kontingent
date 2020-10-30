@@ -12,8 +12,8 @@ def get_weather_data(latitude, longitude):
     response = requests.get(url = url, params = params)
 
     data_json = response.json()
-    with open("weather.json", "w") as write_file:
-        json.dump(data_json, write_file, indent=4)
+    # with open("weather.json", "w") as write_file:
+    #     json.dump(data_json, write_file, indent=4)
     return data_json
 
 def get_trail_data(trail_id):
@@ -24,8 +24,8 @@ def get_trail_data(trail_id):
     params = {"ids":trail_id, "key":trailsAPIKey}
     response = requests.get(url = url, params = params)
     data_json = response.json()
-    with open("trail_data.json", "w") as write_file:
-        json.dump(data_json, write_file, indent=4)
+    # with open("trail_data.json", "w") as write_file:
+    #     json.dump(data_json, write_file, indent=4)
     return data_json
 
 def gear_evaluation(trail_data, weather_data):
@@ -35,6 +35,7 @@ def gear_evaluation(trail_data, weather_data):
     Returns a list of attribute dictionaries with attribute description and gear.
     """
     temperature_attribute = evaluate_temperature(weather_data["temperature"])
+    precipitation_attribute = evaluate_precipitation(weather_data)
     attributes = ["all", temperature_attribute]
     with open("gear_data.json") as in_file:
         gear_data_all = json.load(in_file)
@@ -63,6 +64,10 @@ def evaluate_temperature(temperature):
     else:
         # temp is > 90
         return "hot"
+
+def evaluate_precipitation(weather_data):
+    pass
+
 
 
 # trail_id = 7022927
