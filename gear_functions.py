@@ -1,5 +1,5 @@
 from datetime import datetime
-from config import weatherAPIKey, trailsAPIKey
+from config import trails_api_key, weather_api_key
 import requests
 import json
 
@@ -7,21 +7,40 @@ def get_weather_data(latitude, longitude):
     """ 
     Gets current weather data from weather API based on given latitude/longitude.
     """
-    url = "https://api.weather.com/v3/wx/observations/current"
-    params = {"geocode":f"{latitude},{longitude}", "units":"e", "language":"en-US", "format":"json", "apiKey":weatherAPIKey}
+    latitude = round(latitude, 2)
+    longitude = round(longitude, 2)
+    url = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/weatherdata/forecast"
+    params = {"locations":f"{latitude},{longitude}", "aggregateHours":"24", 
+              "unitGroup":"us", "shortColumnNames":"true", "contentType":"json", 
+              "key":weather_api_key, "forecastDays":"1"}
     response = requests.get(url = url, params = params)
-
-    data_json = response.json()
-    # with open("weather.json", "w") as write_file:
+    data_json = response.json()["locations"][f"{latitude},{longitude}"]
+    weather_data = {
+        "temperature"   :   data_json["currentConditions"]["temp"],
+        "max_temp"      :   data_json["values"][0]["maxt"],
+        "min_temp"      :   data_json["values"][0]["mint"],
+        "wind_speed"    :   data_json["currentConditions"]["wspd"],
+        "wind_direction":   data_json["currentConditions"]["wdir"],
+        "humidity"      :   data_json["currentConditions"]["humidity"],
+        "prob_of_precip":   data_json["values"][0]["pop"],
+        "snow_depth"    :   data_json["values"][0]["snowdepth"],
+        "cloud_cover"   :   data_json["values"][0]["cloudcover"],
+        "conditions"    :   data_json["values"][0]["conditions"],
+        "sunrise"       :   data_json["currentConditions"]["sunrise"][11:16],
+        "sunset"        :   data_json["currentConditions"]["sunset"][11:16]
+    }
+    # print(weather_data)
+    # with open("weather4.json", "w") as write_file:
     #     json.dump(data_json, write_file, indent=4)
-    return data_json
+    return weather_data
+# get_weather_data(41.72,-74.23)
 
 def get_trail_data(trail_id):
     """
     Gets hiking trail data based on trail_id from hiking project API 
     """
     url = "https://www.hikingproject.com/data/get-trails-by-id"
-    params = {"ids":trail_id, "key":trailsAPIKey}
+    params = {"ids":trail_id, "key":trails_api_key}
     response = requests.get(url = url, params = params)
     data_json = response.json()
     # with open("trail_data.json", "w") as write_file:
@@ -36,10 +55,12 @@ def gear_evaluation(trail_data, weather_data):
     """
     temperature_attribute = evaluate_temperature(weather_data["temperature"])
     precipitation_attribute = evaluate_precipitation(weather_data)
-    attributes = ["all", temperature_attribute]
+    # attributes are categories that define the trail and weather conditions
+    # they are used to match up the trail/weather info with gear
+    attributes = ["all", temperature_attribute, precipitation_attribute]
     with open("gear_data.json") as in_file:
         gear_data_all = json.load(in_file)
-    attribute_list = []
+    attribute_list = []      # list of attribute and gear info
     for attribute in attributes:
         for key in gear_data_all:
             if attribute == key:
@@ -66,8 +87,10 @@ def evaluate_temperature(temperature):
         return "hot"
 
 def evaluate_precipitation(weather_data):
-    pass
-
+    if weather_data["prob_of_precip"] > 0:
+        return "rain"
+    else: 
+        return NULL
 
 
 # trail_id = 7022927

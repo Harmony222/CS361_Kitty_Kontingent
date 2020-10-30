@@ -31,6 +31,10 @@
         "description": "Chance of rain!",
         "gear": ["Rainwear (jacket and pants)", "Waterproof shoes", "Gaiters"]
     },
+    "snow": {
+        "description": "There is snow on the ground.",
+        "gear": ["Snowshoes", "Face mask/balaclava", "Snow goggles", "Gaiters", "Trekking poles"]
+    },
     "long": {
         "description": "This will be a long hike.",
         "gear": ["Lunch", "Extra food and water"]

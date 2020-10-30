@@ -20,7 +20,6 @@
         <div class="row">
           <div class="col">Condition: {{ trail_data.conditionStatus }} - {{ trail_data.conditionDetails }}</div>
         </div>
-      {% endif %}
     </div>
   </div>
   <div class="row">
@@ -46,28 +45,29 @@
       {% endif %}
     </div>
     <div class="col">
-      Current Weather Conditions
+      Weather Conditions for {{ trail_data.location }}
       {% if weather_data %}
       <table>
         <tr>
           <td>Current temp: {{ weather_data.temperature }} &#176F</td>
         </tr>
         <tr>
-          <td>Precipitation: {{ weather_data.precip24Hour }} %</td>
+          <td>Chance of rain/snow: {{ weather_data.prob_of_precip }} %</td>
         </tr>
         <tr>
-          <td>Humidity: {{ weather_data.relativeHumidity }} %</td>
+          <td>Humidity: {{ weather_data.humidity }} %</td>
         </tr>
         <tr>
-          <td>Wind: {{ weather_data.windSpeed }} mph {{ weather_data.windDirectionCardinal }}</td>
+          <td>Wind: {{ weather_data.wind_speed }} mph </td>
         </tr>
         <tr>
-          <td>Sunrise: {{ weather_data.sunriseTimeLocal[11:16] }} </td>
+          <td>Sunrise: {{ weather_data.sunrise }} </td>
         </tr>
         <tr>
-          <td>Sunset: {{ weather_data.sunsetTimeLocal[11:16] }}</td>
+          <td>Sunset: {{ weather_data.sunset }}</td>
         </tr>
       </table>
+      {% endif %}
       {% endif %}
     </div>
   </div>

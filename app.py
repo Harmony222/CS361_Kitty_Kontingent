@@ -19,7 +19,7 @@ def map_trail():
 def match_me():
     return render_template('match_me.html', title='Match Me With A Trail', active={'match_me':True})
 
-@app.route('/gear')
+@app.route('/gear', methods=["GET"])
 def gear():
     trail_id = 7022927
     trail_data = get_trail_data(trail_id)
