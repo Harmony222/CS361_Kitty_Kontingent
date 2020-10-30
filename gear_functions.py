@@ -1,5 +1,5 @@
 from datetime import datetime
-from credentials import weatherAPIKey, trailsAPIKey
+from config import weatherAPIKey, trailsAPIKey
 import requests
 import json
 
