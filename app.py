@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect
 from gear_functions import get_weather_data, get_trail_data, gear_evaluation
+from trail_list_functions import get_trails, list_table
 from match_me import get_map_api_key
 
 app = Flask(__name__)
@@ -10,7 +11,10 @@ def index():
 
 @app.route('/find_trails')
 def find_trails():
-    return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails':True})
+    trails_list = get_trails(40.0274, -105.2519, 10)
+    trails_table = list_table(trails_list)
+    return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails':True},
+                            trails_table = trails_table)
 
 @app.route('/map_trail')
 def map_trail():

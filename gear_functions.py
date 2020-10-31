@@ -3,6 +3,10 @@ from config import trails_api_key, weather_api_key
 import requests
 import json
 
+# for file path fix
+from os.path import dirname, join
+current_dir = dirname(__file__)
+
 def get_weather_data(latitude, longitude):
     """ 
     Gets current weather data from weather API based on given latitude/longitude.
@@ -58,7 +62,11 @@ def gear_evaluation(trail_data, weather_data):
     # attributes are categories that define the trail and weather conditions
     # they are used to match up the trail/weather info with gear
     attributes = ["all", temperature_attribute, precipitation_attribute]
-    with open("gear_data.json") as in_file:
+
+    # file path fix
+    file_path = join(current_dir, "./gear_data.json")
+
+    with open(file_path) as in_file:
         gear_data_all = json.load(in_file)
     attribute_list = []      # list of attribute and gear info
     for attribute in attributes:
@@ -90,7 +98,7 @@ def evaluate_precipitation(weather_data):
     if weather_data["prob_of_precip"] > 0:
         return "rain"
     else: 
-        return NULL
+        return None
 
 
 # trail_id = 7022927
