@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect
 from gear_functions import get_weather_data, get_trail_data, gear_evaluation
+from match_me import get_map_api_key
 
 app = Flask(__name__)
 
@@ -15,9 +16,16 @@ def find_trails():
 def map_trail():
     return render_template('map_trail.html', title='Map Trail', active={'map_trail':True})
 
+
 @app.route('/match_me')
 def match_me():
-    return render_template('match_me.html', title='Match Me With A Trail', active={'match_me':True})
+    trail_list = ""
+    map_api_key = get_map_api_key()
+    return render_template('match_me.html', title='Match Me With A Trail',
+                           active={'match_me': True}, map_api_key=map_api_key)
+    # , trail_list=trail_list,
+    #                        show_trails_map=show_trails_map)
+
 
 @app.route('/gear', methods=["GET"])
 def gear():

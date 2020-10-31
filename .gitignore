@@ -1,5 +1,6 @@
 config.py
 __pycache__
+.idea
 credentials.py
 Pipfile
 Pipfile.lock
