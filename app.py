@@ -11,7 +11,11 @@ def index():
 
 @app.route('/find_trails')
 def find_trails():
+
+    # test data, will be filled by user-entered location
     trails_list = get_trails(40.0274, -105.2519, 10)
+
+    # using flask_table to build table for now - see trail_list_functions for more
     trails_table = list_table(trails_list)
     return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails':True},
                             trails_table = trails_table)
