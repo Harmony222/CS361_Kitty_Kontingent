@@ -4,6 +4,7 @@
     src="https://maps.googleapis.com/maps/api/js?key={{ map_api_key }}&callback=initMap&libraries=&v=weekly"
     defer>
 </script>
+<script src="http://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
 <script>
     function initMap() {
         const location = {lat: 47.60621, lng: -122.3321};
@@ -14,11 +15,6 @@
         setMarkers(map);
     }
     let LOCATIONS = {{ location_list | safe }};
-    // const LOCATIONS = [
-    //     ["A Trail", 47.6938241, -122.4157275, 1],
-    //     ["B Trail", 47.6278632, -122.3333217, 2],
-    //     ["C Trail", 47.654404, -122.3778202, 3]
-    // ];
     function setMarkers(map) {
         const icons = {
             red: { icon: "http://maps.google.com/mapfiles/kml/paddle/red-circle.png", },
@@ -84,7 +80,6 @@
   }
 </style>
 <h4>Match Me With A Trail</h4>
-<meta id="location_list" data-name="{{ location_list }}">
 <div class="map-list-pane">
   <nav>
     <div class="nav nav-tabs nav-justified" id="nav-tab" role="tablist">
@@ -97,28 +92,26 @@
       <div id="map"></div>
     </div>
     <div class="tab-pane" id="list-view" role="tabpanel" aria-labelledby="list-view-tab">
-      <div id="scrollTable">
-      <table class="table table-striped header-fixed">
+      <table class="table table-striped sortable">
         <thead>
-          <tr>
-            <th scope="col">Trail</th>
-            <th scope="col">Difficulty</th>
-            <th scope="col">Length</th>
-            <th scope="col">Location</th>
-          </tr>
-          </thead>
-          <tbody>
-          {% for r in filtered_trails %}
-          <tr>
-            <td>{{ r[0] }}</td>
-            <td>{{ r[1] }}</td>
-            <td>{{ r[2] }}</td>
-            <td>{{ r[3] }}</td>
-          </tr>
-          {% endfor %}
-          </tbody>
+        <tr>
+          <th scope="col">Trail</th>
+          <th scope="col">Difficulty</th>
+          <th scope="col">Length</th>
+          <th scope="col">Location</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for r in filtered_trails %}
+        <tr>
+          <td>{{ r[0] }}</td>
+          <td>{{ r[1] }}</td>
+          <td>{{ r[2] }}</td>
+          <td>{{ r[3] }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
       </table>
-        </div>
     </div>
   </div>
 </div>
@@ -133,4 +126,5 @@
     <li>Challenge me!</li>
   </ul>
 </div>
+
 {% endblock content %}

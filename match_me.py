@@ -17,7 +17,7 @@ def filtered_trail_locations(filtered_trails):
     location_list = []
     for trail in filtered_trails:
         location_list.append([str(trail[0]), trail[4], trail[5], 0])
-    print("LOCATION LIST", location_list)
+    # print("LOCATION LIST", location_list)
     return json.dumps(location_list)
 
 
