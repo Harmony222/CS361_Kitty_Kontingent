@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect
 from gear_functions import get_weather_data, get_trail_data, gear_evaluation
 from trail_list_functions import get_trails, list_table
-from match_me import get_map_api_key
+from match_me import filter_trails, filtered_trail_locations, get_map_api_key
 
 app = Flask(__name__)
 
@@ -27,12 +27,14 @@ def map_trail():
 
 @app.route('/match_me')
 def match_me():
-    trail_list = ""
+    trails_list = get_trails(47.60621, -122.3321, 100)
+    filtered_trails = filter_trails(trails_list, 1)
+    location_list = filtered_trail_locations(filtered_trails)
     map_api_key = get_map_api_key()
     return render_template('match_me.html', title='Match Me With A Trail',
-                           active={'match_me': True}, map_api_key=map_api_key)
-    # , trail_list=trail_list,
-    #                        show_trails_map=show_trails_map)
+                           active={'match_me': True}, map_api_key=map_api_key,
+                           trails_list=trails_list, filtered_trails=filtered_trails,
+                           location_list=location_list)
 
 
 @app.route('/gear', methods=["GET"])

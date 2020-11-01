@@ -8,45 +8,45 @@
     function initMap() {
         const location = {lat: 47.60621, lng: -122.3321};
         const map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 10,
+            zoom: 8,
             center: location,
         });
         setMarkers(map);
     }
-    const LOCATIONS = [
-        ["A Trail", 47.6938241, -122.4157275, 1],
-        ["B Trail", 47.6278632, -122.3333217, 2],
-        ["C Trail", 47.654404, -122.3778202, 3]
-    ];
+    let LOCATIONS = {{ location_list | safe }};
+    // const LOCATIONS = [
+    //     ["A Trail", 47.6938241, -122.4157275, 1],
+    //     ["B Trail", 47.6278632, -122.3333217, 2],
+    //     ["C Trail", 47.654404, -122.3778202, 3]
+    // ];
     function setMarkers(map) {
-        const image = {
-            url: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
-            size: new google.maps.Size(20, 32),
-            origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(0, 32),
-        };
-        const shape = {
-            coords: [1, 1, 1, 20, 18, 20, 18, 1],
-            type: "poly",
+        const icons = {
+            red: { icon: "http://maps.google.com/mapfiles/kml/paddle/red-circle.png", },
+            yellow: { icon: "http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png", },
+            green: { icon: "http://maps.google.com/mapfiles/kml/paddle/grn-circle.png", },
         };
         for (let i = 0; i < LOCATIONS.length; i++) {
             const trail = LOCATIONS[i];
             new google.maps.Marker({
-                position: { lat: trail[1], lng: trail[2] },
+                position: { lat: parseFloat(trail[1]), lng: parseFloat(trail[2]) },
                 map,
-                icon: image,
-                shape: shape,
+                // icon: icons['red'].icon,
                 title: trail[0],
-                zIndex: trail[3],
             });
+            // TODO: add InfoWindow() on click
         }
+    }
+    function filterSelected() {
+        // filter list with selected difficulty
+        let val = document.getElementById("slider-range").value;
+        alert(val);
     }
 </script>
 <style type="text/css">
   .map-list-pane {
       height: 450px;
-      width: 600px;
-      border: 2px solid black;
+      width: 800px;
+      border: 2px solid gray;
       display: block;
       margin: auto;
   }
@@ -55,7 +55,7 @@
       width: 100%;
   }
   .slider {
-      width: 600px;
+      width: 800px;
       display: block;
       margin: auto;
   }
@@ -65,8 +65,26 @@
       list-style: none;
       padding: 0
   }
+  /* scrollable table with fixed header */
+  table { min-width: 798px; }
+  thead, tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+  tbody {
+    display: block;
+    max-height: 350px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+  td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 </style>
 <h4>Match Me With A Trail</h4>
+<meta id="location_list" data-name="{{ location_list }}">
 <div class="map-list-pane">
   <nav>
     <div class="nav nav-tabs nav-justified" id="nav-tab" role="tablist">
@@ -79,15 +97,37 @@
       <div id="map"></div>
     </div>
     <div class="tab-pane" id="list-view" role="tabpanel" aria-labelledby="list-view-tab">
-      <h1>List goes here</h1>
+      <div id="scrollTable">
+      <table class="table table-striped header-fixed">
+        <thead>
+          <tr>
+            <th scope="col">Trail</th>
+            <th scope="col">Difficulty</th>
+            <th scope="col">Length</th>
+            <th scope="col">Location</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for r in filtered_trails %}
+          <tr>
+            <td>{{ r[0] }}</td>
+            <td>{{ r[1] }}</td>
+            <td>{{ r[2] }}</td>
+            <td>{{ r[3] }}</td>
+          </tr>
+          {% endfor %}
+          </tbody>
+      </table>
+        </div>
     </div>
   </div>
 </div>
+<!--TODO: change to modal-->
 <div class="slider">
   <label for="slider-range">Difficulty</label>
-  <input type="range" class="custom-range" min="0" max="3" id="slider-range">
+  <input type="range" class="custom-range" min="0" max="3" id="slider-range" onclick="filterSelected()">
   <ul class="difficulty-list">
-    <li>Eacy and chill</li>
+    <li>Easy and chill</li>
     <li>TODO</li>
     <li>Match my fitness level</li>
     <li>Challenge me!</li>
