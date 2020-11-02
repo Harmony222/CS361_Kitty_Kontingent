@@ -33,10 +33,18 @@
     },
     "snow": {
         "description": "There is snow on the ground.",
-        "gear": ["Snowshoes", "Face mask/balaclava", "Snow goggles", "Gaiters", "Trekking poles"]
+        "gear": ["Snowshoes", "Face mask/balaclava", "Snow goggles", "Gaiters", "Trekking poles", "Microspikes/Crampons"]
+    },
+    "medium" : {
+        "description": "This will be a medium-long hike.",
+        "gear": ["Lunch", "Extra water"]
     },
     "long": {
         "description": "This will be a long hike.",
-        "gear": ["Lunch", "Extra food and water"]
+        "gear": ["Lunch", "Extra snacks or dinner", "Extra water"]
+    },
+    "steep": {
+        "description": "High elevation gain or steep hike.",
+        "gear": ["Trekking poles"]
     }
 }

@@ -39,15 +39,14 @@ def match_me():
 
 @app.route('/gear', methods=["GET"])
 def gear():
-    trail_id = 7022927
+    trail_id = 7011192
     trail_data = get_trail_data(trail_id)
-    latitude = trail_data["trails"][0]["latitude"]
-    longitude = trail_data["trails"][0]["longitude"]
-    weather_data = get_weather_data(latitude, longitude)
+    weather_data = get_weather_data(trail_data["latitude"], 
+                                    trail_data["longitude"])
     gear_data = gear_evaluation(trail_data, weather_data)
     return render_template('gear.html', title='Find Hiking Gear', 
                             active={'gear':True}, weather_data=weather_data,
-                            trail_data=trail_data["trails"][0], 
+                            trail_data=trail_data, 
                             gear_data=gear_data)
 
 @app.route('/my_info')

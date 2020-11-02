@@ -41,15 +41,20 @@ def get_weather_data(latitude, longitude):
 
 def get_trail_data(trail_id):
     """
-    Gets hiking trail data based on trail_id from hiking project API 
+    Gets hiking trail data based on trail_id from hiking project API.
+    Add hiking_time and average trail grade key/value to trail data.
     """
     url = "https://www.hikingproject.com/data/get-trails-by-id"
     params = {"ids":trail_id, "key":trails_api_key}
     response = requests.get(url = url, params = params)
-    data_json = response.json()
+    trail_data = response.json()["trails"][0]
+    trail_data["hiking_time"] = calculate_hiking_time(trail_data["length"],
+                                                      trail_data["ascent"])
+    trail_data["grade"] = calculate_grade(trail_data["length"],
+                                          trail_data["ascent"])
     # with open("trail_data.json", "w") as write_file:
     #     json.dump(data_json, write_file, indent=4)
-    return data_json
+    return trail_data
 
 def gear_evaluation(trail_data, weather_data):
     """
@@ -59,9 +64,12 @@ def gear_evaluation(trail_data, weather_data):
     """
     temperature_attribute = evaluate_temperature(weather_data["temperature"])
     precipitation_attribute = evaluate_precipitation(weather_data)
+    length_attribute = evaluate_length(trail_data["hiking_time"])
+    elevation_attribute = evaluate_elevation(trail_data["grade"], trail_data["ascent"])
     # attributes are categories that define the trail and weather conditions
     # they are used to match up the trail/weather info with gear
-    attributes = ["all", temperature_attribute, precipitation_attribute]
+    attributes = ["all", temperature_attribute, precipitation_attribute,
+                  length_attribute, elevation_attribute]
 
     # file path fix
     file_path = join(current_dir, "./gear_data.json")
@@ -100,6 +108,47 @@ def evaluate_precipitation(weather_data):
     else: 
         return None
 
+def evaluate_length(hiking_time):
+    """
+    Evaluates trail length based on distance and elevation. 
+    A hiking time > 3 hours is considered "medium"
+    A hiking time > 6 hours is considered "long" 
+    """
+    if hiking_time > 360:
+        return "long"
+    elif hiking_time > 180:
+        return "medium"
+    else:
+        return None
 
-# trail_id = 7022927
-# gear_evaluation(trail_id)
+
+def calculate_hiking_time(length, elevation_change):
+    """
+    Calculate hiking time estimate based on Naismith's rule, uses trail
+    length in miles, elevation_change in feet, and returns time in minutes.
+    https://en.wikipedia.org/wiki/Naismith%27s_rule
+    Naismith's rule: Allow one hour for every 3 miles (5 km) forward, plus an
+    additional hour for every 2,000 feet (600 m) of ascent. The basic rule
+    assumes hikers of reasonable fitness, on typical terrain, and under normal
+    conditions.
+    """
+    # length (in miles) * 20 mins/mile + elevation_change/1000 * 30 min/1000 ft
+    hiking_time = length * 20 + elevation_change * 30/1000
+    return int(round(hiking_time))
+
+
+def evaluate_elevation(grade, ascent):
+    """
+    Determine if a hike is considered steep or if it has an overall high
+    elevation gain.
+    """
+    if grade > 10 or ascent > 750:
+        return "steep"
+    else:
+        return None
+
+def calculate_grade(length, ascent):
+    """ Calculate average trail grade """
+    distance_feet = length * 5280       # 5280 feet/mile
+    grade = ascent / distance_feet      # calculate % grade 
+    return round(grade * 100, 1)
