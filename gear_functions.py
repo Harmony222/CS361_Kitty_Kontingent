@@ -47,11 +47,14 @@ def get_trail_data(trail_id):
     url = "https://www.hikingproject.com/data/get-trails-by-id"
     params = {"ids":trail_id, "key":trails_api_key}
     response = requests.get(url = url, params = params)
-    trail_data = response.json()["trails"][0]
-    trail_data["hiking_time"] = calculate_hiking_time(trail_data["length"],
-                                                      trail_data["ascent"])
-    trail_data["grade"] = calculate_grade(trail_data["length"],
-                                          trail_data["ascent"])
+    if response.status_code == 200:
+        trail_data = response.json()["trails"][0]
+        trail_data["hiking_time"] = calculate_hiking_time(trail_data["length"],
+                                                        trail_data["ascent"])
+        trail_data["grade"] = calculate_grade(trail_data["length"],
+                                            trail_data["ascent"])
+    else:
+        trail_data = None
     # with open("trail_data.json", "w") as write_file:
     #     json.dump(data_json, write_file, indent=4)
     return trail_data

@@ -44,7 +44,7 @@
         "gear": ["Lunch", "Extra snacks or dinner", "Extra water"]
     },
     "steep": {
-        "description": "High elevation gain or steep hike.",
+        "description": "Steep trail or high total elevation gain.",
         "gear": ["Trekking poles"]
     }
 }

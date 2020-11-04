@@ -14,6 +14,22 @@
 #gear_body, #weather_body {
   padding: 20px;
 }
+
+#trail_body {
+  margin-top: 20px;
+}
+
+#trail_title {
+  margin-bottom: 0.4rem;
+}
+#trail_summary {
+  font-style: italic;
+  font-size: 1.2rem;
+}
+
+#new_trail {
+  margin-top: 0.7rem;
+}
 </style>
 
 <div class="container">
@@ -21,16 +37,19 @@
   {% if trail_data %}
   <div class="row">
     <div class="col-md-12">
-      <div class="card flex-md-row">
+      <div class="card flex-md-row" id="trail_body">
         <div class="card-body d-flex flex-column align-items-start">
-          <h5 class="card-title">{{ trail_data.name }} </h5>
-          <p class="card-txt font-italic">{{ trail_data.summary }}</p>
+          <h4 class="card-title" id="trail_title">{{ trail_data.name }} </h4>
+          <p class="card-txt" id="trail_summary">{{ trail_data.summary }}</p>
           <p class="card-txt">Location: {{ trail_data.location }} </p>
           <p class="card-txt">Trail length: {{ trail_data.length }} miles </p>
           <p class="card-txt">Elevation gain: {{ trail_data.ascent }} feet </p>
           <p class="card-txt">Average trail grade: {{ trail_data.grade }}%</p>
           <p class="card-txt" style="margin-bottom:0px;">Estimated hiking time: {{ (trail_data.hiking_time / 60) | round(1) }} hours</p>
             <small class="text-muted">Assumes hiker of reasonable fitness, on typical terrain, and under normal conditions.</small>
+          <small class="text-muted" id="new_trail">
+            <a href="{{ url_for('find_trails') }}">Select another trail.</a>
+          </small>
         </div>
         <img class="card-img-right flex-auto d-none d-md-block" src="{{ trail_data.imgSmallMed }}">
       </div>
@@ -81,9 +100,20 @@
           </tr>
         </table>
         {% endif %}
-        {% endif %}
       </div>
     </div>
   </div>
+  {% else %}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card flex-md-row" id="trail_body">
+        <div class="card-body d-flex flex-column align-items-start">
+          <h5> There was an error finding information for that trail. Please try again.</h5>
+          <a href="{{ url_for('find_trails') }}">Select another trail.</a>
+        </div>    
+      </div>
+    </div>
+  </div>
+  {% endif %}
 </div>
 {% endblock content %}

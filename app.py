@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 from gear_functions import get_weather_data, get_trail_data, gear_evaluation
 from trail_list_functions import get_trails, list_table
 from match_me import filter_trails, filtered_trail_locations, get_map_api_key
@@ -39,11 +39,17 @@ def match_me():
 
 @app.route('/gear', methods=["GET"])
 def gear():
-    trail_id = 7011192
+    if request.method == "GET" and request.args:
+        trail_id = request.args["trail_id"]
+    else:
+        trail_id = 7011192
     trail_data = get_trail_data(trail_id)
-    weather_data = get_weather_data(trail_data["latitude"], 
-                                    trail_data["longitude"])
-    gear_data = gear_evaluation(trail_data, weather_data)
+    if trail_data:
+        weather_data = get_weather_data(trail_data["latitude"], 
+                                        trail_data["longitude"])
+        gear_data = gear_evaluation(trail_data, weather_data)
+    else:
+        weather_data, gear_data = None, None
     return render_template('gear.html', title='Find Hiking Gear', 
                             active={'gear':True}, weather_data=weather_data,
                             trail_data=trail_data, 
