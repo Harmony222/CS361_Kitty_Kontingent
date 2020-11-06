@@ -1,0 +1,39 @@
+
+{% extends "layout.html" %}
+{% block content %}
+<script>
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>
+<style>
+</style>
+<h4>My Info</h4>
+<dl class="row">
+  <dt class="col-sm-3">Username</dt>
+  <dd class="col-sm-9">kittyKat</dd>
+
+  <dt class="col-sm-3">Date of Birth</dt>
+  <dd class="col-sm-9">January 1st, 1900</dd>
+
+  <dt class="col-sm-3">Gender</dt>
+  <dd class="col-sm-9">Male.</dd>
+
+  <dt class="col-sm-3">Height</dt>
+  <dd class="col-sm-9">5'10"</dd>
+
+  <dt class="col-sm-3">Weight</dt>
+  <dd class="col-sm-9">180 lbs</dd>
+
+  <dt class="col-sm-3">Address</dt>
+  <dd class="col-sm-9">
+    <p>1234 Meow Street</p>
+    <p>Feline City, OR 54321</p>
+    <p>USA</p>
+  </dd>
+
+  <dt class="col-sm-3">Fitness Level</dt>
+  <dd class="col-sm-9">Medium</dd>
+  <button type="submit" onclick="window.location='/my_info'" class="btn btn-primary">Edit Info</button>
+</dl>
+{% endblock content %}

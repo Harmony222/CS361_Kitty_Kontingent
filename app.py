@@ -57,7 +57,27 @@ def gear():
 
 @app.route('/my_info')
 def my_info():
-    return render_template('my_info.html', title="My Info", active={'my_info':True})
+    if request.method == 'GET':             # render the form to edit the user's info
+        return render_template('my_info.html', title="My Info", active={'my_info':True})
+    elif request.method == 'POST':          # form is submitted
+        month = request.form['month']
+        print('What is the month?\n', month)
+        day = request.form['day']
+        print('What is the day?\n', day)
+        year = request.form['year']
+        print('What is the year?\n', year)
+        address = request.form['address']
+        print('What is the address?\n', address)
+        address2 = request.form['address2']
+        print('What is the address2?\n', address2)
+        return render_template('display_info.html', title="My Info", active={'display_info':True})
+
+@app.route('/display_info')
+def display_info():
+    if request.method == 'GET':             # render the user's info
+        return render_template('display_info.html', title="My Info", active={'display_info':True})
+    elif request.method == 'POST':          # render the form to edit the user's info
+        return render_template('my_info.html', title="My Info", active={'my_info':True})
 
 @app.route('/signin')
 def signin():
