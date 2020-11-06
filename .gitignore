@@ -2,7 +2,6 @@ config.py
 __pycache__
 .idea
 credentials.py
-Pipfile.lock
 test_code.py
 trail_data.json
 weather.json
