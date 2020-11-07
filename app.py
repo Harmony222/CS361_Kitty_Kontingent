@@ -55,29 +55,66 @@ def gear():
                             trail_data=trail_data, 
                             gear_data=gear_data)
 
-@app.route('/my_info')
+@app.route('/my_info', methods=["GET", "POST"])
 def my_info():
     if request.method == 'GET':             # render the form to edit the user's info
         return render_template('my_info.html', title="My Info", active={'my_info':True})
     elif request.method == 'POST':          # form is submitted
-        month = request.form['month']
-        print('What is the month?\n', month)
-        day = request.form['day']
-        print('What is the day?\n', day)
-        year = request.form['year']
-        print('What is the year?\n', year)
-        address = request.form['address']
-        print('What is the address?\n', address)
-        address2 = request.form['address2']
-        print('What is the address2?\n', address2)
         return render_template('display_info.html', title="My Info", active={'display_info':True})
 
-@app.route('/display_info')
+@app.route('/display_info', methods=["GET", "POST"])
 def display_info():
     if request.method == 'GET':             # render the user's info
-        return render_template('display_info.html', title="My Info", active={'display_info':True})
-    elif request.method == 'POST':          # render the form to edit the user's info
-        return render_template('my_info.html', title="My Info", active={'my_info':True})
+        return render_template('display_info.html', title="My Info", active={'my_info':True})
+    elif request.method == 'POST':          # Edit Info form was submitted, get the values and display them
+        month = request.form['month']
+        day = request.form['day']
+        year = request.form['year']
+        gender = request.form['gender']
+        height = request.form['height']
+        weight = request.form['weight']
+        address = request.form['address']
+        address2 = request.form['address2']
+        city = request.form['city']
+        state = request.form['state']
+        zip = request.form['zip']
+        country = request.form['country']
+        days = int(request.form['days'])
+        hours = int(request.form['hours'])
+        intensity = int(request.form['intensity'])
+        miles = int(request.form['miles'])
+
+        # calculate the user's fitness level
+        # first get the average number of hours of physical activity per week
+        avg_hours = days * hours // 7
+        level = avg_hours
+        # adjust level based off of the user's intensity when hiking
+        if intensity > avg_hours and avg_hours <= 3:
+            level += 1
+        elif intensity < avg_hours and avg_hours >= 2:
+            level -= 1
+        # adjust level based off of the user's average length for a hike
+        if miles > avg_hours and level <= 3:
+            level += 1
+        elif miles < avg_hours and level >= 2:
+            level -= 1
+        # ensure level is a value from 1-4
+        if level <= 1:
+            level = 1
+        # create names for fitness levels
+        level_str = ""
+        if level == 1:
+            level_str = "low"
+        elif level == 2:
+            level_str = "medium"
+        elif level == 3:
+            level_str = "high"
+        elif level == 4:
+            level_str = "very high"
+
+        return render_template('display_info.html', title="My Info", active={'my_info':True}, month=month, day=day, year=year,
+        gender=gender, height=height, weight=weight, address=address, address2=address2, city=city, state=state, zip=zip, 
+        country=country, level=level_str)
 
 @app.route('/signin')
 def signin():
@@ -87,5 +124,5 @@ def signin():
 
 
 
-# if __name__ == '__main__':
-#     app.run(debug=True)
+#if __name__ == '__main__':
+#    app.run(debug=True)

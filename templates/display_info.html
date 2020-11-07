@@ -10,30 +10,61 @@
 </style>
 <h4>My Info</h4>
 <dl class="row">
-  <dt class="col-sm-3">Username</dt>
-  <dd class="col-sm-9">kittyKat</dd>
+  <dd class="col-sm-4"></dd>
+  <dt class="col-sm-2">Username</dt>
+  <dd class="col-sm-2">kittyKat</dd>
+  <dd class="col-sm-4"></dd>
 
-  <dt class="col-sm-3">Date of Birth</dt>
-  <dd class="col-sm-9">January 1st, 1900</dd>
+  <dd class="col-sm-4"></dd>
+  <dt class="col-sm-2">Date of Birth</dt>
+  {% if month %}
+  <dd class="col-sm-2">{{month}} {{day}}, {{year}}</dd>
+  {% else %}
+  <dd class="col-sm-2"></dd>
+  {% endif %}
+  <dd class="col-sm-4"></dd>
 
-  <dt class="col-sm-3">Gender</dt>
-  <dd class="col-sm-9">Male.</dd>
+  <dd class="col-sm-4"></dd>
+  <dt class="col-sm-2">Gender</dt>
+  <dd class="col-sm-2">{{gender}}</dd>
+  <dd class="col-sm-4"></dd>
 
-  <dt class="col-sm-3">Height</dt>
-  <dd class="col-sm-9">5'10"</dd>
+  <dd class="col-sm-4"></dd>
+  <dt class="col-sm-2">Height</dt>
+  <dd class="col-sm-2">{{height}}</dd>
+  <dd class="col-sm-4"></dd>
 
-  <dt class="col-sm-3">Weight</dt>
-  <dd class="col-sm-9">180 lbs</dd>
+  <dd class="col-sm-4"></dd>
+  <dt class="col-sm-2">Weight</dt>
+  {% if weight %}
+  <dd class="col-sm-2">{{weight}} lbs</dd>
+  {% else %}
+  <dd class="col-sm-2"></dd>
+  {% endif %}
+  <dd class="col-sm-4"></dd>
 
-  <dt class="col-sm-3">Address</dt>
-  <dd class="col-sm-9">
-    <p>1234 Meow Street</p>
-    <p>Feline City, OR 54321</p>
-    <p>USA</p>
+  <dd class="col-sm-4"></dd>
+  <dt class="col-sm-2">Address</dt>
+  <dd class="col-sm-2">
+    <p>{{address}}<br>
+      {% if address2 %}
+      {{address2}}<br>
+      {% endif %}
+      {% if city %}
+       {{city}}, {{state}} {{zip}}<br>
+      {% endif %}
+       {{country}}
+    </p>
   </dd>
+  <dd class="col-sm-4"></dd>
 
-  <dt class="col-sm-3">Fitness Level</dt>
-  <dd class="col-sm-9">Medium</dd>
-  <button type="submit" onclick="window.location='/my_info'" class="btn btn-primary">Edit Info</button>
+  <dd class="col-sm-4"></dd>
+  <dt class="col-sm-2">Fitness Level</dt>
+  <dd class="col-sm-2">{{level}}</dd>
+  <dd class="col-sm-4"></dd>
+
+  <dd class="col-sm-4"></dd>
+  <button type="submit" onclick="window.location='/my_info'" class="btn btn-primary col-sm-1">Edit Info</button>
+  <dd class="col-sm-7"></dd>
 </dl>
 {% endblock content %}

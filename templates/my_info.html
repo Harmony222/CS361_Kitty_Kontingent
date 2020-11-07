@@ -17,8 +17,8 @@
     margin: 0  0 10px 0;
 }
 </style>
-<h4>My Info</h4>
-<form class="container" action="/my_info" method="POST">
+<h4>Edit Info</h4>
+<form class="container" action="/display_info" method="POST">
   <div class="form-row">
     <div class="form-group col-md-4">
       <label for="inputMonth">Month</label>
@@ -27,17 +27,52 @@
         <option>January</option>
         <option>February</option>
         <option>March</option>
+        <option>April</option>
+        <option>May</option>
+        <option>June</option>
+        <option>July</option>
+        <option>August</option>
+        <option>September</option>
+        <option>October</option>
+        <option>November</option>
+        <option>December</option>
       </select>
     </div>
     <div class="form-group col-md-4">
       <label for="inputDay">Day</label>
       <select id="inputDay" name="day" class="form-control">
         <option selected>Choose...</option>
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-        <option>5</option>
+        <option value="1st">1</option>
+        <option value="2nd">2</option>
+        <option value="3rd">3</option>
+        <option value="4th">4</option>
+        <option value="5th">5</option>
+        <option value="6th">6</option>
+        <option value="7th">7</option>
+        <option value="8th">8</option>
+        <option value="9th">9</option>
+        <option value="10th">10</option>
+        <option value="11th">11</option>
+        <option value="12th">12</option>
+        <option value="13th">13</option>
+        <option value="14th">14</option>
+        <option value="15th">15</option>
+        <option value="16th">16</option>
+        <option value="17th">17</option>
+        <option value="18th">18</option>
+        <option value="19th">19</option>
+        <option value="20th">20</option>
+        <option value="21st">21</option>
+        <option value="22nd">22</option>
+        <option value="23rd">23</option>
+        <option value="24th">24</option>
+        <option value="25th">25</option>
+        <option value="26th">26</option>
+        <option value="27th">27</option>
+        <option value="28th">28</option>
+        <option value="29th">29</option>
+        <option value="30th">30</option>
+        <option value="31st">31</option>
       </select>
     </div>
     <div class="form-group col-md-4">
@@ -55,24 +90,36 @@
         <option>1988</option>
         <option>1989</option>
         <option>1990</option>
+        <option>1991</option>
+        <option>1992</option>
+        <option>1993</option>
+        <option>1994</option>
+        <option>1995</option>
+        <option>1996</option>
       </select>
     </div>
   </div>
+
   <div class="form-row" id="gender-buttons">
     <div class="custom-control custom-radio custom-control-inline">
-    <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input">
+    <input type="radio" id="customRadioInline1" name="gender" value="Male" class="custom-control-input">
     <label class="custom-control-label" for="customRadioInline1">Male</label>
     </div>
     <div class="custom-control custom-radio custom-control-inline">
-    <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input">
+    <input type="radio" id="customRadioInline2" name="gender" value="Female" class="custom-control-input">
     <label class="custom-control-label" for="customRadioInline2">Female</label>
     </div>
   </div>
+
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="inputHeight">Height</label>
-      <select id="inputHeight" class="form-control">
+      <select id="inputHeight" name="height" class="form-control">
         <option selected>Choose...</option>
+        <option>5'2"</option>
+        <option>5'3"</option>
+        <option>5'4"</option>
+        <option>5'5"</option>
         <option>5'6"</option>
         <option>5'7"</option>
         <option>5'8"</option>
@@ -85,19 +132,25 @@
     </div>
     <div class="form-group col-md-6">
       <label for="inputWeight">Weight</label>
-      <select id="inputWeight" class="form-control">
+      <select id="inputWeight" name="weight" class="form-control">
         <option selected>Choose...</option>
+        <option>100</option>
+        <option>110</option>
         <option>120</option>
-        <option>125</option>
         <option>130</option>
-        <option>135</option>
         <option>140</option>
-        <option>145</option>
         <option>150</option>
-        <option>155</option>
+        <option>160</option>
+        <option>170</option>
+        <option>180</option>
+        <option>190</option>
+        <option>200</option>
+        <option>210</option>
+        <option>220</option>
       </select>
     </div>
   </div>
+
   <div class="form-row">
     <div class="form-group col-md-12">
         <label for="inputAddress">Address</label>
@@ -110,90 +163,116 @@
         <input type="text" class="form-control" id="inputAddress2" name="address2" placeholder="Apartment 999">
     </div>
   </div>
+
   <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="inputCity">City</label>
-      <input type="text" class="form-control" id="inputCity">
-    </div>
     <div class="form-group col-md-4">
+      <label for="inputCity">City</label>
+      <input type="text" class="form-control" id="inputCity" name="city">
+    </div>
+    <div class="form-group col-md-2">
       <label for="inputState">State</label>
-      <select id="inputState" class="form-control">
+      <select id="inputState" class="form-control" name="state">
         <option selected>Choose...</option>
-        <option>...</option>
+        <option>AL</option>
+        <option>AK</option>
+        <option>AZ</option>
+        <option>CA</option>
+        <option>MN</option>
+        <option>NY</option>
+        <option>OR</option>
+        <option>WI</option>
+        <option>WY</option>
       </select>
     </div>
     <div class="form-group col-md-2">
       <label for="inputZip">Zip</label>
-      <input type="text" class="form-control" id="inputZip">
+      <input type="text" class="form-control" id="inputZip" name="zip">
+    </div>
+    <div class="form-group col-md-4">
+      <label for="inputCountry">Country</label>
+      <select id="inputCountry" class="form-control" name="country">
+        <option selected>Choose...</option>
+        <option>Australia</option>
+        <option>Belgium</option>
+        <option>Canada</option>
+        <option>Denmark</option>
+        <option>East Timor</option>
+        <option>Mexico</option>
+        <option>South Korea</option>
+        <option>United Kingdom</option>
+        <option>USA</option>
+      </select>
     </div>
   </div>
 
   <div class="form-row">
     <div class="form-group col-md-9">
-      <label for="inputQ1">How many days a week are you physically active?</label>
+      <label for="inputQ1">How many days a week are you physically active on average?</label>
     </div>
     <div class="form-group col-md-3">
-      <select id="inputQ1" class="form-control">
+      <select id="inputQ1" class="form-control" name="days">
         <option selected>Choose...</option>
-        <option>0 days/week</option>
-        <option>1 day/week</option>
-        <option>2 days/week</option>
-        <option>3 days/week or more</option>
+        <option value="0">0 days per week</option>
+        <option value="1">1 day per week</option>
+        <option value="2">2 days per week</option>
+        <option value="3">3 days per week</option>
+        <option value="4">4 days per week</option>
+        <option value="5">5 days per week</option>
+        <option value="6">6 days per week</option>
+        <option value="7">7 days per week</option>
       </select>
     </div>
   </div>
+
   <div class="form-row">
     <div class="form-group col-md-9">
       <label for="inputQ2">On days when you are physically active, how many hours are you physically active on average?</label>
     </div>
     <div class="form-group col-md-3">
-      <select id="inputQ2" class="form-control">
+      <select id="inputQ2" class="form-control" name="hours">
         <option selected>Choose...</option>
-        <option>0 hours</option>
-        <option>1 hour</option>
-        <option>2 hours</option>
-        <option>3 hours or more</option>
+        <option value="0">0 hours per day</option>
+        <option value="1">1 hour per day</option>
+        <option value="2">2 hours per day</option>
+        <option value="3">3 hours per day</option>
+        <option value="4">4 hours or more per day</option>
       </select>
     </div>
   </div>
+
   <div class="form-row">
     <div class="form-group col-md-9">
       <label for="inputQ3">What is your intensity level when you go hiking?</label>
     </div>
     <div class="form-group col-md-3">
-      <select id="inputQ3" class="form-control">
+      <select id="inputQ3" class="form-control" name="intensity">
         <option selected>Choose...</option>
-        <option>easy stroll</option>
-        <option>mild effort</option>
-        <option>moderate effort</option>
-        <option>strenuous pace</option>
-        <option>push it to the limit</option>
+        <option value="1">easy stroll</option>
+        <option value="2">mild effort</option>
+        <option value="3">moderate effort</option>
+        <option value="4">strenuous pace</option>
+        <option value="5">push it to the limit</option>
       </select>
     </div>
   </div>
+
   <div class="form-row">
     <div class="form-group col-md-9">
       <label for="inputQ4">How many miles do you go on a hike on average?</label>
     </div>
     <div class="form-group col-md-3">
-      <select id="inputQ4" class="form-control">
+      <select id="inputQ4" class="form-control" name="miles">
         <option selected>Choose...</option>
-        <option>less then 1 mile</option>
-        <option>1-2 miles</option>
-        <option>2-3 miles</option>
-        <option>more than 3 miles</option>
+        <option value="0">less then 1 mile</option>
+        <option value="1">1-2 miles</option>
+        <option value="2">2-3 miles</option>
+        <option value="3">3-4 miles</option>
+        <option value="4">4-5 miles</option>
+        <option value="5">more than 5 miles</option>
       </select>
     </div>
   </div>
 
-  <div class="form-group">
-    <div class="form-check">
-      <input class="form-check-input" type="checkbox" id="gridCheck">
-      <label class="form-check-label" for="gridCheck">
-        Check me out
-      </label>
-    </div>
-  </div>
   <button type="submit" class="btn btn-primary">Submit Form</button>
 </form>
 <br>
