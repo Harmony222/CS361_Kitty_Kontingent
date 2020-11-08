@@ -5,14 +5,11 @@ import json
 
 
 def filter_trails(trails_list, difficulty):
-    # trails_list = get_trails(47.60621, -122.3321, 100)
-    # print(trails_list)
+    '''filters trails based on difficulty'''
     filtered_trails = []
     for trail in trails_list:
-        # filter criteria
-        filtered_trails.append((trail['name'], trail['difficulty'], trail['length'],
-                                trail['location'], float(trail['latitude']), float(trail['longitude']),
-                                trail['summary']))
+        if difficulty == trail[3]:
+            filtered_trails.append(trail)
     return filtered_trails
 
 

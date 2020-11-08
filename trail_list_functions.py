@@ -3,7 +3,8 @@ import requests
 from config import trails_api_key
 
 def get_trails(lat, lon, dist):
-    '''return list of trails with data within radius 'dist' from longitude/latitude'''
+    '''return list of trails with data within radius 'dist' from longitude/latitude
+    id, name, length, difficulty, starVotes, location, url, imgMedium, high, low, latitude, longitude, summary'''
 
     base_url = "https://www.hikingproject.com/data/get-trails?lat=" + str(lat) \
                 + "&lon=" + str(lon) + "&maxDistance=" + str(dist) + "&key=" + trails_api_key + "&maxResults=100"

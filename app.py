@@ -7,6 +7,9 @@ import webbrowser
 
 app = Flask(__name__)
 
+## TRAIL LIST STRUCTURE RETURNED BY GET_TRAILS(LAT, LONG, RAD) - BY INDEX REFERENCE
+## id, name, length, difficulty, starVotes, location, url, imgMedium, high, low, latitude, longitude, summary
+
 @app.route('/')
 def index():
     return render_template('index.html', active={'index':True})
@@ -39,7 +42,7 @@ def map_trail():
 @app.route('/match_me')
 def match_me():
     trails_list = get_trails(47.60621, -122.3321, 100)
-    filtered_trails = filter_trails(trails_list, 1)
+    filtered_trails = filter_trails(trails_list, "black")
     location_list = filtered_trail_locations(filtered_trails)
     map_api_key = get_map_api_key()
     return render_template('match_me.html', title='Match Me With A Trail',
