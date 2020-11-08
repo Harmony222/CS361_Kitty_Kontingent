@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for
 from gear_functions import get_weather_data, get_trail_data, gear_evaluation
 from trail_list_functions import get_trails
 from match_me import filter_trails, filtered_trail_locations, get_map_api_key
+from map_trail import get_directions_url
+import webbrowser
 
 app = Flask(__name__)
 
@@ -22,9 +24,16 @@ def find_trails():
     else:
         return render_template('find_trails_get.html', title='Find Hiking Trails', active={'find_trails':True})
 
-@app.route('/map_trail')
+@app.route('/map_trail', methods=['GET', 'POST'])
 def map_trail():
-    return render_template('map_trail.html', title='Map Trail', active={'map_trail':True})
+    if request.method == 'POST':
+        start_address = request.form['start-loc']
+        trail_address = request.form['trail-loc']
+        directions_url = get_directions_url(start_address, trail_address)
+        return render_template('map_trail.html', title='Map Trail', active={'map_trail':True}), webbrowser.open_new_tab(directions_url)
+    
+    else:
+        return render_template('map_trail.html', title='Map Trail', active={'map_trail':True})
 
 
 @app.route('/match_me')
