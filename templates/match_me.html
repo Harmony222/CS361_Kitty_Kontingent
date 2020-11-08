@@ -40,9 +40,34 @@
     }
     function filterSelected() {
         // filter list with selected difficulty
-        let val = document.getElementById("slider-range").value;
-        alert(val);
+        let val = document.getElementById("filter-slider").value;
+        {#alert(val);#}
     }
+    function toggleButton() {
+        let filterBtnText = $("#filter-button").text();
+        if (filterBtnText !== "Disable Filter") {
+            $("#filter-button").html("Disable Filter");
+        } else {
+            $("#filter-button").html("Filter Trails Just for You");
+            // Disable filter
+        }
+    }
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    });
+    $(function () {
+        $("[data-toggle=popover]").popover({
+            html: true,
+            sanitize: false,
+            container: "#filter-div",
+            title: function() {
+                return $("#popover-title").html();
+                },
+            content: function() {
+                return $("#popover-content").html();
+            }
+        });
+    });
 </script>
 <style type="text/css">
   .map-list-pane {
@@ -55,17 +80,6 @@
   #map {
       height: 400px;
       width: 100%;
-  }
-  .slider {
-      width: 800px;
-      display: block;
-      margin: auto;
-  }
-  .difficulty-list {
-      display: flex;
-      justify-content: space-between;
-      list-style: none;
-      padding: 0
   }
   /* scrollable table with fixed header */
   table { min-width: 798px; }
@@ -83,6 +97,32 @@
   td {
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+  /* filter trails UI */
+  #filter-div {
+      width: 800px;
+      margin: auto;
+      padding-top: 50px;
+  }
+  .popover {
+      max-width: 100%;
+  }
+  #popover-slider {
+      width: 490px;
+  }
+  .difficulty-list {
+      display: flex;
+      justify-content: space-between;
+      list-style: none;
+      padding: 0
+  }
+  .slider {
+      width: 800px;
+      display: block;
+      margin: auto;
+  }
+  .hidden {
+      display: none;
   }
 </style>
 <h4>Match Me With A Trail</h4>
@@ -121,16 +161,41 @@
     </div>
   </div>
 </div>
-<!--TODO: change to modal-->
-<div class="slider">
-  <label for="slider-range">Difficulty</label>
-  <input type="range" class="custom-range" min="0" max="3" id="slider-range" onclick="filterSelected()">
-  <ul class="difficulty-list">
-    <li>Easy and chill</li>
-    <li>TODO</li>
-    <li>Match my fitness level</li>
-    <li>Challenge me!</li>
-  </ul>
+
+<!-- FILTER TRAILS UI -->
+<div id="filter-div">
+  <button id="filter-button" class="btn btn-lg btn-info" data-placement="right"
+        data-html="true" data-popover-content="#filter-popover" data-toggle="popover" onclick="toggleButton()">
+    Filter Trails Just for You
+  </button>
+<!-- Content for Popover -->
+  <div class="hidden" id="filter-popover">
+    <div id="popover-title">
+      Choose how you want to feel from the hike (click or slide)
+    </div>
+    <div id="popover-content">
+      <div id="popover-slider">
+        <label for="slider-range">I want a hike that...</label>
+        <input id="filter-slider" type="range" class="custom-range" min="0" max="2" onclick="filterSelected()">
+        <ul class="difficulty-list">
+          <li>is easy and chill</li>
+          <li>matches my fitness level</li>
+          <li>challenges me!</li>
+        </ul>
+        <input type="button" value="Save">
+      </div>
+    </div>
+  </div>
 </div>
+{#<div class="slider">#}
+{#  <label for="slider-range">Difficulty</label>#}
+{#  <input type="range" class="custom-range" min="0" max="3" id="slider-range" onclick="filterSelected()">#}
+{#  <ul class="difficulty-list">#}
+{#    <li>Easy and chill</li>#}
+{#    <li>TODO</li>#}
+{#    <li>Match my fitness level</li>#}
+{#    <li>Challenge me!</li>#}
+{#  </ul>#}
+{#</div>#}
 
 {% endblock content %}
