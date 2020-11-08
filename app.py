@@ -23,6 +23,8 @@ def find_trails():
         rad, addr = request.form['rad'], request.form['address']
         lat, long = get_lat_long(addr)
         trails_list = get_trails(lat, long, rad)
+        if request.form['filter-slider']:
+            trails_list = filter_trails(trails_list, request.form['filter-slider'], 2)
         return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails':True},
                                 trails_list = trails_list, radius = rad, address = addr)
     # else render page asking for data
