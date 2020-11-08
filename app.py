@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from gear_functions import get_weather_data, get_trail_data, gear_evaluation
-from trail_list_functions import get_trails, list_table
+from trail_list_functions import get_trails
 from match_me import filter_trails, filtered_trail_locations, get_map_api_key
 
 app = Flask(__name__)
@@ -15,11 +15,9 @@ def find_trails():
     # if user has entered trail search location data
     if request.method == 'POST':
         rad, long, lat = request.form['rad'], request.form['long'], request.form['lat']
-        print(rad, long, lat)
         trails_list = get_trails(lat, long, rad)
-        trails_table = list_table(trails_list)
         return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails':True},
-                                trails_table = trails_table)
+                                trails_list = trails_list)
     # else render page asking for data
     else:
         return render_template('find_trails_get.html', title='Find Hiking Trails', active={'find_trails':True})
