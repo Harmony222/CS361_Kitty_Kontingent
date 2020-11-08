@@ -37,15 +37,22 @@ def get_string(latitude, longitude):
     string_result = str(latitude) + ',' + str(longitude)
     return string_result
 
-
 def get_directions_url(origin_raw, destination_raw):
-    '''Creates directions url using origin and destination longitudes
-    and latitudes'''
+    '''Creates directions url using origin and destination raw addresses'''
     origin_lat = get_latitude(origin_raw)
     origin_long = get_longitude(origin_raw)
     origin = get_string(origin_lat, origin_long)
     destination_lat = get_latitude(destination_raw)
     destination_long = get_longitude(destination_raw)
+    destination = get_string(destination_lat, destination_long)
+    params = urllib.parse.urlencode({"api": api, "origin": origin, "destination": destination,})
+    url = f"{DIRECTIONS_BASE_URL}?{params}"
+    return url
+
+def get_directions_url_trails(origin_lat, origin_long, destination_lat, destination_long):
+    '''Creates directions url using origin and destination longitude
+    and latitudes'''
+    origin = get_string(origin_lat, origin_long)
     destination = get_string(destination_lat, destination_long)
     params = urllib.parse.urlencode({"api": api, "origin": origin, "destination": destination,})
     url = f"{DIRECTIONS_BASE_URL}?{params}"

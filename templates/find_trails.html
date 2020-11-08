@@ -1,55 +1,55 @@
-
-{% extends "layout.html" %}
-{% block content %}
-    <h4>Find Hiking Trails</h4>
-        <div>
-            <table class="table table-striped sortable">
-                <thead>
-                    <tr>
-                        <th scope="col">Trail</th>
-                        <th scope="col">Length</th>
-                        <th scope="col">Difficulty</th>
-                        <th scope="col">Rating</th>
-                        <th scope="col">Low Point</th>
-                        <th scope="col">High Point</th>
-                        <th scope="col">Location</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in trails_list %}
-                    <tr data-toggle="modal" data-target="#exampleModalCenter">
-                        <td>{{ row[1] }}</td>
-                        <td>{{ row[2] }}</td>
-                        <td>{{ row[3] }}</td>
-                        <td>{{ row[4] }}</td>
-                        <td>{{ row[9] }}</td>
-                        <td>{{ row[8] }}</td>
-                        <td>{{ row[5] }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    <!-- {{ trails_table }} -->
+ {% extends "layout.html" %} {% block content %}
+<h4>Find Hiking Trails</h4>
+<div>
+    <table class="table table-striped sortable">
+        <thead>
+            <tr>
+                <th scope="col">Trail</th>
+                <th scope="col">Length</th>
+                <th scope="col">Difficulty</th>
+                <th scope="col">Rating</th>
+                <th scope="col">Low Point</th>
+                <th scope="col">High Point</th>
+                <th scope="col">Location</th>
+                <th scope="col">Directions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in trails_list %}
+            <tr data-toggle="modal" data-target="#exampleModalCenter">
+                <td>{{ row[1] }}</td>
+                <td>{{ row[2] }}</td>
+                <td>{{ row[3] }}</td>
+                <td>{{ row[4] }}</td>
+                <td>{{ row[9] }}</td>
+                <td>{{ row[8] }}</td>
+                <td>{{ row[5] }}</td>
+                <td><a href="{{ row[13] }}" target="_blank">Click for Directions</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<!-- {{ trails_table }} -->
 {% endblock content %}
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
         </div>
-        <div class="modal-body">
-          ...
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
     </div>
-  </div>
+</div>

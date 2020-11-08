@@ -1,6 +1,7 @@
 import json
 import requests
 from config import trails_api_key
+from map_trail import get_directions_url_trails
 
 def get_trails(lat, lon, dist):
     '''return list of trails with data within radius 'dist' from longitude/latitude
@@ -14,10 +15,12 @@ def get_trails(lat, lon, dist):
     trails = requests.get(base_url).json()['trails']
     trails_list =[]
     for trail in trails:
+        # Get directions url
+        directions_url = get_directions_url_trails(lat, lon, trail['latitude'], trail['longitude'])
         # sets with trail info appended to list
         trails_list.append((trail["id"], trail['name'], trail['length'], trail['difficulty'], trail['starVotes'],
                             trail['location'], trail['url'], trail['imgMedium'], trail['high'], trail['low'],
-                            trail['latitude'], trail['longitude'], trail['summary']))
+                            trail['latitude'], trail['longitude'], trail['summary'], directions_url))
     
     return trails_list
 
