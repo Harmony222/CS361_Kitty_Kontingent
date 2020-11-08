@@ -17,10 +17,11 @@ def get_trails(lat, lon, dist):
     for trail in trails:
         # Get directions url
         directions_url = get_directions_url_trails(lat, lon, trail['latitude'], trail['longitude'])
+        gear_url = "/gear?trail_id=" + str(trail["id"])
         # sets with trail info appended to list
         trails_list.append((trail["id"], trail['name'], trail['length'], trail['difficulty'], trail['starVotes'],
                             trail['location'], trail['url'], trail['imgMedium'], trail['high'], trail['low'],
-                            trail['latitude'], trail['longitude'], trail['summary'], directions_url))
+                            trail['latitude'], trail['longitude'], trail['summary'], directions_url, gear_url))
     
     return trails_list
 

@@ -8,7 +8,7 @@ import webbrowser
 app = Flask(__name__)
 
 ## TRAIL LIST STRUCTURE RETURNED BY GET_TRAILS(LAT, LONG, RAD) - BY INDEX REFERENCE
-## 0-id, 1-name, 2-length, 3-difficulty, 4-starVotes, 5-location, 6-url, 7-imgMedium, 8-high, 9-low, 10-latitude, 11-longitude, 12-summary, 13-directions_url
+## 0-id, 1-name, 2-length, 3-difficulty, 4-starVotes, 5-location, 6-url, 7-imgMedium, 8-high, 9-low, 10-latitude, 11-longitude, 12-summary, 13-directions_url, 14-gear_url
 
 @app.route('/')
 def index():
