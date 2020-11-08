@@ -1,34 +1,46 @@
  {% extends "layout.html" %} {% block content %}
-<h4>Find Hiking Trails</h4>
-<div>
-    <table class="table table-striped sortable">
-        <thead>
-            <tr>
-                <th scope="col">Trail</th>
-                <th scope="col">Length</th>
-                <th scope="col">Difficulty</th>
-                <th scope="col">Rating</th>
-                <th scope="col">Low Point</th>
-                <th scope="col">High Point</th>
-                <th scope="col">Location</th>
-                <th scope="col">Directions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in trails_list %}
-            <tr data-toggle="modal" data-target="#exampleModalCenter">
-                <td>{{ row[1] }}</td>
-                <td>{{ row[2] }}</td>
-                <td>{{ row[3] }}</td>
-                <td>{{ row[4] }}</td>
-                <td>{{ row[9] }}</td>
-                <td>{{ row[8] }}</td>
-                <td>{{ row[5] }}</td>
-                <td><a href="{{ row[13] }}" target="_blank">Click for Directions</a></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="container pt-5">
+    <div class="row">
+        <div class="container">
+            <div class="card bg-light text-dark border-dark">
+                <div class="card-header text-center">
+                    <h4>
+                        Find Hiking Trails
+                    </h4>
+                </div>
+                <div>
+                    <table class="table table-striped sortable">
+                        <thead>
+                            <tr>
+                                <th scope="col">Trail</th>
+                                <th scope="col">Length</th>
+                                <th scope="col">Difficulty</th>
+                                <th scope="col">Rating</th>
+                                <th scope="col">Low Point</th>
+                                <th scope="col">High Point</th>
+                                <th scope="col">Location</th>
+                                <th scope="col">Gear Recommendations</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in trails_list %}
+                            <tr data-toggle="modal" data-target="#exampleModalCenter">
+                                <td><a href="{{ row[13] }}" target="_blank">{{ row[1] }}</a></td>
+                                <td>{{ row[2] }}</td>
+                                <td>{{ row[3] }}</td>
+                                <td>{{ row[4] }}</td>
+                                <td>{{ row[9] }}</td>
+                                <td>{{ row[8] }}</td>
+                                <td>{{ row[5] }}</td>
+                                <td><a href="" target="_blank">Click for Gear Recommendations</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <!-- {{ trails_table }} -->
 {% endblock content %}
