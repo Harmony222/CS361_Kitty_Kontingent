@@ -18,13 +18,17 @@
                 <div class="container">
                     <form action='/find_trails' method="POST" class="text-left card-body">
                         <div class="form-group">
+                            <label for="address">Address:</label>
+                            <input class="form-control form-control-lg" type="text" name="address" placeholder="eg. Seattle, WA or 98114">
+                        </div>
+                        <!-- <div class="form-group">
                             <label for="longitude">Longitude:</label>
-                            <input class="form-control form-control-lg" type="number" name="long" step="any" max="180.0000" min="-180.0000" value="-105.2519">
+                            <input class="form-control form-control-lg" type="number" name="long" step="any" max="180.0000" min="-180.0000" placeholder="eg. -105.2519">
                         </div>
                         <div class="form-group">
                             <label for="longitude">Latitude:</label>
-                            <input class="form-control form-control-lg" type="number" name="lat" step="any" max="90.0000" min="-90.0000" value="40.0274">
-                        </div>
+                            <input class="form-control form-control-lg" type="number" name="lat" step="any" max="90.0000" min="-90.0000" placeholder="eg. 40.0274">
+                        </div> -->
                         <div class="form-group">
                             <label for="longitude">Radius (mi):</label>
                             <input class="form-control form-control-lg" type="number" name="rad" step="any" max="300" min="1" value="100">

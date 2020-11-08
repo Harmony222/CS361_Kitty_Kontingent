@@ -31,6 +31,13 @@ def get_longitude(address):
     longitude = geocode_result[0]['geometry']['location']['lng']
     return longitude
 
+def get_lat_long(address):
+    '''Returns the latitude and longitude from an address'''
+    geocode_result = get_geocode(address=address)
+    latitude = geocode_result[0]['geometry']['location']['lat']
+    longitude = geocode_result[0]['geometry']['location']['lng']
+    return latitude, longitude
+
 def get_string(latitude, longitude):
     '''Concatenates latitude and longitude into string needed for
     directions url'''

@@ -2,13 +2,14 @@ from flask import Flask, render_template, request, redirect, url_for
 from gear_functions import get_weather_data, get_trail_data, gear_evaluation
 from trail_list_functions import get_trails
 from match_me import filter_trails, filtered_trail_locations, get_map_api_key
-from map_trail import get_directions_url
+from map_trail import get_directions_url, get_lat_long
 import webbrowser
 
 app = Flask(__name__)
 
 ## TRAIL LIST STRUCTURE RETURNED BY GET_TRAILS(LAT, LONG, RAD) - BY INDEX REFERENCE
-## 0-id, 1-name, 2-length, 3-difficulty, 4-starVotes, 5-location, 6-url, 7-imgMedium, 8-high, 9-low, 10-latitude, 11-longitude, 12-summary, 13-directions_url, 14-gear_url
+## 0-id, 1-name, 2-length, 3-difficulty, 4-starVotes, 5-location, 6-url, 7-imgMedium 
+## 8-high, 9-low, 10-latitude, 11-longitude, 12-summary, 13-directions_url, 14-gear_url
 
 @app.route('/')
 def index():
@@ -19,10 +20,11 @@ def find_trails():
     '''find trails page to display table with trail data'''
     # if user has entered trail search location data
     if request.method == 'POST':
-        rad, long, lat = request.form['rad'], request.form['long'], request.form['lat']
+        rad, addr = request.form['rad'], request.form['address']
+        lat, long = get_lat_long(addr)
         trails_list = get_trails(lat, long, rad)
         return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails':True},
-                                trails_list = trails_list)
+                                trails_list = trails_list, radius = rad, address = addr)
     # else render page asking for data
     else:
         return render_template('find_trails_get.html', title='Find Hiking Trails', active={'find_trails':True})
