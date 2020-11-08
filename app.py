@@ -29,6 +29,8 @@ def find_trails():
 
 @app.route('/map_trail', methods=['GET', 'POST'])
 def map_trail():
+    '''Gets start and trail addresses then opens new tab with google
+    maps directions from start to trail address'''
     if request.method == 'POST':
         start_address = request.form['start-loc']
         trail_address = request.form['trail-loc']
