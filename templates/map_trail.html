@@ -1,4 +1,30 @@
-{% extends "layout.html" %}
-{% block content %}
-    <h4>Map Trail</h4>
+{% extends "layout.html" %} {% block content %}
+
+<div class="container pt-5">
+    <div class="row">
+        <div class="col-sm-3">
+        </div>
+        <div class="col-sm-6">
+            <div class="card bg-ligth text-dark border-dark">
+                <div class="card-header text-center">
+                    <h4>
+                        Where would you like to Hike?
+                    </h4>
+                </div>
+                <form id="map_trail" action="/map_trail" method="POST" class="text-left card-body">
+                    <div class="form-group">
+                        <input class="form-control form-control-lg" type="text" id="start-loc" placeholder="Enter starting location">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control form-control-lg" type="text" id="trail-loc" placeholder="Enter trail location">
+                    </div>
+                    <button type="submit" class="btn btn-info">Get Directions</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 {% endblock content %}
