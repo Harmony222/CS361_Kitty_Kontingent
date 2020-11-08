@@ -5,7 +5,7 @@ import json
 
 
 def filter_trails(trails_list, difficulty):
-    trails_list = get_trails(47.60621, -122.3321, 100)
+    # trails_list = get_trails(47.60621, -122.3321, 100)
     # print(trails_list)
     filtered_trails = []
     for trail in trails_list:

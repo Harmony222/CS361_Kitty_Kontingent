@@ -1,0 +1,14 @@
+
+{% extends "layout.html" %}
+{% block content %}
+    <h4>Find Hiking Trails</h4>
+    <h3>Enter location to search from and search distance:</h3>
+
+    <form action='/find_trails' method="POST">
+        Longitude:  <input type="number" name="long" step="any" max="180.0000" min="-180.0000" value="-105.2519"><br>
+        Latitude:   <input type="number" name="lat" step="any" max="90.0000" min="-90.0000" value="40.0274"><br>
+        Radius (mi):     <input type="number" name="rad" step="any" max="300" min="1" value="100"><br>
+        <input type="submit" value="Submit"><br>
+    </form>
+
+{% endblock content %}

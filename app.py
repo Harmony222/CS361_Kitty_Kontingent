@@ -9,16 +9,20 @@ app = Flask(__name__)
 def index():
     return render_template('index.html', active={'index':True})
 
-@app.route('/find_trails')
+@app.route('/find_trails', methods= ['GET', 'POST'])
 def find_trails():
-
-    # test data, will be filled by user-entered location
-    trails_list = get_trails(40.0274, -105.2519, 10)
-
-    # using flask_table to build table for now - see trail_list_functions for more
-    trails_table = list_table(trails_list)
-    return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails':True},
-                            trails_table = trails_table)
+    '''find trails page to display table with trail data'''
+    # if user has entered trail search location data
+    if request.method == 'POST':
+        rad, long, lat = request.form['rad'], request.form['long'], request.form['lat']
+        print(rad, long, lat)
+        trails_list = get_trails(lat, long, rad)
+        trails_table = list_table(trails_list)
+        return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails':True},
+                                trails_table = trails_table)
+    # else render page asking for data
+    else:
+        return render_template('find_trails_get.html', title='Find Hiking Trails', active={'find_trails':True})
 
 @app.route('/map_trail')
 def map_trail():
@@ -119,9 +123,6 @@ def display_info():
 @app.route('/signin')
 def signin():
     return render_template('signin.html', title="Sign In / Sign Up", active={'signin':True})
-
-
-
 
 
 if __name__ == '__main__':

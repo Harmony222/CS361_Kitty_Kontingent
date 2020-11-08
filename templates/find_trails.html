@@ -2,5 +2,27 @@
 {% extends "layout.html" %}
 {% block content %}
     <h4>Find Hiking Trails</h4>
+        <!-- <div class="tab-pane" id="list-view" role="tabpanel" aria-labelledby="list-view-tab">
+            <table class="table table-striped sortable">
+                <thead>
+                    <tr>
+                        <th scope="col">Trail</th>
+                        <th scope="col">Difficulty</th>
+                        <th scope="col">Length</th>
+                        <th scope="col">Location</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in filtered_trails %}
+                    <tr>
+                        <td>{{ r[0] }}</td>
+                        <td>{{ r[1] }}</td>
+                        <td>{{ r[2] }}</td>
+                        <td>{{ r[3] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div> -->
     {{ trails_table }}
 {% endblock content %}
