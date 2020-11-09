@@ -20,9 +20,9 @@ $(function () {
         }
     });
 });
+// this doesn't work unless it is in the html file?
 function filterSelected() {
     // filter list with selected difficulty
-    // let val = document.getElementById("filter-slider").value;
-    let val = $('filter-slider-in').html();
+    var val = document.getElementById('filter-slider-in').innerHTML;
     alert(val);
 }

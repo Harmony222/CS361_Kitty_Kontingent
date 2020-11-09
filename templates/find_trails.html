@@ -2,6 +2,12 @@
 
 <!-- FILTER TRAILS UI -->
 <script src="{{ url_for('static', filename='js/filter.js') }}"></script>
+<script>
+    function filterSelected() {
+        let val = $("#filter-slider-in").html();
+        alert(val);
+    }
+</script>
 <!-- FILTER TRAILS UI -->
 <div id="filter-div">
   <button id="filter-button" class="btn btn-lg btn-info" data-placement="right"
@@ -17,16 +23,16 @@
       <div id="popover-slider">
         <form action="/find_trails" method="POST">
           <label id="slider-label" for="slider-range">I want a hike that...</label>
-          <input id="filter-slider" type="range" class="custom-range" min="1" max="3" value="2"
+          <input id="filter-slider" name="filter-slider" type="range" class="custom-range" min="1" max="3"
           oninput="$('#filter-slider-in').html(this.value)">
-          <label id="filter-slider-in" class="hidden"></label>
+          <label id="filter-slider-in" class="hidden">2</label>
           <ul class="difficulty-list">
             <li>is easy and chill</li>
             <li>matches my fitness level</li>
             <li>challenges me!</li>
           </ul>
 {#          <input type="button" value="Save" onclick="filterSelected()">#}
-          <button type="submit" class="btn btn-sm btn-info">Save</button>
+          <button type="submit" class="btn btn-sm btn-info" onclick="filterSelected()">Save</button>
         </form>
       </div>
     </div>

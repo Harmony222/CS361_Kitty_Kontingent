@@ -41,7 +41,7 @@
     function filterSelected() {
         // filter list with selected difficulty
         // let val = document.getElementById("filter-slider").value;
-        var val = document.getElementById('filter-slider-in').innerHTML;
+        var val = document.getElementById('_filter-slider-in').innerHTML;
         alert(val);
     }
     function toggleButton() {
@@ -150,19 +150,19 @@
     </div>
     <div id="popover-content">
       <div id="popover-slider">
-        <form action="/match_me" method="POST">
+{#        <form action="/match_me" method="POST">#}
           <label for="slider-range">I want a hike that...</label>
-          <input id="filter-slider" type="range" class="custom-range" min="1" max="3" value="2"
-          oninput="$('#filter-slider-in').html(this.value)">
-          <label id="filter-slider-in" class="hidden"></label>
+          <input id="_filter-slider" type="range" class="custom-range" min="1" max="3" value="2"
+          oninput="$('#_filter-slider-in').html(this.value)">
+          <label id="_filter-slider-in" class="hidden"></label>
             <ul class="difficulty-list">
               <li>is easy and chill</li>
               <li>matches my fitness level</li>
               <li>challenges me!</li>
             </ul>
-{#          <input type="button" value="Save" onclick="filterSelected()">#}
-          <button type="submit" class="btn btn-small btn-info">Save</button>
-        </form>
+          <input type="button" value="Save" onclick="filterSelected()">
+{#          <button type="submit" class="btn btn-sm btn-info">Save</button>#}
+{#        </form>#}
       </div>
     </div>
   </div>

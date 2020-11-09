@@ -48,7 +48,7 @@ def filter_trails(trails_list, difficulty, fitness):
         difficulty_dict = fitness_3
 
     # method 2
-    filter_difficulty = difficulty_num[difficulty + fitness]
+    filter_difficulty = difficulty_num[int(difficulty) + int(fitness)]
 
     # filter trails - trail[3] is eg. "green"
     for trail in trails_list:

@@ -21,11 +21,10 @@ def find_trails():
     # if user has entered trail search location data
     if request.method == 'POST':
         rad, addr = request.form['rad'], request.form['address']
-        # lat, long = get_lat_long(addr)
-        trails_list = get_trails(47.60621, -122.3321, 100)
+        lat, long = get_lat_long(addr)
+        trails_list = get_trails(lat, long, rad)
         if "filter-slider" in request.form:
             trails_list = filter_trails(trails_list, request.form["filter-slider"], 2)
-            print("filtered", trails_list)
         return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails':True},
                                 trails_list = trails_list, radius = rad, address = addr)
     # else render page asking for data
