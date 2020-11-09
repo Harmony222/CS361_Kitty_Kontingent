@@ -7,14 +7,14 @@
 <script src="http://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
 <script>
     function initMap() {
-        const location = {lat: 47.60621, lng: -122.3321};
+        const location = { lat: {{ lat }}, lng: {{ lon }} };
         const map = new google.maps.Map(document.getElementById("map"), {
             zoom: 8,
             center: location,
         });
         setMarkers(map);
     }
-    let LOCATIONS = {{ location_list | safe }};
+    let LOCATIONS = {{ locations | safe }};
     function setMarkers(map) {
         const icons = {
             red: { icon: "http://maps.google.com/mapfiles/kml/paddle/red-circle.png", },
@@ -149,7 +149,7 @@
           </tr>
         </thead>
         <tbody>
-          {% for r in filtered_trails %}
+          {% for r in all_trails %}
           <tr>
             <td>{{ r[1] }}</td>
             <td>{{ r[2] }}</td>
@@ -176,16 +176,18 @@
     </div>
     <div id="popover-content">
       <div id="popover-slider">
-        <label for="slider-range">I want a hike that...</label>
-        <input id="filter-slider" type="range" class="custom-range" min="1" max="3"
-        oninput="document.getElementById('filter-slider-in').innerHTML = this.value">
-        <label id="filter-slider-in"></label>
-          <ul class="difficulty-list">
-            <li>is easy and chill</li>
-            <li>matches my fitness level</li>
-            <li>challenges me!</li>
-          </ul>
-        <input type="button" value="Save" onclick="filterSelected()">
+        <form action="/match_me" method="POST">
+          <label for="slider-range">I want a hike that...</label>
+          <input id="filter-slider" type="range" class="custom-range" min="1" max="3"
+          oninput="document.getElementById('filter-slider-in').innerHTML = this.value">
+          <label id="filter-slider-in"></label>
+            <ul class="difficulty-list">
+              <li>is easy and chill</li>
+              <li>matches my fitness level</li>
+              <li>challenges me!</li>
+            </ul>
+          <input type="button" value="Save" onclick="filterSelected()">
+        </form>
       </div>
     </div>
   </div>

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from gear_functions import get_weather_data, get_trail_data, gear_evaluation
 from trail_list_functions import get_trails
-from match_me import filter_trails, filtered_trail_locations, get_map_api_key
+from match_me import filter_trails, trail_locations, get_map_api_key
 from map_trail import get_directions_url, get_lat_long
 import webbrowser
 
@@ -21,8 +21,11 @@ def find_trails():
     # if user has entered trail search location data
     if request.method == 'POST':
         rad, addr = request.form['rad'], request.form['address']
-        lat, long = get_lat_long(addr)
-        trails_list = get_trails(lat, long, rad)
+        # lat, long = get_lat_long(addr)
+        trails_list = get_trails(47.60621, -122.3321, 100)
+        if "filter-slider" in request.form:
+            trails_list = filter_trails(trails_list, request.form["filter-slider"], 2)
+            print("filtered", trails_list)
         return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails':True},
                                 trails_list = trails_list, radius = rad, address = addr)
     # else render page asking for data
@@ -45,14 +48,18 @@ def map_trail():
 
 @app.route('/match_me')
 def match_me():
-    trails_list = get_trails(47.60621, -122.3321, 100)
-    filtered_trails = filter_trails(trails_list, "black")
-    location_list = filtered_trail_locations(filtered_trails)
+    lat, lon, dist = 47.60621, -122.3321, 100
+    all_trails = get_trails(lat, lon, dist)
+    # filtered_trails = filter_trails(all_trails, 2, 2)
+    locations = trail_locations(all_trails)
     map_api_key = get_map_api_key()
     return render_template('match_me.html', title='Match Me With A Trail',
                            active={'match_me': True}, map_api_key=map_api_key,
-                           trails_list=trails_list, filtered_trails=filtered_trails,
-                           location_list=location_list)
+                           all_trails=all_trails, locations=locations, lat=lat, lon=lon)
+
+                           # filtered_trails=filtered_trails,
+                           # locations=locations, lat=lat, lon=lon,
+                           # filter_trails_func=filtered_trails)
 
 
 @app.route('/gear', methods=["GET"])
