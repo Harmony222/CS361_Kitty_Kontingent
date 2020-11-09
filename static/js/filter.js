@@ -23,6 +23,6 @@ $(function () {
 function filterSelected() {
     // filter list with selected difficulty
     // let val = document.getElementById("filter-slider").value;
-    var val = document.getElementById('filter-slider-in').innerHTML;
+    let val = $('filter-slider-in').html();
     alert(val);
 }
