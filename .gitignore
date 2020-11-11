@@ -11,3 +11,4 @@ trail_data2.json
 requirements.txt
 config.py
 
+templates/home_test.html
