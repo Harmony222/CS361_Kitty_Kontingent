@@ -15,21 +15,41 @@ app = Flask(__name__)
 def index():
     return render_template('index.html', active={'index':True})
 
+all_trails_list = []
 @app.route('/find_trails', methods= ['GET', 'POST'])
 def find_trails():
     '''find trails page to display table with trail data'''
+    global all_trails_list
     # if user has entered trail search location data
     if request.method == 'POST':
         rad, addr = request.form['rad'], request.form['address']
         lat, long = get_lat_long(addr)
-        trails_list = get_trails(lat, long, rad)
+        all_trails_list = get_trails(lat, long, rad)
+        trails_list = all_trails_list
         if "filter-slider" in request.form:
-            trails_list = filter_trails(trails_list, request.form["filter-slider"], 2)
+            trails_list = filter_trails(all_trails_list, request.form["filter-slider"], 2)
         return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails':True},
                                 trails_list = trails_list, radius = rad, address = addr)
     # else render page asking for data
     else:
         return render_template('find_trails_get.html', title='Find Hiking Trails', active={'find_trails':True})
+
+
+@app.route("/find_trails/filter", methods=['GET', 'POST'])
+def filter_list():
+    global all_trails_list
+    if request.method == 'POST':
+        if "clear" in request.form:
+            # disable filter, show all trails again
+            trails_list = all_trails_list
+            return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails': True},
+                                   trails_list=trails_list)
+        elif "filter" in request.form:
+            # filter trails on slider value
+            trails_list = filter_trails(all_trails_list, request.form["filter-slider"], 2)
+            return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails': True},
+                           trails_list=trails_list)
+
 
 @app.route('/map_trail', methods=['GET', 'POST'])
 def map_trail():
