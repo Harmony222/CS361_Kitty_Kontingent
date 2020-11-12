@@ -12,3 +12,6 @@ requirements.txt
 config.py
 
 templates/home_test.html
+weather5.json
+.gitignore
+gear_data2.json

@@ -35,11 +35,11 @@
         "description": "There is snow on the ground.",
         "gear": ["Snowshoes", "Face mask/balaclava", "Snow goggles", "Gaiters", "Trekking poles", "Microspikes/Crampons"]
     },
-    "medium" : {
+    "medium_duration" : {
         "description": "This will be a medium-long hike.",
         "gear": ["Lunch", "Extra water"]
     },
-    "long": {
+    "long_duration": {
         "description": "This will be a long hike.",
         "gear": ["Lunch", "Extra snacks or dinner", "Extra water"]
     },

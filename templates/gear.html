@@ -30,6 +30,14 @@
 #new_trail {
   margin-top: 0.7rem;
 }
+
+.gear_category {
+  padding: 0.5em 1em 1em 1em;
+}
+
+.gear_category h5 {
+  text-transform: capitalize;
+}
 </style>
 
 <div class="container">
@@ -59,21 +67,30 @@
   <div class="row">
     <div class="col-md-8">
       <div class="flex-md-row" id="gear_body">
-        <h5>Recommended Gear</h5>
+        <h4>Recommended Gear</h4>
+        <div class="d-flex flex-wrap">
+
         {% if gear_data %}
-          {% for attribute in gear_data %}
-            {% for gear_item in attribute.gear %}
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="{{ gear_item }}">
-                <label class="form-check-label" for="{{ gear_item }}">{{ gear_item }} 
-                  <i class="fas fa-hiking" data-toggle="tooltip" data-placement="right" 
-                      title="{{ attribute.description }}"></i></label>
-              </div>
-            {% endfor %}
+          {% for category in gear_data %}
+            <div class="flex-col gear_category">
+                <h5>{{ category }}</h5>
+                {% for gear_item in gear_data[category] %}
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="{{ gear_item }}">
+                  <label class="form-check-label" for="{{ gear_item }}">{{ gear_item }} 
+                    <i class="fas fa-hiking" data-toggle="tooltip" data-placement="right" 
+                        title="{% for description in gear_data[category][gear_item] %}
+                        {{ description }}
+                        {% endfor %}"></i></label>
+                </div>
+                {% endfor %}
+            </div>
           {% endfor %}
         {% endif %}
+        </div>
       </div>
     </div>
+
 
     <div class="col">
       <div class="flex-md-row" id="weather_body">
