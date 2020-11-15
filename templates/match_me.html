@@ -53,19 +53,24 @@
             // Disable filter
         }
     }
-    $(function () {
+    $(function () 
+    {
         $('[data-toggle="tooltip"]').tooltip()
     });
-    $(function () {
-        $("[data-toggle=popover]").popover({
+    $(function () 
+    {
+        $("[data-toggle=popover]").popover(
+        {
             html: true,
             sanitize: false,
             container: "#filter-div",
-            title: function() {
-                return $("#popover-title").html();
-                },
-            content: function() {
-                return $("#popover-content").html();
+            title: function() 
+            {
+              return $("#popover-title").html();
+            },
+            content: function() 
+            {
+              return $("#popover-content").html();
             }
         });
     });
@@ -134,7 +139,7 @@
         </tbody>
       </table>
     </div>
-  </div>
+  </div> 
 </div>
 
 <!-- FILTER TRAILS UI -->

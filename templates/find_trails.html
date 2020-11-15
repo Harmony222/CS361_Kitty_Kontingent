@@ -1,13 +1,80 @@
 {% extends "layout.html" %} {% block content %}
 
-<!-- FILTER TRAILS UI -->
+<!-- TRAILHEAD MAP API -->
+<script
+    src="https://maps.googleapis.com/maps/api/js?key={{ map_api_key }}&callback=initMap&libraries=&v=weekly"
+    defer>
+</script>
+
+<!-- SORT TABLE SCRIPT-->
+<script src="http://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+
+<!-- JS -->
 <script src="{{ url_for('static', filename='js/filter.js') }}"></script>
 <script>
+    // FILTER TRAILS SCRIPT
     function filterSelected() {
         let val = $("#filter-slider-in").html();
         alert(val);
     }
+
+    // MAP UI SCRIPT
+    function initMap() {
+        const location = { lat: {{ lat }}, lng: {{ lon }} };
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 8,
+            center: location,
+        });
+        setMarkers(map);
+    }
+    let LOCATIONS = {{ locations | safe }};
+    function setMarkers(map) {
+        const icons = {
+            red: { icon: "http://maps.google.com/mapfiles/kml/paddle/red-circle.png", },
+            yellow: { icon: "http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png", },
+            green: { icon: "http://maps.google.com/mapfiles/kml/paddle/grn-circle.png", },
+        };
+        for (let i = 0; i < LOCATIONS.length; i++) {
+            let trail = LOCATIONS[i];
+            let infoWindow = new google.maps.InfoWindow({
+                content: `<h6>${trail[0]}</h6><div><p>${trail[3]}</p></div>`,
+                maxWidth: 200,
+            });
+            let marker = new google.maps.Marker({
+                position: { lat: parseFloat(trail[1]), lng: parseFloat(trail[2]) },
+                map,
+                // icon: icons['red'].icon,
+                title: trail[0],
+            });
+            marker.addListener("click", () => {
+                infoWindow.open(map, marker);
+            });
+        }
+    }
+    $(function () 
+    {
+        $('[data-toggle="tooltip"]').tooltip()
+    });
+    $(function () 
+    {
+        $("[data-toggle=popover]").popover(
+        {
+            html: true,
+            sanitize: false,
+            container: "#filter-div",
+            title: function() 
+            {
+              return $("#popover-title").html();
+            },
+            content: function() 
+            {
+              return $("#popover-content").html();
+            }
+        });
+    });
 </script>
+
+
 <!-- FILTER TRAILS UI -->
 <div id="filter-div">
   <button id="filter-button" class="btn btn-lg btn-info" data-placement="right"
@@ -31,6 +98,8 @@
             <li>matches my fitness level</li>
             <li>challenges me!</li>
           </ul>
+          <!-- <input type="hidden" name="rad" value={{radius}}>
+          <input type="hidden" name="address" value={{address}}> -->
           <button name="filter" type="submit" class="btn btn-sm btn-info">Save</button>
           <button name="clear" type="submit" class="btn btn-sm btn-info">Clear Filter</button>
         </form>
@@ -39,50 +108,62 @@
   </div>
 </div>
 
-<div class="container pt-5">
-    <div class="row">
-        <div class="container">
-            <div class="card bg-light text-dark border-dark">
-                <div class="card-header text-center">
-                    <h4>
-                        Hiking Trails Within {{radius}} Miles of {{address}}
-                    </h4>
+<div class="card-header text-center">
+    <h4>
+        Hiking Trails Within {{radius}} Miles of {{address}}
+    </h4>
+    <div class="map-list-pane">
+        <nav>
+            <div class="nav nav-tabs nav-justified" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active" id="list-view-tab" data-toggle="tab" href="#list-view" role="tab" aria-controls="list-view" aria-selected="true">List View</a>
+            <a class="nav-item nav-link" id="map-view-tab" data-toggle="tab" href="#map-view" role="tab" aria-controls="map-view" aria-selected="false">Map View</a>
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane show active" id="list-view" role="tabpanel" aria-labelledby="list-view-tab">
+                <div class="row">
+                    <div class="container">
+                        <div class="card bg-light text-dark border-dark">
+                            <div>
+                                <table class="table table-striped sortable">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Trail</th>
+                                            <th scope="col">Length(mi)</th>
+                                            <th scope="col">Difficulty</th>
+                                            <th scope="col">Rating</th>
+                                            <th scope="col">Low(ft)</th>
+                                            <th scope="col">High(ft)</th>
+                                            <th scope="col">Location</th>
+                                            <th scope="col">Gear</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for row in trails_list %}
+                                        <tr data-toggle="modal" data-target="#exampleModalCenter">
+                                            <td><a href="{{ row[13] }}" target="_blank" title="get directions">{{ row[1] }}</a></td>
+                                            <td>{{ row[2] }}</td>
+                                            <td>{{ row[3] }}</td>
+                                            <td>{{ row[4] }}</td>
+                                            <td>{{ row[9] }}</td>
+                                            <td>{{ row[8] }}</td>
+                                            <td>{{ row[5] }}</td>
+                                            <td><a href="{{ row[14] }}" target="_blank">See Gear Recommendations</a></td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <table class="table table-striped sortable">
-                        <thead>
-                            <tr>
-                                <th scope="col">Trail</th>
-                                <th scope="col">Length(mi)</th>
-                                <th scope="col">Difficulty</th>
-                                <th scope="col">Rating</th>
-                                <th scope="col">Low(ft)</th>
-                                <th scope="col">High(ft)</th>
-                                <th scope="col">Location</th>
-                                <th scope="col">Gear</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for row in trails_list %}
-                            <tr data-toggle="modal" data-target="#exampleModalCenter">
-                                <td><a href="{{ row[13] }}" target="_blank" title="get directions">{{ row[1] }}</a></td>
-                                <td>{{ row[2] }}</td>
-                                <td>{{ row[3] }}</td>
-                                <td>{{ row[4] }}</td>
-                                <td>{{ row[9] }}</td>
-                                <td>{{ row[8] }}</td>
-                                <td>{{ row[5] }}</td>
-                                <td><a href="{{ row[14] }}" target="_blank">See Gear Recommendations</a></td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+            </div>
+            <div class="tab-pane" id="map-view" role="tabpanel" aria-labelledby="map-view-tab">
+                <div id="map"></div>
             </div>
         </div>
     </div>
 </div>
-<!-- {{ trails_table }} -->
 {% endblock content %}
 
 <!-- Modal -->

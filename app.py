@@ -22,26 +22,22 @@ def find_trails():
     global all_trails_list
     # if user has entered trail search location data
     if request.method == 'POST':
-        if "rad" in request.form:
-            rad, addr = request.form['rad'], request.form['address']
-            lat, long = get_lat_long(addr)
-            all_trails_list = get_trails(lat, long, rad)
-            trails_list = all_trails_list
+        map_api_key = get_map_api_key()
+        rad, addr = request.form['rad'], request.form['address']
+        lat, long = get_lat_long(addr)
+        all_trails_list = get_trails(lat, long, rad)
+
+        # check for filter or a cleared filter for original list
+        if "filter-slider" not in request.form or "clear" in request.form:
             return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails': True},
-                                   trails_list=trails_list, radius=rad, address=addr)
+                                   trails_list=all_trails_list, radius=rad, address=addr, map_api_key=map_api_key)
 
         # filter trails
-        if "filter-slider" in request.form:
-            if "clear" in request.form:
-                # disable filter, show all trails again
-                trails_list = all_trails_list
-                return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails': True},
-                                       trails_list=trails_list)
-            elif "filter" in request.form:
-                # filter trails on slider value
-                trails_list = filter_trails(all_trails_list, request.form["filter-slider"], 2)
-                return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails': True},
-                                       trails_list=trails_list)
+        else:
+            # filter trails on slider value
+            trails_list = filter_trails(all_trails_list, request.form["filter-slider"], 2)
+            return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails': True},
+                                       trails_list=trails_list, radius=rad, address=addr, map_api_key=map_api_key)
     # else render page asking for data
     else:
         return render_template('find_trails_get.html', title='Find Hiking Trails', active={'find_trails': True})
