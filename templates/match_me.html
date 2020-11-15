@@ -7,14 +7,14 @@
 <script src="http://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
 <script>
     function initMap() {
-        const location = {lat: 47.60621, lng: -122.3321};
+        const location = { lat: {{ lat }}, lng: {{ lon }} };
         const map = new google.maps.Map(document.getElementById("map"), {
             zoom: 8,
             center: location,
         });
         setMarkers(map);
     }
-    let LOCATIONS = {{ location_list | safe }};
+    let LOCATIONS = {{ locations | safe }};
     function setMarkers(map) {
         const icons = {
             red: { icon: "http://maps.google.com/mapfiles/kml/paddle/red-circle.png", },
@@ -41,7 +41,7 @@
     function filterSelected() {
         // filter list with selected difficulty
         // let val = document.getElementById("filter-slider").value;
-        var val = document.getElementById('filter-slider-in').innerHTML;
+        var val = document.getElementById('_filter-slider-in').innerHTML;
         alert(val);
     }
     function toggleButton() {
@@ -99,32 +99,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  /* filter trails UI */
-  #filter-div {
-      width: 800px;
-      margin: auto;
-      padding-top: 50px;
-  }
-  .popover {
-      max-width: 100%;
-  }
-  #popover-slider {
-      width: 490px;
-  }
-  .difficulty-list {
-      display: flex;
-      justify-content: space-between;
-      list-style: none;
-      padding: 0
-  }
-  .slider {
-      width: 800px;
-      display: block;
-      margin: auto;
-  }
-  .hidden {
-      display: none;
-  }
 </style>
 <h4>Match Me With A Trail</h4>
 <div class="map-list-pane">
@@ -149,7 +123,7 @@
           </tr>
         </thead>
         <tbody>
-          {% for r in filtered_trails %}
+          {% for r in all_trails %}
           <tr>
             <td>{{ r[1] }}</td>
             <td>{{ r[2] }}</td>
@@ -176,16 +150,19 @@
     </div>
     <div id="popover-content">
       <div id="popover-slider">
-        <label for="slider-range">I want a hike that...</label>
-        <input id="filter-slider" type="range" class="custom-range" min="1" max="3"
-        oninput="document.getElementById('filter-slider-in').innerHTML = this.value">
-        <label id="filter-slider-in"></label>
-          <ul class="difficulty-list">
-            <li>is easy and chill</li>
-            <li>matches my fitness level</li>
-            <li>challenges me!</li>
-          </ul>
-        <input type="button" value="Save" onclick="filterSelected()">
+{#        <form action="/match_me" method="POST">#}
+          <label for="slider-range">I want a hike that...</label>
+          <input id="_filter-slider" type="range" class="custom-range" min="1" max="3" value="2"
+          oninput="$('#_filter-slider-in').html(this.value)">
+          <label id="_filter-slider-in" class="hidden"></label>
+            <ul class="difficulty-list">
+              <li>is easy and chill</li>
+              <li>matches my fitness level</li>
+              <li>challenges me!</li>
+            </ul>
+          <input type="button" value="Save" onclick="filterSelected()">
+{#          <button type="submit" class="btn btn-sm btn-info">Save</button>#}
+{#        </form>#}
       </div>
     </div>
   </div>

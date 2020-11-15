@@ -1,0 +1,33 @@
+/* filter trails UI */
+#filter-div {
+    width: 800px;
+    margin: auto;
+    padding-top: 50px;
+}
+#slider-label {
+    margin-bottom: 0;
+}
+.popover {
+    max-width: 100%;
+}
+.popover-body, .popover-header {
+    padding: .25rem .75rem;
+}
+#popover-slider {
+    width: 490px;
+}
+.difficulty-list {
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 .1rem 0;
+}
+.slider {
+    width: 800px;
+    display: block;
+    margin: auto;
+}
+.hidden {
+    display: none;
+}

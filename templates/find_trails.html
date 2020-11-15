@@ -1,4 +1,44 @@
- {% extends "layout.html" %} {% block content %}
+{% extends "layout.html" %} {% block content %}
+
+<!-- FILTER TRAILS UI -->
+<script src="{{ url_for('static', filename='js/filter.js') }}"></script>
+<script>
+    function filterSelected() {
+        let val = $("#filter-slider-in").html();
+        alert(val);
+    }
+</script>
+<!-- FILTER TRAILS UI -->
+<div id="filter-div">
+  <button id="filter-button" class="btn btn-lg btn-info" data-placement="right"
+        data-html="true" data-popover-content="#filter-popover" data-toggle="popover" onclick="toggleButton()">
+    Filter Trails Just for You
+  </button>
+  <!-- Content for Popover -->
+  <div class="hidden" id="filter-popover">
+    <div id="popover-title">
+      Choose how you want to feel from the hike (click or slide)
+    </div>
+    <div id="popover-content">
+      <div id="popover-slider">
+        <form action="/find_trails" method="POST">
+          <label id="slider-label" for="slider-range">I want a hike that...</label>
+          <input id="filter-slider" name="filter-slider" type="range" class="custom-range" min="1" max="3"
+          oninput="$('#filter-slider-in').html(this.value)">
+          <label id="filter-slider-in" class="hidden">2</label>
+          <ul class="difficulty-list">
+            <li>is easy and chill</li>
+            <li>matches my fitness level</li>
+            <li>challenges me!</li>
+          </ul>
+          <button name="filter" type="submit" class="btn btn-sm btn-info">Save</button>
+          <button name="clear" type="submit" class="btn btn-sm btn-info">Clear Filter</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="container pt-5">
     <div class="row">
         <div class="container">
