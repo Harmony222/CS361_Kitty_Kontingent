@@ -26,18 +26,21 @@ def find_trails():
         rad, addr = request.form['rad'], request.form['address']
         lat, long = get_lat_long(addr)
         all_trails_list = get_trails(lat, long, rad)
+        locations = trail_locations(all_trails_list)
 
         # check for filter or a cleared filter for original list
         if "filter-slider" not in request.form or "clear" in request.form:
             return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails': True},
-                                   trails_list=all_trails_list, radius=rad, address=addr, map_api_key=map_api_key)
+                                   trails_list=all_trails_list, radius=rad, address=addr, 
+                                   map_api_key=map_api_key, lat=lat, lon=long, locations=locations)
 
         # filter trails
         else:
             # filter trails on slider value
             trails_list = filter_trails(all_trails_list, request.form["filter-slider"], 2)
             return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails': True},
-                                       trails_list=trails_list, radius=rad, address=addr, map_api_key=map_api_key)
+                                       trails_list=trails_list, radius=rad, address=addr, 
+                                       map_api_key=map_api_key, lat=lat, lon=long, locations=locations)
     # else render page asking for data
     else:
         return render_template('find_trails_get.html', title='Find Hiking Trails', active={'find_trails': True})
