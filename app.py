@@ -31,7 +31,7 @@ def find_trails():
         # check for filter or a cleared filter for original list
         if "filter-slider" not in request.form or "clear" in request.form:
             return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails': True},
-                                   trails_list=all_trails_list, radius=rad, address=addr, 
+                                   trails_list=all_trails_list, radius=rad, address=addr, filtered=False,
                                    map_api_key=map_api_key, lat=lat, lon=long, locations=locations)
 
         # filter trails
@@ -39,7 +39,7 @@ def find_trails():
             # filter trails on slider value
             trails_list = filter_trails(all_trails_list, request.form["filter-slider"], 2)
             return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails': True},
-                                       trails_list=trails_list, radius=rad, address=addr, 
+                                       trails_list=trails_list, radius=rad, address=addr, filtered=True,
                                        map_api_key=map_api_key, lat=lat, lon=long, locations=locations)
     # else render page asking for data
     else:

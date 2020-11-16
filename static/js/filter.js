@@ -1,10 +1,10 @@
 function toggleButton() {
     let filterBtnText = $("#filter-button").text();
-    if (filterBtnText !== "Disable Filter") {
-        $("#filter-button").html("Disable Filter");
+    if (filterBtnText !== "Filter") {
+        $("#filter-button").html("Filter");
     } else {
         $("#filter-button").html("Filter Trails Just for You");
-        // Disable filter
+        // Filter
     }
 }
 $(function () {

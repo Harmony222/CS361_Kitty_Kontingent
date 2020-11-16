@@ -1,5 +1,13 @@
 {% extends "layout.html" %} 
 {% block content %}
+<!-- CSS FORMATTING -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/find_trails_.css') }}" type="text/css"/>
+
+<!-- JS -->
+<script src="{{ url_for('static', filename='js/filter.js') }}"></script>
+
+<!-- Doesn't work... :( -->
+<!-- <script src="{{ url_for('static', filename='js/map_view.js') }}" type="text/javascript"></script> -->
 
 <!-- TRAILHEAD MAP API -->
 <script
@@ -10,15 +18,7 @@
 <!-- SORT TABLE SCRIPT-->
 <script src="http://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
 
-<!-- JS -->
-<script src="{{ url_for('static', filename='js/filter.js') }}"></script>
 <script>
-    // FILTER TRAILS SCRIPT
-    function filterSelected() {
-        let val = $("#filter-slider-in").html();
-        alert(val);
-    }
-
     // MAP UI SCRIPT
     function initMap() {
         const location = { lat: {{ lat }}, lng: {{ lon }} };
@@ -56,31 +56,17 @@
     {
         $('[data-toggle="tooltip"]').tooltip()
     });
-    $(function () 
-    {
-        $("[data-toggle=popover]").popover(
-        {
-            html: true,
-            sanitize: false,
-            container: "#filter-div",
-            title: function() 
-            {
-              return $("#popover-title").html();
-            },
-            content: function() 
-            {
-              return $("#popover-content").html();
-            }
-        });
-    });
 </script>
-
 
 <!-- FILTER TRAILS UI -->
 <div id="filter-div">
   <button id="filter-button" class="btn btn-lg btn-info" data-placement="right"
         data-html="true" data-popover-content="#filter-popover" data-toggle="popover" onclick="toggleButton()">
-    Filter Trails Just for You
+        {% if filtered %}
+            Clear or Change Filter
+        {% else %}
+            Filter Trails Just for You
+        {% endif %}
   </button>
   <!-- Content for Popover -->
   <div class="hidden" id="filter-popover">
@@ -99,6 +85,8 @@
             <li>matches my fitness level</li>
             <li>challenges me!</li>
           </ul>
+          <input type="hidden" name="rad" value={{radius}}>
+          <input type="hidden" name="address" value={{address}}>
           <button name="filter" type="submit" class="btn btn-sm btn-info">Save</button>
           <button name="clear" type="submit" class="btn btn-sm btn-info">Clear Filter</button>
         </form>
@@ -147,7 +135,7 @@
                                             <td>{{ row[9] }}</td>
                                             <td>{{ row[8] }}</td>
                                             <td>{{ row[5] }}</td>
-                                            <td><a href="{{ row[14] }}" target="_blank">See Gear Recommendations</a></td>
+                                            <td><a href="{{ row[14] }}" target="_blank">Recommended Gear</a></td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>
