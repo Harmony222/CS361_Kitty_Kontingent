@@ -33,9 +33,3 @@ function setMarkers(map) {
         });
     }
 }
-
-
-$(function () 
-{
-    $('[data-toggle="tooltip"]').tooltip()
-});
