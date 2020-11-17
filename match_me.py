@@ -61,8 +61,8 @@ def trail_locations(trails):
     """List of locations for map trail markers"""
     locations = []
     for trail in trails:
-        # name, latitude, longitude, summary
-        locations.append([trail[1], trail[10], trail[11], trail[12]])
+        # 0:name, 1:latitude, 2:longitude, 3:summary, 4:length, 5:rating, 6: difficulty, 7:location, 8:directions_url, 9:gear_url
+        locations.append([trail[1], trail[10], trail[11], trail[12], trail[2], trail[4], trail[3], trail[5], trail[13], trail[14]])
 
     return json.dumps(locations)
 

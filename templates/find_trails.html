@@ -35,12 +35,17 @@
             yellow: { icon: "http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png", },
             green: { icon: "http://maps.google.com/mapfiles/kml/paddle/grn-circle.png", },
         };
+        let infoWindow = new google.maps.InfoWindow({ maxWidth: 250 });
         for (let i = 0; i < LOCATIONS.length; i++) {
             let trail = LOCATIONS[i];
-            let infoWindow = new google.maps.InfoWindow({
-                content: `<h6>${trail[0]}</h6><div><p>${trail[3]}</p></div>`,
-                maxWidth: 200,
-            });
+            let infoContent = `<h5>${trail[0]}</h5>`
+                + `<div><p>${trail[3]}</p></div>`
+                + `<div><p><strong>Length:</strong> ${trail[4]} miles</p></div>`
+                + `<div><p><strong>Rating:</strong> ${trail[5]} stars</p></div>`
+                + `<div><p><strong>Difficulty:</strong> ${trail[6]}</p></div>`
+                + `<div><p><strong>${trail[7]}</strong></p></div>`
+                + `<a href="${trail[8]}" target="_blank" title="get directions" role="button" class="btn btn-info btn-sm btn-marker">Get Directions</a>`
+                + `<a href="${trail[9]}" target="_blank" role="button" class="btn btn-outline-info btn-sm btn-marker">Recommended Gear</a>`;
             let marker = new google.maps.Marker({
                 position: { lat: parseFloat(trail[1]), lng: parseFloat(trail[2]) },
                 map,
@@ -48,6 +53,7 @@
                 title: trail[0],
             });
             marker.addListener("click", () => {
+                infoWindow.setContent(infoContent);
                 infoWindow.open(map, marker);
             });
         }
@@ -104,12 +110,12 @@
     <div class="map-list-pane">
         <nav>
             <div class="nav nav-tabs nav-justified" id="nav-tab" role="tablist">
-            <a class="nav-item nav-link {{'active' if view_tab == 'list' }}" id="list-view-tab" data-toggle="tab" href="#list-view" role="tab" aria-controls="list-view" aria-selected="true" onclick="$('#active-tab').val('list')">List View</a>
-            <a class="nav-item nav-link {{'active' if view_tab == 'map' }}" id="map-view-tab" data-toggle="tab" href="#map-view" role="tab" aria-controls="map-view" aria-selected="false" onclick="$('#active-tab').val('map')">Map View</a>
+            <a class="nav-item nav-link {{ 'active' if view_tab == 'list' }}" id="list-view-tab" data-toggle="tab" href="#list-view" role="tab" aria-controls="list-view" aria-selected="true" onclick="$('#active-tab').val('list')">List View</a>
+            <a class="nav-item nav-link {{ 'active' if view_tab == 'map' }}" id="map-view-tab" data-toggle="tab" href="#map-view" role="tab" aria-controls="map-view" aria-selected="false" onclick="$('#active-tab').val('map')">Map View</a>
             </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane show {{'active' if view_tab == 'list' }}" id="list-view" role="tabpanel" aria-labelledby="list-view-tab">
+            <div class="tab-pane show {{ 'active' if view_tab == 'list' }}" id="list-view" role="tabpanel" aria-labelledby="list-view-tab">
                 <div class="row">
                     <div class="container">
                         <div class="card bg-light text-dark border-dark">
@@ -147,7 +153,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane {{'active' if view_tab == 'map' }}" id="map-view" role="tabpanel" aria-labelledby="map-view-tab">
+            <div class="tab-pane {{ 'active' if view_tab == 'map' }}" id="map-view" role="tabpanel" aria-labelledby="map-view-tab">
                 <div id="map" style="height: 600px"></div>
             </div>
         </div>
