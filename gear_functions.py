@@ -76,18 +76,6 @@ def gear_evaluation(trail_data, weather_data):
                   snow_attribute, length_attribute, elevation_attribute]
     gear_meta_data = build_gear_meta_data()
     gear_dict = get_gear(attributes, gear_meta_data)
-    # # file path fix
-    # file_path = join(current_dir, "./gear_data.json")
-
-    # with open(file_path) as in_file:
-    #     gear_data_all = json.load(in_file)
-    # attribute_list = []      # list of attribute and gear info
-    # for attribute in attributes:
-    #     for key in gear_data_all:
-    #         if attribute == key:
-    #             attribute_list.append(gear_data_all[attribute])
-    # print(attributes_dict)
-    # return attribute_list
     return gear_dict
 
 def evaluate_temperature(temperature):
@@ -95,18 +83,18 @@ def evaluate_temperature(temperature):
     Evaluates given temperature and returns a temperature category.
     """
     if temperature <= 30:
-        return "freezing"
+        return "freezing_temp"
     elif 30 < temperature <= 45:
-        return "cold"
+        return "cold_temp"
     elif 45 < temperature <= 65:
-        return "cool"
+        return "cool_temp"
     elif 65 < temperature <= 80:
-        return "moderate"
+        return "moderate_temp"
     elif 80 < temperature <= 90:
-        return "warm"
+        return "warm_temp"
     else:
         # temp is > 90
-        return "hot"
+        return "hot_temp"
 
 def evaluate_precipitation(weather_data):
     if weather_data["prob_of_precip"] and weather_data["prob_of_precip"] > 0:
@@ -137,7 +125,7 @@ def evaluate_length(hiking_time):
 def calculate_hiking_time(length, elevation_change):
     """
     Calculate hiking time estimate based on Naismith's rule, uses trail
-    length in miles, elevation_change in feet, and returns time in minutes.
+    length in miles, elevation_change in feet, and returns time in hours.
     https://en.wikipedia.org/wiki/Naismith%27s_rule
     Naismith's rule: Allow one hour for every 3 miles (5 km) forward, plus an
     additional hour for every 2,000 feet (600 m) of ascent. The basic rule
@@ -147,7 +135,8 @@ def calculate_hiking_time(length, elevation_change):
     # time (minutes) = length (in miles) * 20 minutes/mile 
     #                  + elevation_change (in feet) * 30 min/1000 feet
     hiking_time = length * 20 + elevation_change * 30/1000
-    return int(round(hiking_time))
+    # convert time from minutes to hours and round to 1 decimal place
+    return round((hiking_time / 60), 1)
 
 def evaluate_elevation(grade, ascent):
     """
@@ -251,23 +240,23 @@ def build_gear_meta_data():
     microspikes = Gear_Item("microspikes/crampons", "gear")
 
 
-    freezing = Use_Condition("freezing", "Temperature < 31 \u00b0F.")
+    freezing = Use_Condition("freezing_temp", "Temperature < 31 \u00b0F.")
     freezing.set_gear([warm_jacket, warm_boots, gloves, warm_hat, 
                        long_underwear, warm_socks, face_mask])
 
-    cold = Use_Condition("cold", "Temperature 31-45 \u00b0F.")
+    cold = Use_Condition("cold_temp", "Temperature 31-45 \u00b0F.")
     cold.set_gear([light_med_jacket, gloves, warm_hat, hiking_boots])
 
-    cool = Use_Condition("cool", "Temperature 46-65 \u00b0F.")
+    cool = Use_Condition("cool_temp", "Temperature 46-65 \u00b0F.")
     cool.set_gear([light_jacket, hiking_shoes])
     
-    moderate = Use_Condition("moderate", "Temperature 66-80 \u00b0F.")
+    moderate = Use_Condition("moderate_temp", "Temperature 66-80 \u00b0F.")
     moderate.set_gear([hiking_shoes, hiking_boots, moisture_wicking_clothing])
 
-    warm = Use_Condition("warm", "Temperature 81-90 \u00b0F.")
+    warm = Use_Condition("warm_temp", "Temperature 81-90 \u00b0F.")
     warm.set_gear([moisture_wicking_clothing, shorts, hiking_sandals])
 
-    hot = Use_Condition("hot", "Temperature >91 \u00b0F.")
+    hot = Use_Condition("hot_temp", "Temperature >91 \u00b0F.")
     hot.set_gear([moisture_wicking_clothing, shorts, hiking_sandals, sun_hat, sun_protecetion])
 
     all_use = Use_Condition("all", "All hikers should bring this!")

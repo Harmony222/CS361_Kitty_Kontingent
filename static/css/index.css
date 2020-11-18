@@ -1,0 +1,189 @@
+#flow_chart_container, .modal-content {
+    background-color: black;
+    color: white;
+}
+.item-a, .item-b, .item-d, .item-e {
+    text-align: center;
+    margin: auto;
+    padding: 0.5em;
+    border-radius: 25px;
+}
+.item-c {
+    margin: auto;
+    border: 0.2em solid black;
+    padding: 1.25em;
+    border-radius: 25px;
+}
+.item-a {
+    grid-area: a;
+    border: 0.5em solid rgb(157,223,222);
+}
+.item-b {
+    grid-area: b;
+    margin: 0;
+    border: 0.5em solid rgb(153,195,131);
+}
+.item-c {
+    grid-area: c;
+    border: 0.5em solid rgb(88,112,63);
+}
+.item-d {
+    grid-area: d;
+    border: 0.5em solid rgb(134,122,109);
+}
+.item-e {
+    grid-area: e;
+    border: 0.5em solid rgb(134,122,109);
+}
+.yes {
+    grid-area: yes;
+    align-self: center;
+    padding-left: 6px;
+}
+.no {
+    grid-area: no;
+    align-self: center;
+    justify-self: start;
+    padding-left: 6px;
+}
+.down-arrow2 {
+    grid-area: down-arrow2;
+    position: relative;
+    color: rgb(157,223,222);
+}
+.down-arrow3 {
+    grid-area: down-arrow3;
+    /* align-self: center; */
+    position: relative;
+    color: rgb(157,223,222);
+}
+.right-arrow2 {
+    grid-area: right-arrow2;
+    position: relative;
+    color: rgb(153,195,131);
+}
+.right-arrow3 {
+    grid-area: right-arrow3;
+    /* place-self: center; */
+    position: relative;
+    color: rgb(88,112,63);
+}
+.right-arrow4 {
+    grid-area: right-arrow4;
+    /* place-self: center; */
+    position: relative;
+    color: rgb(88,112,63);
+}
+.horizontal-line {
+    grid-area: horizontal-line;
+    border-bottom: 0.2em solid rgb(157,223,222);
+}
+.horizontal-line2 {
+    grid-area: horizontal-line2;
+    border-bottom: 0.2em solid rgb(153,195,131);
+}
+.horizontal-line3 {
+    grid-area: horizontal-line3;
+    border-bottom: 0.2em solid rgb(88,112,63);
+}
+.horizontal-line4 {
+    grid-area: horizontal-line4;
+    border-bottom: 0.2em solid rgb(88,112,63);
+}
+.vertical-line {
+    grid-area: vertical-line;
+    border-right: 0.2em solid rgb(157,223,222);
+}
+.vertical-line2 {
+    grid-area: vertical-line2;
+    border-right: 0.2em solid rgb(157,223,222);
+}
+.vertical-line3 {
+    grid-area: vertical-line3;
+    border-right: 0.2em solid rgb(157,223,222);
+}
+.vertical-line4 {
+    grid-area: vertical-line4;
+    border-right: 0.2em solid rgb(157,223,222);
+}
+.down-arrow-pos {
+    position: absolute;
+    left: -10%;
+    bottom: -16%;
+}
+.down-arrow-pos2 {
+    position: absolute;
+    left: -15%;
+    bottom: -16%;
+}
+.right-arrow-pos {
+    position: absolute;
+    right: -13%;
+    top: -35%;
+}
+.flow-chart {
+    display: grid;
+    grid-template-columns: 115px 115px 50px 140px 160px 50px 230px;
+    grid-template-rows: 50px 55px 50px 50px 50px 50px 50px 50px 50px 50px 50px;
+    grid-template-areas: 
+        "a a horizontal-line horizontal-line no . ."
+        "a a . vertical-line no . ."
+        "vertical-line2 . . vertical-line down-arrow3 . ."
+        "vertical-line3 yes . c c . d"
+        "vertical-line4 down-arrow2 . c c horizontal-line3 d"
+        "b b horizontal-line2 c c right-arrow3 d"
+        "b b right-arrow2 c c . ."
+        "b b . c c horizontal-line4 e"
+        ". . . c c right-arrow4 e";
+}
+#account {
+    margin-top: 20px;
+}
+@media (min-width: 768px) {
+  .modal-xl {
+    width: 90%;
+   max-width:1000px;
+  }
+}
+.close {
+    color: white;
+    opacity: 1;
+}
+.tooltip .tooltip-inner { 
+    background-color:    white;
+    color: black;
+    opacity: 1; 
+}
+/* https://stackoverflow.com/questions/36143382/re-color-tooltip-in-bootstrap-4 */
+.tooltip.bs-tooltip-auto[x-placement^=top] .arrow::before, .tooltip.bs-tooltip-top .arrow::before {
+    border-top-color: white;
+}
+.tooltip.show {
+    opacity: 1;
+}
+
+.set_fade_in {
+    opacity: 0;
+    animation-name: fadeIn;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+.set_fade_in.fade2 {
+    animation-delay: 0.5s;
+}
+.set_fade_in.fade3 {
+    animation-delay: 1s;
+}
+.set_fade_in.fade4 {
+    animation-delay: 1.5s;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

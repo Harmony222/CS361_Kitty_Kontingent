@@ -1,215 +1,23 @@
 {% extends "layout.html" %}
 {% block content %}
-<script
-  src="https://code.jquery.com/jquery-3.5.1.min.js"
-  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
-  crossorigin="anonymous"></script>
-<script>
-  $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-  })
-</script>
 
-<style type="text/css">
-#flow_chart_container, .modal-content {
-    background-color: black;
-    color: white;
-}
-.item-a, .item-b, .item-d, .item-e {
-    text-align: center;
-    margin: auto;
-    padding: 0.5em;
-    border-radius: 25px;
-}
-.item-c {
-    margin: auto;
-    border: 0.2em solid black;
-    padding: 1.25em;
-    border-radius: 25px;
-}
-.item-a {
-    grid-area: a;
-    border: 0.5em solid rgb(157,223,222);
-}
-.item-b {
-    grid-area: b;
-    margin: 0;
-    border: 0.5em solid rgb(153,195,131);
-}
-.item-c {
-    grid-area: c;
-    border: 0.5em solid rgb(88,112,63);
-}
-.item-d {
-    grid-area: d;
-    border: 0.5em solid rgb(134,122,109);
-}
-.item-e {
-    grid-area: e;
-    border: 0.5em solid rgb(134,122,109);
-}
-.yes {
-    grid-area: yes;
-    align-self: center;
-    padding-left: 6px;
-}
-.no {
-    grid-area: no;
-    align-self: center;
-    justify-self: start;
-    padding-left: 6px;
-}
-.down-arrow2 {
-    grid-area: down-arrow2;
-    position: relative;
-    color: rgb(157,223,222);
-}
-.down-arrow3 {
-    grid-area: down-arrow3;
-    /* align-self: center; */
-    position: relative;
-    color: rgb(157,223,222);
-}
-.right-arrow2 {
-    grid-area: right-arrow2;
-    position: relative;
-    color: rgb(153,195,131);
-}
-.right-arrow3 {
-    grid-area: right-arrow3;
-    /* place-self: center; */
-    position: relative;
-    color: rgb(88,112,63);
-}
-.right-arrow4 {
-    grid-area: right-arrow4;
-    /* place-self: center; */
-    position: relative;
-    color: rgb(88,112,63);
-}
-.horizontal-line {
-    grid-area: horizontal-line;
-    border-bottom: 0.2em solid rgb(157,223,222);
-}
-.horizontal-line2 {
-    grid-area: horizontal-line2;
-    border-bottom: 0.2em solid rgb(153,195,131);
-}
-.horizontal-line3 {
-    grid-area: horizontal-line3;
-    border-bottom: 0.2em solid rgb(88,112,63);
-}
-.horizontal-line4 {
-    grid-area: horizontal-line4;
-    border-bottom: 0.2em solid rgb(88,112,63);
-}
-.vertical-line {
-    grid-area: vertical-line;
-    border-right: 0.2em solid rgb(157,223,222);
-}
-.vertical-line2 {
-    grid-area: vertical-line2;
-    border-right: 0.2em solid rgb(157,223,222);
-}
-.vertical-line3 {
-    grid-area: vertical-line3;
-    border-right: 0.2em solid rgb(157,223,222);
-}
-.vertical-line4 {
-    grid-area: vertical-line4;
-    border-right: 0.2em solid rgb(157,223,222);
-}
-.down-arrow-pos {
-    position: absolute;
-    left: -10%;
-    bottom: -16%;
-}
-.down-arrow-pos2 {
-    position: absolute;
-    left: -15%;
-    bottom: -16%;
-}
-.right-arrow-pos {
-    position: absolute;
-    right: -13%;
-    top: -35%;
-}
-.flow-chart {
-    display: grid;
-    grid-template-columns: 115px 115px 50px 140px 160px 50px 230px;
-    grid-template-rows: 50px 55px 50px 50px 50px 50px 50px 50px 50px 50px 50px;
-    grid-template-areas: 
-        "a a horizontal-line horizontal-line no . ."
-        "a a . vertical-line no . ."
-        "vertical-line2 . . vertical-line down-arrow3 . ."
-        "vertical-line3 yes . c c . d"
-        "vertical-line4 down-arrow2 . c c horizontal-line3 d"
-        "b b horizontal-line2 c c right-arrow3 d"
-        "b b right-arrow2 c c . ."
-        "b b . c c horizontal-line4 e"
-        ". . . c c right-arrow4 e";
-}
-#account {
-    margin-top: 20px;
-}
-@media (min-width: 768px) {
-  .modal-xl {
-    width: 90%;
-   max-width:1000px;
-  }
-}
-.close {
-    color: white;
-    opacity: 1;
-}
-.tooltip .tooltip-inner { 
-    background-color:    white;
-    color: black;
-    opacity: 1; 
-}
-/* https://stackoverflow.com/questions/36143382/re-color-tooltip-in-bootstrap-4 */
-.tooltip.bs-tooltip-auto[x-placement^=top] .arrow::before, .tooltip.bs-tooltip-top .arrow::before {
-    border-top-color: white;
-}
-.tooltip.show {
-    opacity: 1;
-}
+<!-- TOOl TIP JAVASCRIPT -->
+<script src="{{ url_for('static', filename='js/tool_tip.js') }}"></script>
 
-.set_fade_in {
-    opacity: 0;
-    animation-name: fadeIn;
-    animation-duration: 1s;
-    animation-iteration-count: 1;
-    animation-fill-mode: forwards;
-}
+<!-- CSS FORMATTING -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}" type="text/css"/>
 
-.set_fade_in.fade2 {
-    animation-delay: 0.5s;
-}
-.set_fade_in.fade3 {
-    animation-delay: 1s;
-}
-.set_fade_in.fade4 {
-    animation-delay: 1.5s;
-}
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-</style>
+
+
 
 <!-- MORE HOMEPAGE STUFF TO GO HERE -->
 
 <div class="container">
-    <!-- https://getbootstrap.com/docs/4.0/components/modal/ -->
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#flow_chart_modal">
-    First time here? Find out how it works.
-    </button>
+  <!-- https://getbootstrap.com/docs/4.0/components/modal/ -->
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#flow_chart_modal">
+  First time here? Find out how it works.
+  </button>
 </div>
 
 
@@ -225,85 +33,85 @@
       </div>
       <div class="modal-body">
         <div class="container" id="flow_chart_container">
-            <!-- HOW IT WORKS FLOW CHART -->
-            <div class="row justify-content-center">
-                <h4>How it works.</h4>
-            </div>
-            <div class="row justify-content-center">
-                <div class="flow-chart">
-                    <div class="item item-a set_fade_in">
-                        <h5>Would you like personalized trail recommendations?</h5>
-                    </div>
-                    <div class="horizontal-line set_fade_in"></div>
-                    <div class="item no set_fade_in"> <h5>NO</h5></div>
-                    <div class="vertical-line set_fade_in"></div>
-                    <div class="item item-b set_fade_in fade2">
-                        <div id="account">
-                            <h5><a href="{{ url_for('signin') }}">Create an account.</a></h5>
-                            <h5><a href="{{ url_for('my_info') }}">Fill out fitness survey.</a></h5>
-                        </div>
-                    </div>
-                    <div class="item yes set_fade_in"> <h5>YES</h5></div>
-                    <div class="vertical-line2 set_fade_in"></div>
-                    <div class="vertical-line3 set_fade_in"></div>
-                    <div class="vertical-line4 set_fade_in"></div>
-                    <div class="item down-arrow2 set_fade_in">
-                        <!-- down caret -->
-                        <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-caret-down-fill down-arrow-pos2" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                        </svg>
-                    </div>
-                    <div class="item down-arrow3 set_fade_in">
-                        <!-- down caret -->
-                        <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-caret-down-fill down-arrow-pos" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                        </svg>
-                    </div>
-                    <div class="horizontal-line2 set_fade_in fade2"></div>
-                    <div class="item right-arrow2 set_fade_in fade2">
-                        <!-- right caret -->
-                        <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-caret-right-fill right-arrow-pos" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12.14 8.753l-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
-                        </svg>
-                    </div>
-                    <div class="item item-c set_fade_in fade3">
-                        <h5><a href="{{ url_for('find_trails') }}">Find a Hiking Trail</a></h5>
-                        <p>You have several options here including:</p>
-                        <ul>
-                            <li>Find trail by location</li>
-                            <li>Customize your trail search</li>
-                            <li>Filter trails "Just for You" - this will find trails that match your fitness level</li>
-                        </ul>
-                        <p>You can also navigate to:</p>
-                        <ul>
-                            <li>Map</li>
-                            <li>Get hiking gear recommendations</li>
-                        </ul>
-                    </div>
-                    <div class="horizontal-line3 set_fade_in fade3"></div>
-                    <div class="item right-arrow3 set_fade_in fade3">
-                        <!-- right caret -->
-                        <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-caret-right-fill right-arrow-pos" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12.14 8.753l-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
-                        </svg>
-                    </div>
-                    <div class="item item-d set_fade_in fade4">
-                        <h5 data-toggle="tooltip" data-placement="top" title="Find a hiking trail first, then we'll map your route.">Map</h5>    
-                        <p>Get directions from your chosen starting location to the trail.</p>
-                    </div>
-                    <div class="horizontal-line4 set_fade_in fade3"></div>
-                    <div class="item right-arrow4 set_fade_in fade3">
-                        <!-- right caret -->
-                        <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-caret-right-fill right-arrow-pos" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12.14 8.753l-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
-                        </svg>
-                    </div>
-                    <div class="item item-e set_fade_in fade4">
-                        <h5 data-toggle="tooltip" data-placement="top" title="Find a hiking trail first, then select gear button next to trail." >Hiking Gear</h5>
-                        <p>We'll suggest gear specific to your selected trail and trail weather conditions.</p>
-                    </div>
+          <!-- HOW IT WORKS FLOW CHART -->
+          <div class="row justify-content-center">
+            <h4>How it works.</h4>
+          </div>
+          <div class="row justify-content-center">
+            <div class="flow-chart">
+              <div class="item item-a set_fade_in">
+                <h5>Would you like personalized trail recommendations?</h5>
+              </div>
+              <div class="horizontal-line set_fade_in"></div>
+              <div class="item no set_fade_in"> <h5>NO</h5></div>
+              <div class="vertical-line set_fade_in"></div>
+              <div class="item item-b set_fade_in fade2">
+                <div id="account">
+                  <h5><a href="{{ url_for('signin') }}">Create an account.</a></h5>
+                  <h5><a href="{{ url_for('my_info') }}">Fill out fitness survey.</a></h5>
                 </div>
+              </div>
+              <div class="item yes set_fade_in"> <h5>YES</h5></div>
+              <div class="vertical-line2 set_fade_in"></div>
+              <div class="vertical-line3 set_fade_in"></div>
+              <div class="vertical-line4 set_fade_in"></div>
+              <div class="item down-arrow2 set_fade_in">
+                <!-- down caret -->
+                <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-caret-down-fill down-arrow-pos2" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                </svg>
+              </div>
+              <div class="item down-arrow3 set_fade_in">
+                <!-- down caret -->
+                <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-caret-down-fill down-arrow-pos" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                </svg>
+              </div>
+              <div class="horizontal-line2 set_fade_in fade2"></div>
+              <div class="item right-arrow2 set_fade_in fade2">
+                <!-- right caret -->
+                <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-caret-right-fill right-arrow-pos" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12.14 8.753l-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                </svg>
+              </div>
+              <div class="item item-c set_fade_in fade3">
+                <h5><a href="{{ url_for('find_trails') }}">Find a Hiking Trail</a></h5>
+                <p>You have several options here including:</p>
+                <ul>
+                  <li>Find trail by location</li>
+                  <li>Customize your trail search</li>
+                  <li>Filter trails "Just for You" - this will find trails that match your fitness level</li>
+                </ul>
+                <p>You can also navigate to:</p>
+                <ul>
+                  <li>Map</li>
+                  <li>Get hiking gear recommendations</li>
+                </ul>
+              </div>
+              <div class="horizontal-line3 set_fade_in fade3"></div>
+              <div class="item right-arrow3 set_fade_in fade3">
+                <!-- right caret -->
+                <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-caret-right-fill right-arrow-pos" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12.14 8.753l-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                </svg>
+              </div>
+              <div class="item item-d set_fade_in fade4">
+                <h5 data-toggle="tooltip" data-placement="top" title="Find a hiking trail first, then we'll map your route.">Map</h5>    
+                <p>Get directions from your chosen starting location to the trail.</p>
+              </div>
+              <div class="horizontal-line4 set_fade_in fade3"></div>
+              <div class="item right-arrow4 set_fade_in fade3">
+                <!-- right caret -->
+                <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-caret-right-fill right-arrow-pos" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12.14 8.753l-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                </svg>
+              </div>
+              <div class="item item-e set_fade_in fade4">
+                <h5 data-toggle="tooltip" data-placement="top" title="Find a hiking trail first, then select gear button next to trail." >Hiking Gear</h5>
+                <p>We'll suggest gear specific to your selected trail and trail weather conditions.</p>
+              </div>
             </div>
+          </div>
         </div>
       </div>
       <div class="modal-footer border-top-0">

@@ -11,6 +11,8 @@ gunicorn = "*"
 flask-table = "*"
 requests = "*"
 googlemaps = "*"
+flask-sqlalchemy = "*"
+flask-migrate = "*"
 
 [requires]
 python_version = "3.8"
