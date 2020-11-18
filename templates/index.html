@@ -3,30 +3,39 @@
 
 <!-- TOOl TIP JAVASCRIPT -->
 <script src="{{ url_for('static', filename='js/tool_tip.js') }}"></script>
+<!-- <script src="{{ url_for('static', filename='js/index.js') }}"></script> -->
 
 <!-- CSS FORMATTING -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}" type="text/css"/>
 
 
-
-
-<!-- MORE HOMEPAGE STUFF TO GO HERE -->
-
-<div class="container">
-  <!-- https://getbootstrap.com/docs/4.0/components/modal/ -->
-  <!-- Button trigger modal -->
-  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#flow_chart_modal">
-  First time here? Find out how it works.
-  </button>
+<!-- MAIN HOME PAGE TITLE AND BUTTONS -->
+<div class="container" id="main_container">
+  
+  <div class="app_name">
+    <h1>Hiking Trails For You</h1>
+  </div>
+  <div class="d-flex justify-content-center align-items-center">
+        <a class="btn btn-dark main_button" role="button" href="{{ url_for('signin') }}"> 
+          <span>Sign In / Sign Up</span> </a>
+        <a class="btn btn-dark main_button" role="button" href="{{ url_for('find_trails') }}"> 
+          <span>Find a Hiking Trail</span> </a>
+  </div>
+  <div class="d-flex justify-content-center align-items-center">
+    <!-- https://getbootstrap.com/docs/4.0/components/modal/ -->
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#flow_chart_modal" id="first_time_here">
+      <span>First time here? Find out how it works.</span>
+    </button>
+  </div>
 </div>
 
 
-<!-- Modal for how it works flowchart -->
+<!-- MODAL FOR "HOW IT WORKS" FLOWCHART -->
 <div class="modal fade" id="flow_chart_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header border-bottom-0">
-        <!-- <h5 class="modal-title" id="exampleModalLabel">Modal title</h5> -->
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
