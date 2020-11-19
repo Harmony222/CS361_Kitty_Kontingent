@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from gear_functions import get_weather_data, get_trail_data, gear_evaluation
 from trail_list_functions import get_trails
 from match_me import filter_trails, trail_locations, get_map_api_key
 from map_trail import get_directions_url, get_lat_long
+from forms import LoginForm
 import webbrowser
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
@@ -11,6 +12,7 @@ from flask_migrate import Migrate
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
+import models
 migrate = Migrate(app, db)
 
 ## TRAIL LIST STRUCTURE RETURNED BY GET_TRAILS(LAT, LONG, RAD) - BY INDEX REFERENCE
@@ -166,7 +168,12 @@ def display_info():
 
 @app.route('/signin')
 def signin():
-    return render_template('signin.html', title="Sign In / Sign Up", active={'signin':True})
+    form = LoginForm()
+    if form.validate_on_submit():
+        flash('Login requested for user {}, remember_me={}'.format(
+            form.username.data, form.remember_me.data))
+        return redirect('/index')
+    return render_template('signin.html', title="Sign In / Sign Up", active={'signin':True}, form=form)
 
 
 if __name__ == '__main__':
