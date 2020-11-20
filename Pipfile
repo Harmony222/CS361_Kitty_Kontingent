@@ -13,6 +13,7 @@ requests = "*"
 googlemaps = "*"
 flask-sqlalchemy = "*"
 flask-migrate = "*"
+flask-wtf = "*"
 
 [requires]
 python_version = "3.8"
