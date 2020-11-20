@@ -21,7 +21,7 @@ align-content: center;
 }
 
 .card{
-height: 370px;
+height: 390px;
 margin-top: auto;
 margin-bottom: auto;
 width: 400px;
@@ -108,32 +108,42 @@ margin-left: 4px;
 			<div class="card-body">
 				<form action="" method="post" novalidate>
 					{{ form.hidden_tag() }}
+					{% for error in form.username.errors %}
+					<span style="color: red;">[{{ error }}]</span>
+					{% endfor %}
 					<div class="input-group form-group">
 						<div class="input-group-prepend">
 							<span class="input-group-text"><i class="fas fa-user"></i></span>
 						</div>
-						<input type="text" class="form-control" placeholder="username">
-						{{ form.username.label }}<br>
-            			{{ form.username(size=32) }}
-						
+						{{ form.username(size=32, class="form-control", placeholder="username") }}
 					</div>
+
+					{% for error in form.password.errors %}
+					<span style="color: red;">[{{ error }}]</span>
+					{% endfor %}
 					<div class="input-group form-group">
 						<div class="input-group-prepend">
 							<span class="input-group-text"><i class="fas fa-key"></i></span>
 						</div>
-						<input type="password" class="form-control" placeholder="password">
-						{{ form.password.label }}<br>
-            			{{ form.password(size=32) }}
+						{{ form.password(size=32, class="form-control", placeholder="password") }}
 					</div>
+
 					<div class="row align-items-center remember">
-						<input type="checkbox">Remember Me
 						{{ form.remember_me() }} {{ form.remember_me.label }}
 					</div>
 					<div class="form-group">
-						<input type="submit" value="Login" class="btn float-right login_btn">
-						{{ form.submit() }}
+						{{ form.submit(value="Login", class="btn float-right login_btn") }}
 					</div>
 				</form>
+				{% with messages = get_flashed_messages() %}
+        		{% if messages %}
+        		<ul>
+            		{% for message in messages %}
+            		<li>{{ message }}</li>
+            		{% endfor %}
+        		</ul>
+        		{% endif %}
+        		{% endwith %}
 			</div>
 			<div class="card-footer">
 				<div class="d-flex justify-content-center links">

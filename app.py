@@ -105,12 +105,12 @@ def gear():
                             trail_data=trail_data, 
                             gear_data=gear_data)
 
-@app.route('/my_info', methods=["GET", "POST"])
+@app.route('/my_info', methods=["GET"])
 def my_info():
     if request.method == 'GET':             # render the form to edit the user's info
         return render_template('my_info.html', title="My Info", active={'my_info':True})
-    elif request.method == 'POST':          # form is submitted
-        return render_template('display_info.html', title="My Info", active={'display_info':True})
+#    elif request.method == 'POST':          # form is submitted
+#        return render_template('display_info.html', title="My Info", active={'display_info':True})
 
 @app.route('/display_info', methods=["GET", "POST"])
 def display_info():
@@ -166,13 +166,13 @@ def display_info():
         gender=gender, height=height, weight=weight, address=address, address2=address2, city=city, state=state, zip=zip, 
         country=country, level=level_str)
 
-@app.route('/signin')
+@app.route('/signin', methods=["GET", "POST"])
 def signin():
     form = LoginForm()
     if form.validate_on_submit():
         flash('Login requested for user {}, remember_me={}'.format(
             form.username.data, form.remember_me.data))
-        return redirect('/index')
+        return redirect(url_for('display_info'))
     return render_template('signin.html', title="Sign In / Sign Up", active={'signin':True}, form=form)
 
 
