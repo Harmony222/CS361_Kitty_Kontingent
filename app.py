@@ -28,18 +28,19 @@ def index():
 def find_trails():
     '''find trails page to display table with trail data'''
     # if user has entered trail search location data
-    if request.method == 'POST' and "rad" in request.form:
+    if request.method == 'POST' and request.form['rad'] != 'False':
         map_api_key = get_map_api_key()
         rad, addr = request.form['rad'], request.form['address']
         lat, long = get_lat_long(addr)
         all_trails_list = get_trails(lat, long, rad)
         locations = trail_locations(all_trails_list)
         active_tab = 'list'
-        user_fitness = False
         if "active-tab" in request.form:
             active_tab = request.form['active-tab']
-        if "user_fitness" in request.form:
-            user_fitness = request.form['user_fitness']
+        if request.form['user_fitness'] == 'False':
+            user_fitness = False
+        else:
+            user_fitness = int(request.form['user_fitness'])
         # check for filter or a cleared filter for original list
         if "filter-slider" not in request.form or "clear" in request.form:
             return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails': True},
@@ -50,10 +51,9 @@ def find_trails():
         # filter trails
         else:
             # check for fitness value
-            if "user_fitness" in request.form:
-                user_fitness = request.form['user_fitness']
+            user_fitness = request.form['user_fitness']
             # filter trails on slider value
-            trails_list = filter_trails(all_trails_list, request.form["filter-slider"], 2)
+            trails_list = filter_trails(all_trails_list, request.form["filter-slider"], user_fitness)
             locations = trail_locations(trails_list)
             return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails': True},
                                        trails_list=trails_list, radius=rad, address=addr, filtered=True,
@@ -67,20 +67,6 @@ def find_trails():
             user_fitness = calculate_fitness(request.form['days'], request.form['hours'], request.form['miles'], request.form['intensity'])
         return render_template('find_trails_get.html', title='Find Hiking Trails', active={'find_trails': True}, 
                                 user_fitness=user_fitness)
-
-
-# @app.route('/map_trail', methods=['GET', 'POST'])
-# def map_trail():
-#     '''Gets start and trail addresses then opens new tab with google
-#     maps directions from start to trail address'''
-#     if request.method == 'POST':
-#         start_address = request.form['start-loc']
-#         trail_address = request.form['trail-loc']
-#         directions_url = get_directions_url(start_address, trail_address)
-#         return render_template('map_trail.html', title='Map Trail', active={'map_trail':True}), webbrowser.open_new_tab(directions_url)
-    
-#     else:
-#         return render_template('map_trail.html', title='Map Trail', active={'map_trail':True})
 
 @app.route('/gear', methods=["GET"])
 def gear():
@@ -102,7 +88,14 @@ def gear():
 
 @app.route('/fitness_values', methods=["GET", "POST"])
 def fitness_values():
-    return render_template('fitness_values.html', title="Fitness Calculation", active={'fitness_values':True})
+    # TODO: save "radius" and "address" if navigated to from "find trails" page
+    user_fitness = radius = address = False
+    if request.method == 'POST':
+        user_fitness = calculate_fitness(request.form['days'], request.form['hours'], request.form['miles'], request.form['intensity'])
+    if 'rad' in request.form and request.form['rad'] != 'False':
+        radius, address = request.form['rad'], request.form['address']
+    return render_template('fitness_values.html', title="Fitness Calculation", active={'fitness_values':True},
+                            user_fitness=user_fitness, radius=radius, address=address)
 
 # @app.route('/my_info', methods=["GET"])
 # def my_info():

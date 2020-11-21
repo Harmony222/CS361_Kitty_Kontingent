@@ -108,6 +108,8 @@
 {% else %}
     <div class="container pt-5">
         <form action="/fitness_values" title="Calculate your fitness to customize your trail results!">
+            <input type="hidden" name="rad" value={{radius}}>
+            <input type="hidden" name="address" value={{address}}>
             <input type="submit" value="Calculate your fitness level" class="btn btn-lg btn-info">
         </form>
     </div>

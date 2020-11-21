@@ -10,6 +10,9 @@
                     <h4>
                         Find Hiking Trails
                     </h4>
+                    {% if user_fitness %}
+                        <h5>fitness level: {{user_fitness}}</h5>
+                    {% endif %}
                 </div>
 
                 <div class="container">

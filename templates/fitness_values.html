@@ -2,7 +2,7 @@
 {% extends "layout.html" %}
 {% block content %}
   <!-- USER DATA FOR FITNESS CALCULATION -->
-<form class="container" action="/find_trails" method="POST">
+<form class="container" action="/fitness_values" method="POST">
   <h4> Calculate Your Fitness Level </h4>
   <div class="form-row">
     <div class="form-group col-md-9">
@@ -71,7 +71,17 @@
       </select>
     </div>
   </div>
-
-  <button type="submit" class="btn btn-primary">Find Personalized Trails</button>
+  <input type="hidden" name="rad" value={{radius}}>
+  <input type="hidden" name="address" value={{address}}>
+  {% if user_fitness %}
+    <dl class="row">
+      <dt class="col-sm-2">Fitness Level:</dt>
+      <dd class="col-sm-2">{{user_fitness}} (out of 4)</dd>
+    </dl>
+    <button type="submit" class="btn btn-primary" formaction="/find_trails">Find Personalized Trails</button>
+    <button type="submit" class="btn btn-primary">Re-Calculate Fitness Level</button>
+  {% else %}
+    <button type="submit" class="btn btn-primary">Calculate Fitness Level</button>
+  {% endif %}
 </form>
 {% endblock content %}
