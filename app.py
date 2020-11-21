@@ -3,17 +3,28 @@ from gear_functions import get_weather_data, get_trail_data, gear_evaluation
 from trail_list_functions import get_trails
 from match_me import filter_trails, trail_locations, get_map_api_key
 from map_trail import get_directions_url, get_lat_long
-from forms import LoginForm
+#from forms import LoginForm, RegistrationForm
 import webbrowser
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_login import LoginManager, current_user, login_user, logout_user
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
-import models
 migrate = Migrate(app, db)
+login = LoginManager(app)
+
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
+
+from models import *
+
+@app.shell_context_processor
+def make_shell_context():
+    return {'db': db, 'User': User}
 
 ## TRAIL LIST STRUCTURE RETURNED BY GET_TRAILS(LAT, LONG, RAD) - BY INDEX REFERENCE
 ## 0-id, 1-name, 2-length, 3-difficulty, 4-starVotes, 5-location, 6-url, 7-imgMedium 
@@ -168,12 +179,36 @@ def display_info():
 
 @app.route('/signin', methods=["GET", "POST"])
 def signin():
+    if current_user.is_authenticated:
+        return redirect(url_for('display_info'))
     form = LoginForm()
     if form.validate_on_submit():
-        flash('Login requested for user {}, remember_me={}'.format(
-            form.username.data, form.remember_me.data))
+        user = User.query.filter_by(username=form.username.data).first()
+        if user is None or not user.check_password(form.password.data):
+            flash('Invalid username or password')
+            return redirect(url_for('signin'))
+        login_user(user, remember=form.remember_me.data)
         return redirect(url_for('display_info'))
     return render_template('signin.html', title="Sign In / Sign Up", active={'signin':True}, form=form)
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if current_user.is_authenticated:
+        return redirect(url_for('display_info'))
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(username=form.username.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Congratulations, you are now a registered user!')
+        return redirect(url_for('signin'))
+    return render_template('signup.html', title="Sign In / Sign Up", active={'signin':True}, form=form)
+
+@app.route('/signout')
+def signout():
+    logout_user()
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
