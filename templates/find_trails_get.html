@@ -1,29 +1,59 @@
  {% extends "layout.html" %} {% block content %}
 
+<!-- TOOLTIP -->
+<script>
+    $(function() {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>
+
 <div class="container pt-5">
     <div class="row">
-        <div class="col-sm-3">
+        <div class="col-sm-2">
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-8">
             <div class="card bg-ligth text-dark border-dark">
                 <div class="card-header text-center">
-                    <h4>
-                        Find Hiking Trails
-                    </h4>
                     <h3>
-                        Enter location to search from and search distance:
+                        Find Hiking Trails
                     </h3>
+                    {% if user_fitness %}
+                    <h4>fitness level: {{user_fitness}}</h4>
+                    {% endif %}
+                    <h5>
+                        Enter address or latitude and longitude to search from
+                    </h5>
                 </div>
 
                 <div class="container">
                     <form action='/find_trails' method="POST" class="text-left card-body">
                         <div class="form-group">
                             <label for="address">Address:</label>
-                            <input class="form-control form-control-lg" type="text" name="address" placeholder="eg. Seattle, WA or 98114" required>
+                            <input class="form-control form-control-lg" type="text" name="address" placeholder="e.g. Seattle, WA or 47.6,-122.33" required>
                         </div>
                         <div class="form-group">
-                            <label for="longitude">Radius (mi):</label>
+                            <label for="longitude">Radius (in miles):</label>
                             <input class="form-control form-control-lg" type="number" name="rad" step="any" max="300" min="1" value="100">
+                        </div>
+                        <input type="hidden" name="user_fitness" value={{user_fitness}}>
+                        <div class="form-group">
+                            <label for="length">Length (optional, in miles):</label>
+                            <!-- <span class="align-middle"> -->
+                            <input class="form-control form-control-lg" type="number" name="min_length" id="min_length" placeholder="Enter minimum length">
+                            <div class="row">
+                                <div class="col-sm-6"></div>
+                                <div class="col-sm-2">to</div>
+                            </div>
+                            <input class="form-control form-control-lg" type="number" name="max_length" id="max_length" placeholder="Enter maximum length">
+                        </div>
+                        <div class="form-group">
+                            <label for="difficulty">Difficulty (optional):</label>
+                            <select class="form-control" name="difficulty" id="difficulty">
+                                <option hidden disabled selected value>Select a Difficulty</option>
+                                <option value="Easy">Easy</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Hard">Hard</option>
+                            </select>
                         </div>
                         <button type="submit" class="btn btn-info">Submit</button>
                     </form>

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from gear_functions import get_weather_data, get_trail_data, gear_evaluation
-from trail_list_functions import get_trails
-from match_me import filter_trails, trail_locations, get_map_api_key
+from trail_list_functions import get_trails, get_custom_trails
+from match_me import filter_trails, trail_locations, get_map_api_key, calculate_fitness
 from map_trail import get_directions_url, get_lat_long
 #from forms import LoginForm, RegistrationForm
 import webbrowser
@@ -26,6 +26,10 @@ from models import *
 def make_shell_context():
     return {'db': db, 'User': User}
 
+# TODO: save "radius" and "address" if navigated to from "find trails" page to "fitness values" page (and back again)
+# TODO: auto-populate drop-down selections for user on "fitness values" page if they had previously made slections
+# (and then the page was re-loaded or navigated away from)
+
 ## TRAIL LIST STRUCTURE RETURNED BY GET_TRAILS(LAT, LONG, RAD) - BY INDEX REFERENCE
 ## 0-id, 1-name, 2-length, 3-difficulty, 4-starVotes, 5-location, 6-url, 7-imgMedium 
 ## 8-high, 9-low, 10-latitude, 11-longitude, 12-summary, 13-directions_url, 14-gear_url
@@ -34,69 +38,58 @@ def make_shell_context():
 def index():
     return render_template('index.html', active={'index':True})
 
-all_trails_list = []
+
 @app.route('/find_trails', methods= ['GET', 'POST'])
 def find_trails():
     '''find trails page to display table with trail data'''
-    global all_trails_list
     # if user has entered trail search location data
-    if request.method == 'POST':
+    if request.method == 'POST' and request.form['rad'] != 'False':
         map_api_key = get_map_api_key()
         rad, addr = request.form['rad'], request.form['address']
         lat, long = get_lat_long(addr)
         all_trails_list = get_trails(lat, long, rad)
+
+        # Get optional search values and create new, custom list if any values are not None
+        min_length = request.form.get('min_length') or None
+        max_length = request.form.get('max_length') or None
+        difficulty = request.form.get('difficulty') or None
+        if (difficulty is not None) or ((min_length is not None) and (max_length is not None)):
+            all_trails_list = get_custom_trails(all_trails_list, min_length, max_length, difficulty)
+        
         locations = trail_locations(all_trails_list)
         active_tab = 'list'
         if "active-tab" in request.form:
             active_tab = request.form['active-tab']
+        if request.form['user_fitness'] == 'False':
+            user_fitness = False
+        else:
+            user_fitness = int(request.form['user_fitness'])
         # check for filter or a cleared filter for original list
         if "filter-slider" not in request.form or "clear" in request.form:
             return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails': True},
                                    trails_list=all_trails_list, radius=rad, address=addr, filtered=False,
-                                   map_api_key=map_api_key, lat=lat, lon=long, locations=locations, view_tab=active_tab)
+                                   map_api_key=map_api_key, lat=lat, lon=long, locations=locations, 
+                                   view_tab=active_tab, user_fitness=user_fitness)
 
         # filter trails
         else:
+            # check for fitness value
+            user_fitness = request.form['user_fitness']
             # filter trails on slider value
-            trails_list = filter_trails(all_trails_list, request.form["filter-slider"], 2)
+            trails_list = filter_trails(all_trails_list, request.form["filter-slider"], user_fitness)
             locations = trail_locations(trails_list)
             return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails': True},
                                        trails_list=trails_list, radius=rad, address=addr, filtered=True,
-                                       map_api_key=map_api_key, lat=lat, lon=long, locations=locations, view_tab=active_tab)
+                                       map_api_key=map_api_key, lat=lat, lon=long, locations=locations,
+                                       view_tab=active_tab, user_fitness=user_fitness)
     # else render page asking for data
     else:
-        return render_template('find_trails_get.html', title='Find Hiking Trails', active={'find_trails': True})
-
-
-@app.route('/map_trail', methods=['GET', 'POST'])
-def map_trail():
-    '''Gets start and trail addresses then opens new tab with google
-    maps directions from start to trail address'''
-    if request.method == 'POST':
-        start_address = request.form['start-loc']
-        trail_address = request.form['trail-loc']
-        directions_url = get_directions_url(start_address, trail_address)
-        return render_template('map_trail.html', title='Map Trail', active={'map_trail':True}), webbrowser.open_new_tab(directions_url)
-    
-    else:
-        return render_template('map_trail.html', title='Map Trail', active={'map_trail':True})
-
-
-@app.route('/match_me')
-def match_me():
-    lat, lon, dist = 47.60621, -122.3321, 100
-    all_trails = get_trails(lat, lon, dist)
-    # filtered_trails = filter_trails(all_trails, 2, 2)
-    locations = trail_locations(all_trails)
-    map_api_key = get_map_api_key()
-    return render_template('match_me.html', title='Match Me With A Trail',
-                           active={'match_me': True}, map_api_key=map_api_key,
-                           all_trails=all_trails, locations=locations, lat=lat, lon=lon)
-
-                           # filtered_trails=filtered_trails,
-                           # locations=locations, lat=lat, lon=lon,
-                           # filter_trails_func=filtered_trails)
-
+        # save fitness calculation
+        user_fitness = False
+        if request.method == 'POST':
+            user_fitness = calculate_fitness(request.form['days'], request.form['hours'], request.form['miles'], request.form['intensity'])
+        return render_template('find_trails_get.html', title='Find Hiking Trails', active={'find_trails': True}, 
+                                user_fitness=user_fitness)
 
 @app.route('/gear', methods=["GET"])
 def gear():
@@ -116,66 +109,76 @@ def gear():
                             trail_data=trail_data, 
                             gear_data=gear_data)
 
-@app.route('/my_info', methods=["GET"])
-def my_info():
-    if request.method == 'GET':             # render the form to edit the user's info
-        return render_template('my_info.html', title="My Info", active={'my_info':True})
-#    elif request.method == 'POST':          # form is submitted
-#        return render_template('display_info.html', title="My Info", active={'display_info':True})
+@app.route('/fitness_values', methods=["GET", "POST"])
+def fitness_values():
+    user_fitness = radius = address = False
+    if request.method == 'POST':
+        user_fitness = calculate_fitness(request.form['days'], request.form['hours'], request.form['miles'], request.form['intensity'])
+    if 'rad' in request.form and request.form['rad'] != 'False':
+        radius, address = request.form['rad'], request.form['address']
+    return render_template('fitness_values.html', title="Fitness Calculation", active={'fitness_values':True},
+                            user_fitness=user_fitness, radius=radius, address=address)
 
-@app.route('/display_info', methods=["GET", "POST"])
-def display_info():
-    if request.method == 'GET':             # render the user's info
-        return render_template('display_info.html', title="My Info", active={'my_info':True})
-    elif request.method == 'POST':          # Edit Info form was submitted, get the values and display them
-        month = request.form['month']
-        day = request.form['day']
-        year = request.form['year']
-        gender = request.form['gender']
-        height = request.form['height']
-        weight = request.form['weight']
-        address = request.form['address']
-        address2 = request.form['address2']
-        city = request.form['city']
-        state = request.form['state']
-        zip = request.form['zip']
-        country = request.form['country']
-        days = int(request.form['days'])
-        hours = int(request.form['hours'])
-        intensity = int(request.form['intensity'])
-        miles = int(request.form['miles'])
+# @app.route('/my_info', methods=["GET"])
+# def my_info():
+#     if request.method == 'GET':             # render the form to edit the user's info
+#         return render_template('my_info.html', title="My Info", active={'my_info':True})
+# #    elif request.method == 'POST':          # form is submitted
+# #        return render_template('display_info.html', title="My Info", active={'display_info':True})
 
-        # calculate the user's fitness level
-        # first get the average number of hours of physical activity per week
-        avg_hours = days * hours // 7
-        level = avg_hours
-        # adjust level based off of the user's intensity when hiking
-        if intensity > avg_hours and avg_hours <= 3:
-            level += 1
-        elif intensity < avg_hours and avg_hours >= 2:
-            level -= 1
-        # adjust level based off of the user's average length for a hike
-        if miles > avg_hours and level <= 3:
-            level += 1
-        elif miles < avg_hours and level >= 2:
-            level -= 1
-        # ensure level is a value from 1-4
-        if level <= 1:
-            level = 1
-        # create names for fitness levels
-        level_str = ""
-        if level == 1:
-            level_str = "low"
-        elif level == 2:
-            level_str = "medium"
-        elif level == 3:
-            level_str = "high"
-        elif level == 4:
-            level_str = "very high"
+# @app.route('/display_info', methods=["GET", "POST"])
+# def display_info():
+#     if request.method == 'GET':             # render the user's info
+#         return render_template('display_info.html', title="My Info", active={'my_info':True})
+#     elif request.method == 'POST':          # Edit Info form was submitted, get the values and display them
+#         month = request.form['month']
+#         day = request.form['day']
+#         year = request.form['year']
+#         gender = request.form['gender']
+#         height = request.form['height']
+#         weight = request.form['weight']
+#         address = request.form['address']
+#         address2 = request.form['address2']
+#         city = request.form['city']
+#         state = request.form['state']
+#         zip = request.form['zip']
+#         country = request.form['country']
+#         days = int(request.form['days'])
+#         hours = int(request.form['hours'])
+#         intensity = int(request.form['intensity'])
+#         miles = int(request.form['miles'])
 
-        return render_template('display_info.html', title="My Info", active={'my_info':True}, month=month, day=day, year=year,
-        gender=gender, height=height, weight=weight, address=address, address2=address2, city=city, state=state, zip=zip, 
-        country=country, level=level_str)
+#         # calculate the user's fitness level
+#         # first get the average number of hours of physical activity per week
+#         avg_hours = days * hours // 7
+#         level = avg_hours
+#         # adjust level based off of the user's intensity when hiking
+#         if intensity > avg_hours and avg_hours <= 3:
+#             level += 1
+#         elif intensity < avg_hours and avg_hours >= 2:
+#             level -= 1
+#         # adjust level based off of the user's average length for a hike
+#         if miles > avg_hours and level <= 3:
+#             level += 1
+#         elif miles < avg_hours and level >= 2:
+#             level -= 1
+#         # ensure level is a value from 1-4
+#         if level <= 1:
+#             level = 1
+#         # create names for fitness levels
+#         level_str = ""
+#         if level == 1:
+#             level_str = "low"
+#         elif level == 2:
+#             level_str = "medium"
+#         elif level == 3:
+#             level_str = "high"
+#         elif level == 4:
+#             level_str = "very high"
+
+#         return render_template('display_info.html', title="My Info", active={'my_info':True}, month=month, day=day, year=year,
+#         gender=gender, height=height, weight=weight, address=address, address2=address2, city=city, state=state, zip=zip, 
+#         country=country, level=level_str)
 
 @app.route('/signin', methods=["GET", "POST"])
 def signin():
