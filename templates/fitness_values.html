@@ -1,0 +1,77 @@
+
+{% extends "layout.html" %}
+{% block content %}
+  <!-- USER DATA FOR FITNESS CALCULATION -->
+<form class="container" action="/find_trails" method="POST">
+  <h4> Calculate Your Fitness Level </h4>
+  <div class="form-row">
+    <div class="form-group col-md-9">
+      <label for="inputQ1">How many days a week are you physically active on average?</label>
+    </div>
+    <div class="form-group col-md-3">
+      <select id="inputQ1" class="form-control" name="days" required>
+        <option value="">Choose...</option>
+        <option value="0">0 days per week</option>
+        <option value="1">1 day per week</option>
+        <option value="2">2 days per week</option>
+        <option value="3">3 days per week</option>
+        <option value="4">4 days per week</option>
+        <option value="5">5 days per week</option>
+        <option value="6">6 days per week</option>
+        <option value="7">7 days per week</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-9">
+      <label for="inputQ2">On days when you are physically active, how many hours are you physically active on average?</label>
+    </div>
+    <div class="form-group col-md-3">
+      <select id="inputQ2" class="form-control" name="hours" required>
+        <option value="">Choose...</option>
+        <option value="0">0 hours per day</option>
+        <option value="1">1 hour per day</option>
+        <option value="2">2 hours per day</option>
+        <option value="3">3 hours per day</option>
+        <option value="4">4 hours or more per day</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-9">
+      <label for="inputQ3">What is your intensity level when you go hiking?</label>
+    </div>
+    <div class="form-group col-md-3">
+      <select id="inputQ3" class="form-control" name="intensity" required>
+        <option value="">Choose...</option>
+        <option value="1">easy stroll</option>
+        <option value="2">mild effort</option>
+        <option value="3">moderate effort</option>
+        <option value="4">strenuous pace</option>
+        <option value="5">push it to the limit</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-9">
+      <label for="inputQ4">How many miles do you go on a hike on average?</label>
+    </div>
+    <div class="form-group col-md-3">
+      <select id="inputQ4" class="form-control" name="miles" required>
+        <option value="">Choose...</option>
+        <option value="0">less then 1 mile</option>
+        <option value="1">1-2 miles</option>
+        <option value="2">2-3 miles</option>
+        <option value="3">3-4 miles</option>
+        <option value="4">4-5 miles</option>
+        <option value="5">more than 5 miles</option>
+      </select>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Find Personalized Trails</button>
+</form>
+{% endblock content %}

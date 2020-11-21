@@ -8,9 +8,8 @@ def get_trails(lat, lon, dist):
     id, name, length, difficulty, starVotes, location, url, imgMedium, high, low, latitude, longitude, summary'''
 
     base_url = "https://www.hikingproject.com/data/get-trails?lat=" + str(lat) \
-                + "&lon=" + str(lon) + "&maxDistance=" + str(dist) + "&key=" + trails_api_key + "&maxResults=100"
+                + "&lon=" + str(lon) + "&maxDistance=" + str(dist) + "&key=" + trails_api_key + "&maxResults=500"
     
-    # return requests.get(base_url).json()['trails'] 
     # dict of trail dicts
     trails = requests.get(base_url).json()['trails']
     trails_list =[]
@@ -19,7 +18,7 @@ def get_trails(lat, lon, dist):
         directions_url = get_directions_url_trails(lat, lon, trail['latitude'], trail['longitude'])
         gear_url = "/gear?trail_id=" + str(trail["id"])
         # sets with trail info appended to list
-        trails_list.append((trail["id"], trail['name'], trail['length'], trail['difficulty'], trail['stars'],
+        trails_list.append((trail['id'], trail['name'], trail['length'], trail['difficulty'], trail['stars'],
                             trail['location'], trail['url'], trail['imgMedium'], trail['high'], trail['low'],
                             trail['latitude'], trail['longitude'], trail['summary'], directions_url, gear_url))
     

@@ -26,7 +26,7 @@ difficulty_num = {
     3: "greenBlue",
     4: "blue",
     5: "blueBlack",
-    6: "black",
+    6: "black", 
 }
 
 
@@ -77,3 +77,24 @@ def filtered_trail_locations(filtered_trails):
 
 def get_map_api_key():
     return map_api_key
+
+def calculate_fitness(days, hours, miles, intensity):
+    """calculate the user's fitness level"""
+    # first get the average number of hours of physical activity per week
+    avg_hours = int(days) * int(hours) // 7
+    level = avg_hours
+    # adjust level based off of the user's intensity when hiking
+    if int(intensity) > avg_hours and avg_hours <= 3:
+        level += 1
+    elif int(intensity) < avg_hours and avg_hours >= 2:
+        level -= 1
+    # adjust level based off of the user's average length for a hike
+    if int(miles) > avg_hours and level <= 3:
+        level += 1
+    elif int(miles) < avg_hours and level >= 2:
+        level -= 1
+    # ensure level is a value from 1-4
+    if level <= 1:
+        level = 1
+
+    return level

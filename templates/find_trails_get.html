@@ -10,9 +10,6 @@
                     <h4>
                         Find Hiking Trails
                     </h4>
-                    <h3>
-                        Enter location to search from and search distance:
-                    </h3>
                 </div>
 
                 <div class="container">
@@ -25,6 +22,7 @@
                             <label for="longitude">Radius (mi):</label>
                             <input class="form-control form-control-lg" type="number" name="rad" step="any" max="300" min="1" value="100">
                         </div>
+                        <input type="hidden" name="user_fitness" value={{user_fitness}}>
                         <button type="submit" class="btn btn-info">Submit</button>
                     </form>
                 </div>
