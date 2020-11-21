@@ -15,6 +15,10 @@ db = SQLAlchemy(app)
 import models
 migrate = Migrate(app, db)
 
+# TODO: save "radius" and "address" if navigated to from "find trails" page to "fitness values" page (and back again)
+# TODO: auto-populate drop-down selections for user on "fitness values" page if they had previously made slections
+# (and then the page was re-loaded or navigated away from)
+
 ## TRAIL LIST STRUCTURE RETURNED BY GET_TRAILS(LAT, LONG, RAD) - BY INDEX REFERENCE
 ## 0-id, 1-name, 2-length, 3-difficulty, 4-starVotes, 5-location, 6-url, 7-imgMedium 
 ## 8-high, 9-low, 10-latitude, 11-longitude, 12-summary, 13-directions_url, 14-gear_url
@@ -96,7 +100,6 @@ def gear():
 
 @app.route('/fitness_values', methods=["GET", "POST"])
 def fitness_values():
-    # TODO: save "radius" and "address" if navigated to from "find trails" page
     user_fitness = radius = address = False
     if request.method == 'POST':
         user_fitness = calculate_fitness(request.form['days'], request.form['hours'], request.form['miles'], request.form['intensity'])
