@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from gear_functions import get_weather_data, get_trail_data, gear_evaluation
-from trail_list_functions import get_trails
+from trail_list_functions import get_trails, get_custom_trails
 from match_me import filter_trails, trail_locations, get_map_api_key, calculate_fitness
 from map_trail import get_directions_url, get_lat_long
 from forms import LoginForm
@@ -33,6 +33,14 @@ def find_trails():
         rad, addr = request.form['rad'], request.form['address']
         lat, long = get_lat_long(addr)
         all_trails_list = get_trails(lat, long, rad)
+
+        # Get optional search values and create new, custom list if any values are not None
+        min_length = request.form.get('min_length') or None
+        max_length = request.form.get('max_length') or None
+        difficulty = request.form.get('difficulty') or None
+        if (difficulty is not None) or ((min_length is not None) and (max_length is not None)):
+            all_trails_list = get_custom_trails(all_trails_list, min_length, max_length, difficulty)
+        
         locations = trail_locations(all_trails_list)
         active_tab = 'list'
         if "active-tab" in request.form:
