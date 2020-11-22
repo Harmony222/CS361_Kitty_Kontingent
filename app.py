@@ -48,18 +48,20 @@ def find_trails():
     # convert difficulty string into difficulty level
     diff_dict = { "green": 0, "greenBlue": 1, "blue": 2, "blueBlack": 3, "black": 4, "dblack": 5}
 
+    # check for logged in user and get fitness
+    if current_user.is_authenticated:
+        curr_user = db.session.query(User).filter_by(username=current_user.username).first()
+        user_fitness = curr_user.fitness_level
+
     # if user has entered trail search location data
     if request.method == 'POST' and request.form['rad'] != 'False':
         map_api_key = get_map_api_key()
         rad, addr = request.form['rad'], request.form['address']
-        print(request.form['address'])
-        lat, long = get_lat_long(addr)
+        lat, long = get_lat_long(addr)    
+        all_trails_list = get_trails(lat, long, rad)
 
         # change addr to single string for jinja reference
         new_addr = get_string(lat, long)
-        print(addr)
-        
-        all_trails_list = get_trails(lat, long, rad)
 
         # Get optional search values and create new, custom list if any values are not None
         min_length = request.form.get('min_length') or 0
@@ -72,10 +74,12 @@ def find_trails():
         active_tab = 'list'
         if "active-tab" in request.form:
             active_tab = request.form['active-tab']
-        if request.form['user_fitness'] == 'False':
+        
+        if request.form['user_fitness'] == 'False' and not isinstance(user_fitness, int):
             user_fitness = False
         else:
             user_fitness = int(request.form['user_fitness'])
+        
         # check for filter or a cleared filter for original list
         if "filter-slider" not in request.form or "clear" in request.form:
             return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails': True},
@@ -99,7 +103,8 @@ def find_trails():
     # else render page asking for data
     else:
         # save fitness calculation
-        user_fitness = False
+        if not isinstance(user_fitness, int):
+            user_fitness = False
         if request.method == 'POST':
             user_fitness = calculate_fitness(request.form['days'], request.form['hours'], request.form['miles'], request.form['intensity'])
         return render_template('find_trails_get.html', title='Find Hiking Trails', active={'find_trails': True}, 
