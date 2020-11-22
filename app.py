@@ -12,10 +12,23 @@ from flask_login import LoginManager, current_user, login_user, logout_user
 from models import *
 import datetime
 import calendar
+from extensions import db
 
-app = Flask(__name__)
-app.config.from_object(Config)
-db = SQLAlchemy(app)
+# Fix circular imports issue
+# https://stackoverflow.com/questions/42909816/can-i-avoid-circular-imports-in-flask-and-sqlalchemy
+def register_extensions(app):
+    db.init_app(app)
+
+def create_app(config_object=Config):
+    app = Flask(__name__)
+    app.config.from_object(config_object)
+    register_extensions(app)
+    return app
+
+app = create_app(Config)
+# app = Flask(__name__)
+# app.config.from_object(Config)
+# db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
 
