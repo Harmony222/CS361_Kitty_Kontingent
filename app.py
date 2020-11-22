@@ -19,7 +19,8 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
 
-# TODO: save "radius" and "address" if navigated to from "find trails" page to "fitness values" page (and back again)
+# TODO: save "radius" and "address" if navigated to from "find trails" page to "fitness values" page 
+# (and back again)
 # TODO: auto-populate drop-down selections for user on "fitness values" page if they had previously made slections
 # (and then the page was re-loaded or navigated away from)
 # TODO: save trail list results between pages?
@@ -44,6 +45,9 @@ def index():
 @app.route('/find_trails', methods= ['GET', 'POST'])
 def find_trails():
     '''find trails page to display table with trail data'''
+    # convert difficulty string into difficulty level
+    diff_dict = { "green": 0, "greenBlue": 1, "blue": 2, "blueBlack": 3, "black": 4, "dblack": 5}
+
     # if user has entered trail search location data
     if request.method == 'POST' and request.form['rad'] != 'False':
         map_api_key = get_map_api_key()
@@ -72,7 +76,7 @@ def find_trails():
             return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails': True},
                                    trails_list=all_trails_list, radius=rad, address=addr, filtered=False,
                                    map_api_key=map_api_key, lat=lat, lon=long, locations=locations, 
-                                   view_tab=active_tab, user_fitness=user_fitness)
+                                   view_tab=active_tab, user_fitness=user_fitness, diff_dict=diff_dict)
 
         # filter trails
         else:
@@ -84,7 +88,7 @@ def find_trails():
             return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails': True},
                                        trails_list=trails_list, radius=rad, address=addr, filtered=True,
                                        map_api_key=map_api_key, lat=lat, lon=long, locations=locations,
-                                       view_tab=active_tab, user_fitness=user_fitness)
+                                       view_tab=active_tab, user_fitness=user_fitness, diff_dict=diff_dict)
     # else render page asking for data
     else:
         # save fitness calculation
