@@ -3,7 +3,11 @@
     <h4>Sign In / Sign Up</h4>
 <!-- Adapted from https://bootsnipp.com/snippets/vl4R7 -->
 <!-- Made with love by Mutiullah Samim -->
-
+<script>
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>
 <style>
 @import url('https://fonts.googleapis.com/css?family=Numans');
 
@@ -101,7 +105,7 @@ margin-left: 4px;
 				<h3>Sign Up</h3>
 			</div>
 			<div class="card-body">
-				<form action="" method="post" novalidate>
+				<form action="" method="post" novalidate data-toggle="tooltip" data-placement="right" title="Password must be at least 8 characters long, include at least 1 lowercase character, 1 uppercase character, and a special character (!, @, #, $, %, ^, &, or *).">
 					{{ form.hidden_tag() }}
 					{% for error in form.username.errors %}
 					<span style="color: red;">[{{ error }}]</span>
