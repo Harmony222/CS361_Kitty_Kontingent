@@ -3,28 +3,19 @@ from gear_functions import get_weather_data, get_trail_data, gear_evaluation
 from trail_list_functions import get_trails, get_custom_trails
 from match_me import filter_trails, trail_locations, get_map_api_key, calculate_fitness
 from map_trail import get_directions_url, get_lat_long
-#from forms import LoginForm, RegistrationForm
+# from forms import LoginForm, RegistrationForm
 import webbrowser
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager, current_user, login_user, logout_user
+from models import *
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
-
-@login.user_loader
-def load_user(id):
-    return User.query.get(int(id))
-
-from models import *
-
-@app.shell_context_processor
-def make_shell_context():
-    return {'db': db, 'User': User}
 
 # TODO: save "radius" and "address" if navigated to from "find trails" page to "fitness values" page (and back again)
 # TODO: auto-populate drop-down selections for user on "fitness values" page if they had previously made slections
@@ -33,6 +24,14 @@ def make_shell_context():
 ## TRAIL LIST STRUCTURE RETURNED BY GET_TRAILS(LAT, LONG, RAD) - BY INDEX REFERENCE
 ## 0-id, 1-name, 2-length, 3-difficulty, 4-starVotes, 5-location, 6-url, 7-imgMedium 
 ## 8-high, 9-low, 10-latitude, 11-longitude, 12-summary, 13-directions_url, 14-gear_url
+
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
+
+@app.shell_context_processor
+def make_shell_context():
+    return {'db': db, 'User': User}
 
 @app.route('/')
 def index():
@@ -119,18 +118,18 @@ def fitness_values():
     return render_template('fitness_values.html', title="Fitness Calculation", active={'fitness_values':True},
                             user_fitness=user_fitness, radius=radius, address=address)
 
-# @app.route('/my_info', methods=["GET"])
-# def my_info():
-#     if request.method == 'GET':             # render the form to edit the user's info
-#         return render_template('my_info.html', title="My Info", active={'my_info':True})
-# #    elif request.method == 'POST':          # form is submitted
-# #        return render_template('display_info.html', title="My Info", active={'display_info':True})
+@app.route('/my_info', methods=["GET"])
+def my_info():
+    if request.method == 'GET':
+        return render_template('my_info.html', title="My Info", active={'my_info':True})
+    elif request.method == 'POST':
+       return render_template('display_info.html', title="My Info", active={'display_info':True})
 
-# @app.route('/display_info', methods=["GET", "POST"])
-# def display_info():
-#     if request.method == 'GET':             # render the user's info
-#         return render_template('display_info.html', title="My Info", active={'my_info':True})
-#     elif request.method == 'POST':          # Edit Info form was submitted, get the values and display them
+@app.route('/display_info', methods=["GET", "POST"])
+def display_info():
+    if request.method == 'GET':             # render the user's info
+        return render_template('display_info.html', title="My Info", active={'my_info':True})
+    elif request.method == 'POST':          # Edit Info form was submitted, get the values and display them
 #         month = request.form['month']
 #         day = request.form['day']
 #         year = request.form['year']
@@ -176,9 +175,7 @@ def fitness_values():
 #         elif level == 4:
 #             level_str = "very high"
 
-#         return render_template('display_info.html', title="My Info", active={'my_info':True}, month=month, day=day, year=year,
-#         gender=gender, height=height, weight=weight, address=address, address2=address2, city=city, state=state, zip=zip, 
-#         country=country, level=level_str)
+        return render_template('display_info.html', active={'my_info': True})
 
 @app.route('/signin', methods=["GET", "POST"])
 def signin():
