@@ -19,23 +19,14 @@ def get_geocode(address):
         return result['results']
     raise Exception(result['error_message'])
 
-def get_latitude(address):
-    '''Returns the latitude from an address'''
-    geocode_result = get_geocode(address=address)
-    latitude = geocode_result[0]['geometry']['location']['lat']
-    return latitude
-
-def get_longitude(address):
-    '''Returns the longitude from an address'''
-    geocode_result = get_geocode(address=address)
-    longitude = geocode_result[0]['geometry']['location']['lng']
-    return longitude
-
 def get_lat_long(address):
     '''Returns the latitude and longitude from an address'''
     geocode_result = get_geocode(address=address)
+    # if geocode_result:
     latitude = geocode_result[0]['geometry']['location']['lat']
     longitude = geocode_result[0]['geometry']['location']['lng']
+    # else:
+    #     return None, None
     return latitude, longitude
 
 def get_string(latitude, longitude):
@@ -43,18 +34,6 @@ def get_string(latitude, longitude):
     directions url'''
     string_result = str(latitude) + ',' + str(longitude)
     return string_result
-
-def get_directions_url(origin_raw, destination_raw):
-    '''Creates directions url using origin and destination raw addresses'''
-    origin_lat = get_latitude(origin_raw)
-    origin_long = get_longitude(origin_raw)
-    origin = get_string(origin_lat, origin_long)
-    destination_lat = get_latitude(destination_raw)
-    destination_long = get_longitude(destination_raw)
-    destination = get_string(destination_lat, destination_long)
-    params = urllib.parse.urlencode({"api": api, "origin": origin, "destination": destination,})
-    url = f"{DIRECTIONS_BASE_URL}?{params}"
-    return url
 
 def get_directions_url_trails(origin_lat, origin_long, destination_lat, destination_long):
     '''Creates directions url using origin and destination longitude

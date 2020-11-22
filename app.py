@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from gear_functions import get_weather_data, get_trail_data, gear_evaluation
 from trail_list_functions import get_trails, get_custom_trails
 from match_me import filter_trails, trail_locations, get_map_api_key, calculate_fitness
-from map_trail import get_directions_url, get_lat_long
+from map_trail import get_lat_long
 # from forms import LoginForm, RegistrationForm
 import webbrowser
 from config import Config
@@ -10,12 +10,14 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager, current_user, login_user, logout_user
 from models import *
+from flask.logging import create_logger # For logging
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
+LOG = create_logger(app)
 
 # TODO: save "radius" and "address" if navigated to from "find trails" page to "fitness values" page (and back again)
 # TODO: auto-populate drop-down selections for user on "fitness values" page if they had previously made slections
@@ -47,6 +49,7 @@ def find_trails():
         map_api_key = get_map_api_key()
         rad, addr = request.form['rad'], request.form['address']
         lat, long = get_lat_long(addr)
+
         all_trails_list = get_trails(lat, long, rad)
 
         # Get optional search values and create new, custom list if any values are not None

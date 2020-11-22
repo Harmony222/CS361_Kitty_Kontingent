@@ -27,18 +27,21 @@
 
                 <div class="container">
                     <form action='/find_trails' method="POST" class="text-left card-body">
+                        <!-- Form Address -->
                         <div class="form-group">
                             <label for="address">Address:</label>
                             <input class="form-control form-control-lg" type="text" name="address" placeholder="e.g. Seattle, WA or 47.6,-122.33" required>
                         </div>
+                        <!-- Form Radius -->
                         <div class="form-group">
                             <label for="longitude">Radius (in miles):</label>
                             <input class="form-control form-control-lg" type="number" name="rad" step="any" max="300" min="1" value="100">
                         </div>
+                        <!-- Hidden fitness value; Appears if user got Fitness Level -->
                         <input type="hidden" name="user_fitness" value={{user_fitness}}>
+                        <!-- Form Min and Max Length -->
                         <div class="form-group">
                             <label for="length">Length (optional, in miles):</label>
-                            <!-- <span class="align-middle"> -->
                             <input class="form-control form-control-lg" type="number" name="min_length" id="min_length" step="any" placeholder="Enter minimum length" min="0">
                             <div class="row">
                                 <div class="col-sm-6"></div>
@@ -46,6 +49,7 @@
                             </div>
                             <input class="form-control form-control-lg" type="number" name="max_length" id="max_length" step="any" placeholder="Enter maximum length" min="0">
                         </div>
+                        <!-- Form Difficulty -->
                         <div class="form-group">
                             <label for="difficulty">Difficulty (optional):</label>
                             <select class="form-control" name="difficulty" id="difficulty">

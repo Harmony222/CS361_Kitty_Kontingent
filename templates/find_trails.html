@@ -168,6 +168,7 @@
                                 <table class="table sortable table-hover">
                                     <thead>
                                         <tr>
+                                            <!-- Headers -->
                                             <th scope="col">Trail</th>
                                             <th scope="col">Length(mi)</th>
                                             <th scope="col">Difficulty</th>
@@ -175,56 +176,58 @@
                                             <th scope="col">Low(ft)</th>
                                             <th scope="col">High(ft)</th>
                                             <th scope="col">Location</th>
-                                            <!-- <th scope="col">Gear</th> -->
-                                            <!-- <th scope="col">Info</th> -->
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {% for row in trails_list %}
                                         <tr data-toggle="modal" data-target="#id_{{ row[0] }}" title="Click for more info!">
+                                            <!-- Trail name -->
                                             <td>{{ row[1] }}</td>
+                                            <!-- Length -->
                                             <td>{{ row[2] }}</td>
+                                            <!-- Difficulty -->
                                             <td>{{ row[3] }}</td>
-                                            <!-- star ratings -->
-                                            <td>
-                                                {{ row[4] }}
-                                            </td>
+                                            <!-- Rating -->
+                                            <td>{{ row[4] }}</td>
+                                            <!-- Low -->
                                             <td>{{ row[9] }}</td>
+                                            <!-- High -->
                                             <td>{{ row[8] }}</td>
+                                            <!-- Location -->
                                             <td>{{ row[5] }}</td>
-                                            <!-- <td><a href="{{ row[14] }}" target="_blank">Recommended Gear</a></td> -->
-                                            <!-- <td><button type="button" class="btn btn-warning btn-padded btn-lg" data-toggle="modal" data-target="#exampleModalCenter"> trail info </button></td> -->
-                                            <!-- <td> -->
-                                            <!-- Button trigger modal for more info -->
-                                            <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#id_{{ row[0] }}">
-                                                    Trail Info
-                                                </button> -->
 
-                                            <!-- Modal for more info -->
+                                            <!-- Modal for more trailinfo -->
                                             <div class="modal fade" id="id_{{ row[0] }}" tabindex=" -1 " role="dialog" aria-labelledby="modalTrailNameTitle" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                                                     <div class="modal-content">
+                                                        <!-- Modal Header with Trail Title and X (close) button -->
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="modalTrailNameTitle">
+                                                                <!-- Trail Title -->
                                                                 {{ row[1] }}
                                                             </h5>
                                                             <button type="button" class="close" data-dismiss="modal">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
                                                         </div>
+                                                        <!-- Modal body -->
                                                         <div class="modal-body">
                                                             <div class="row">
+                                                                <!-- Trail description -->
                                                                 <div class="col-sm-8">
                                                                     {{ row[12] }}
                                                                 </div>
+                                                                <!-- Trail picture -->
                                                                 <div class="col-sm-4">
                                                                     <img src="{{ row[7] }}" class="img-fluid">
                                                                 </div>
                                                             </div>
                                                             <div class="row">
+                                                                <!-- Navigation Button -->
                                                                 <div class="col-sm-4">
                                                                     <a class="btn btn-primary btn-block" href="{{ row[13] }}" role="button" target="_blank" data-toggle="tooltip" title="Click to open new Google Maps tab">Navigate to Trailhead</a>
                                                                 </div>
+                                                                <!-- Gears Button -->
                                                                 <div class="col-sm-4">
                                                                     <a class="btn btn-primary btn-block" href="{{ row[14] }}" role="button" target="_blank" data-toggle="tooltip" title="Click to get Customized Gear list">Gear for Trail</a>
                                                                 </div>
@@ -233,6 +236,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
+                                                            <!-- Close Button -->
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="tooltip" data-placement="left" title="Close window">Close</button>
                                                         </div>
                                                     </div>
@@ -255,24 +259,3 @@
     </div>
 </div>
 {% endblock content %}
-
-
-<!-- Modal -->
-<!-- <div class="modal fade " id="exampleModalCenter " tabindex="-1 " role="dialog " aria-labelledby="exampleModalCenterTitle " aria-hidden="true ">
-    <div class="modal-dialog modal-dialog-centered " role="document ">
-        <div class="modal-content ">
-            <div class="modal-header ">
-                <h5 class="modal-title " id="exampleModalLongTitle ">Modal title</h5>
-                <button type="button " class="close " data-dismiss="modal " aria-label="Close ">
-            <span aria-hidden="true ">&times;</span>
-          </button>
-            </div>
-            <div class="modal-body ">
-                ...
-            </div>
-            <div class="modal-footer ">
-                <button type="button " class="btn btn-secondary " data-dismiss="modal ">Close</button>
-            </div>
-        </div>
-    </div>
-</div> -->
