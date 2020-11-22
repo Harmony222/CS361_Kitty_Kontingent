@@ -1,5 +1,8 @@
-from app import db
-from app import login
+from extensions import db
+# import login was also causing circular imports problems, I commented it out here
+# because I didn't see it used anywhere in models.py, if its needed we'll have
+# to do something else to fix circular imports issue
+# from app import login
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
