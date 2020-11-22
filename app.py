@@ -10,6 +10,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager, current_user, login_user, logout_user
 from models import *
+import datetime
+import calendar
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -130,54 +132,102 @@ def my_info():
 @app.route('/display_info', methods=["GET", "POST"])
 def display_info():
     if request.method == 'GET':             # render the user's info
+        if current_user.is_authenticated:
+            curr_user = db.session.query(User).filter_by(username=current_user.username).first()
+            if curr_user.date_of_birth is not None:
+                year = curr_user.date_of_birth.year
+                month = calendar.month_name[curr_user.date_of_birth.month]
+                day = curr_user.date_of_birth.day
+            else:
+                year = ""
+                month = ""
+                day = ""
+            if curr_user.gender == "m":
+                gender = "Male"
+            elif curr_user.gender == "f":
+                gender = "Female"
+            else:
+                gender = ""
+
+            if curr_user.height is not None:
+                total_inches = curr_user.height
+                feet = total_inches // 12
+                inches = total_inches % 12
+                height = str(feet) + "\' " + str(inches) + "\""
+            else:
+                height = ""
+            if curr_user.weight is not None:
+                weight = str(curr_user.weight)
+            else:
+                weight = ""
+            if curr_user.address is not None:
+                address = curr_user.address
+            else:
+                address = ""
+            if curr_user.address2 is not None:
+                address2 = curr_user.address2
+            else:
+                address2 = ""
+
+            # create names for fitness levels
+            level = curr_user.fitness_level
+            user_fitness = ""
+            if level == 1:
+                user_fitness = "low"
+            elif level == 2:
+                user_fitness = "medium"
+            elif level == 3:
+                user_fitness = "high"
+            elif level == 4:
+                user_fitness = "very high"
+
+            return render_template('display_info.html', title="My Info", active={'my_info':True}, username=curr_user.username, 
+                                    month=month, day=day, year=year, gender=gender, height=height, weight=weight, 
+                                    address=address, address2=address2, user_fitness=user_fitness)
         return render_template('display_info.html', title="My Info", active={'my_info':True})
     elif request.method == 'POST':          # Edit Info form was submitted, get the values and display them
-#         month = request.form['month']
-#         day = request.form['day']
-#         year = request.form['year']
-#         gender = request.form['gender']
-#         height = request.form['height']
-#         weight = request.form['weight']
-#         address = request.form['address']
-#         address2 = request.form['address2']
-#         city = request.form['city']
-#         state = request.form['state']
-#         zip = request.form['zip']
-#         country = request.form['country']
-#         days = int(request.form['days'])
-#         hours = int(request.form['hours'])
-#         intensity = int(request.form['intensity'])
-#         miles = int(request.form['miles'])
+        if current_user.is_authenticated:
+            curr_user = db.session.query(User).filter_by(username=current_user.username).first()
 
-#         # calculate the user's fitness level
-#         # first get the average number of hours of physical activity per week
-#         avg_hours = days * hours // 7
-#         level = avg_hours
-#         # adjust level based off of the user's intensity when hiking
-#         if intensity > avg_hours and avg_hours <= 3:
-#             level += 1
-#         elif intensity < avg_hours and avg_hours >= 2:
-#             level -= 1
-#         # adjust level based off of the user's average length for a hike
-#         if miles > avg_hours and level <= 3:
-#             level += 1
-#         elif miles < avg_hours and level >= 2:
-#             level -= 1
-#         # ensure level is a value from 1-4
-#         if level <= 1:
-#             level = 1
-#         # create names for fitness levels
-#         level_str = ""
-#         if level == 1:
-#             level_str = "low"
-#         elif level == 2:
-#             level_str = "medium"
-#         elif level == 3:
-#             level_str = "high"
-#         elif level == 4:
-#             level_str = "very high"
+            # add form fields to the database for the current user
+            month = int(request.form.get('month')) or None
+            day = int(request.form.get('day')) or None
+            year = int(request.form.get('year')) or None
+            if month is not None and day is not None and year is not None:
+                birth_date = datetime.date(year, month, day)
+                curr_user.date_of_birth = birth_date
+            gender = request.form.get('gender') or ""
+            if gender == "Male":
+                curr_user.gender = "m"
+            elif gender == "Female":
+                curr_user.gender = "f"
+            else:
+                curr_user.gender = ""
+            if request.form.get('height'):
+                curr_user.height = int(request.form.get('height'))
+            else:
+                curr_user.height = None
+            if request.form.get('weight'):
+                curr_user.weight = int(request.form.get('weight'))
+            else:
+                curr_user.weight = None
+            curr_user.address = request.form.get('address') or ""
+            curr_user.address2 = request.form.get('address2') or ""
 
-        return render_template('display_info.html', active={'my_info': True})
+    #        city = request.form.get('city') or ""
+    #        state = request.form.get('state') or ""
+    #        zip_code = request.form.get('zip') or ""
+    #        country = request.form.get('country') or ""
+            days = int(request.form['days'])
+            hours = int(request.form['hours'])
+            intensity = int(request.form['intensity'])
+            miles = int(request.form['miles'])
+
+            level = calculate_fitness(request.form['days'], request.form['hours'], request.form['miles'], request.form['intensity'])
+            curr_user.fitness_level = level
+            db.session.commit()
+
+        return redirect(url_for('display_info'))
 
 @app.route('/signin', methods=["GET", "POST"])
 def signin():
