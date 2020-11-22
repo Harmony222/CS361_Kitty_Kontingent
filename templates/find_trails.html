@@ -6,8 +6,12 @@
 <!-- JS -->
 <script src="{{ url_for('static', filename='js/filter.js') }}"></script>
 
-<!-- Modal -->
-
+<!-- Tooltips -->
+<script>
+    $(function() {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>
 
 <!-- Doesn't work... :( -->
 <!-- <script src="{{ url_for('static', filename='js/map_view.js') }}"></script> -->
@@ -145,6 +149,9 @@
     <h4>
         Hiking Trails Within {{radius}} Miles of {{address}}
     </h4>
+    <h5>
+        (Click on any trail to see more info)
+    </h5>
     <div class="map-list-pane">
         <nav>
             <div class="nav nav-tabs nav-justified" id="nav-tab" role="tablist">
@@ -216,17 +223,17 @@
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-sm-4">
-                                                                    <a class="btn btn-primary btn-block" href="{{ row[13] }}" role="button" target="_blank">Navigate to Trailhead</a>
+                                                                    <a class="btn btn-primary btn-block" href="{{ row[13] }}" role="button" target="_blank" data-toggle="tooltip" title="Click to open new Google Maps tab">Navigate to Trailhead</a>
                                                                 </div>
                                                                 <div class="col-sm-4">
-                                                                    <a class="btn btn-primary btn-block" href="{{ row[14] }}" role="button" target="_blank">Gear for Trail</a>
+                                                                    <a class="btn btn-primary btn-block" href="{{ row[14] }}" role="button" target="_blank" data-toggle="tooltip" title="Click to get Customized Gear list">Gear for Trail</a>
                                                                 </div>
                                                                 <div class="col-sm-4">
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="tooltip" data-placement="left" title="Close window">Close</button>
                                                         </div>
                                                     </div>
                                                 </div>
