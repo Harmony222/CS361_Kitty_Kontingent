@@ -89,8 +89,9 @@ def find_trails():
         if "active-tab" in request.form:
             active_tab = request.form['active-tab']
         
-        if request.form['user_fitness'] == 'False' and not isinstance(user_fitness, int):
-            user_fitness = False
+        if request.form['user_fitness'] == 'False':
+            if not current_user.is_authenticated:
+                user_fitness = False
         else:
             user_fitness = int(request.form['user_fitness'])
 
