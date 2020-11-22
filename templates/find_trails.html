@@ -26,60 +26,35 @@
 <script>
     // MAP UI SCRIPT
     function initMap() {
-        const location = {
-            lat: {
-                {
-                    lat
-                }
-            },
-            lng: {
-                {
-                    lon
-                }
-            }
-        };
+        const location = { lat: {{ lat }}, lng: {{ lon }} };
         const map = new google.maps.Map(document.getElementById("map"), {
             zoom: 8,
             center: location,
         });
         setMarkers(map);
     }
-    let LOCATIONS = {
-        {
-            locations | safe
-        }
-    };
+
+    let LOCATIONS = {{ locations | safe }};
 
     function setMarkers(map) {
         const icons = {
-            red: {
-                icon: "http://maps.google.com/mapfiles/kml/paddle/red-circle.png",
-            },
-            yellow: {
-                icon: "http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png",
-            },
-            green: {
-                icon: "http://maps.google.com/mapfiles/kml/paddle/grn-circle.png",
-            },
+            red: { icon: "http://maps.google.com/mapfiles/kml/paddle/red-circle.png", },
+            yellow: { icon: "http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png", },
+            green: { icon: "http://maps.google.com/mapfiles/kml/paddle/grn-circle.png", },
         };
-        let infoWindow = new google.maps.InfoWindow({
-            maxWidth: 250
-        });
+        let infoWindow = new google.maps.InfoWindow({ maxWidth: 250 });
         for (let i = 0; i < LOCATIONS.length; i++) {
             let trail = LOCATIONS[i];
-            let infoContent = `<h5>${trail[0]}</h5>` +
-                `<div><p>${trail[3]}</p></div>` +
-                `<div><p><strong>Length:</strong> ${trail[4]} miles</p></div>` +
-                `<div><p><strong>Rating:</strong> ${trail[5]} stars</p></div>` +
-                `<div><p><strong>Difficulty:</strong> ${trail[6]}</p></div>` +
-                `<div><p><strong>${trail[7]}</strong></p></div>` +
-                `<a href="${trail[8]}" target="_blank" title="get directions" role="button" class="btn btn-info btn-sm btn-marker">Get Directions</a>` +
-                `<a href="${trail[9]}" target="_blank" role="button" class="btn btn-outline-info btn-sm btn-marker">Recommended Gear</a>`;
+            let infoContent = `<h5>${trail[0]}</h5>`
+                + `<div><p>${trail[3]}</p></div>`
+                + `<div><p><strong>Length:</strong> ${trail[4]} miles</p></div>`
+                + `<div><p><strong>Rating:</strong> ${trail[5]} stars</p></div>`
+                + `<div><p><strong>Difficulty:</strong> ${trail[6]}</p></div>`
+                + `<div><p><strong>${trail[7]}</strong></p></div>`
+                + `<a href="${trail[8]}" target="_blank" title="get directions" role="button" class="btn btn-info btn-sm btn-marker">Get Directions</a>`
+                + `<a href="${trail[9]}" target="_blank" role="button" class="btn btn-outline-info btn-sm btn-marker">Recommended Gear</a>`;
             let marker = new google.maps.Marker({
-                position: {
-                    lat: parseFloat(trail[1]),
-                    lng: parseFloat(trail[2])
-                },
+                position: { lat: parseFloat(trail[1]), lng: parseFloat(trail[2]) },
                 map,
                 // icon: icons['red'].icon,
                 title: trail[0],
@@ -90,6 +65,7 @@
             });
         }
     }
+
     // records which tab is active on page load, list or map
     $(function() {
         if ($("#map-view").attr("class").includes("active")) $('#active-tab').val('map');
@@ -97,57 +73,58 @@
     });
 </script>
 
-<!-- FILTER TRAILS UI -->
-<!-- check if fitness has been gathered or not -->
-{% if user_fitness %}
-<div id="filter-div">
-    <button id="filter-button" class="btn btn-lg btn-info" data-placement="right" data-html="true" data-popover-content="#filter-popover" data-toggle="popover" onclick="toggleButton()">
-                {% if filtered %}
-                    Clear or Change Filter
-                {% else %}
-                    Filter Trails Just for You
-                {% endif %}
-        </button>
-    <!-- Content for Popover -->
-    <div class="hidden" id="filter-popover">
-        <div id="popover-title">
-            Choose how you want to feel from the hike (click or slide)
-        </div>
-        <div id="popover-content">
-            <div id="popover-slider">
-                <form action="/find_trails" method="POST">
-                    <label id="slider-label" for="slider-range">I want a hike that...</label>
-                    <input id="filter-slider" name="filter-slider" type="range" class="custom-range" min="1" max="3" oninput="$('#filter-slider-in').html(this.value)">
-                    <label id="filter-slider-in" class="hidden">2</label>
-                    <ul class="difficulty-list">
-                        <li>is easy and chill</li>
-                        <li>matches my fitness level</li>
-                        <li>challenges me!</li>
-                    </ul>
-                    <input type="hidden" name="rad" value={{radius}}>
-                    <input type="hidden" name="address" value={{address}}>
-                    <input type="hidden" name="user_fitness" value={{user_fitness}}>
-                    <input type="hidden" name="active-tab" value="list" id="active-tab">
-                    <button name="filter" type="submit" class="btn btn-sm btn-info">Save</button>
-                    <button name="clear" type="submit" class="btn btn-sm btn-info">Clear Filter</button>
-                </form>
+<div class="card-header text-center">
+    <!-- FILTER TRAILS BUTTON -->
+    <!-- check if fitness has been gathered or not -->
+    {% if user_fitness %}
+    <div id="filter-div">
+        <button id="filter-button" class="btn btn-md btn-info" data-placement="right" data-html="true" data-popover-content="#filter-popover" data-toggle="popover" onclick="toggleButton()">
+                    {% if filtered %}
+                        Clear or Change Filter
+                    {% else %}
+                        Filter Trails Just for You
+                    {% endif %}
+            </button>
+        <!-- Content for Popover -->
+        <div class="hidden" id="filter-popover">
+            <div id="popover-title">
+                Choose how you want to feel from the hike (click or slide)
+            </div>
+            <div id="popover-content">
+                <div id="popover-slider">
+                    <form action="/find_trails" method="POST">
+                        <label id="slider-label" for="slider-range">I want a hike that...</label>
+                        <input id="filter-slider" name="filter-slider" type="range" class="custom-range" min="1" max="3" oninput="$('#filter-slider-in').html(this.value)">
+                        <label id="filter-slider-in" class="hidden">2</label>
+                        <ul class="difficulty-list">
+                            <li>is easy and chill</li>
+                            <li>matches my fitness level</li>
+                            <li>challenges me!</li>
+                        </ul>
+                        <input type="hidden" name="rad" value={{radius}}>
+                        <input type="hidden" name="address" value={{address}}>
+                        <input type="hidden" name="user_fitness" value={{user_fitness}}>
+                        <input type="hidden" name="active-tab" value="list" id="active-tab">
+                        <button name="filter" type="submit" class="btn btn-sm btn-info">Save</button>
+                        <button name="clear" type="submit" class="btn btn-sm btn-info">Clear Filter</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-{% else %}
-<div class="container pt-5">
-    <form action="/fitness_values" title="Calculate your fitness to customize your trail results!">
-        <input type="hidden" name="rad" value={{radius}}>
-        <input type="hidden" name="address" value={{address}}>
-        <input type="submit" value="Calculate your fitness level" class="btn btn-lg btn-info">
-    </form>
-</div>
-{% endif %}
+    {% else %}
+        <form action="/fitness_values" title="Calculate your fitness to customize your trail results!" >
+            <input type="hidden" name="rad" value={{radius}}>
+            <input type="hidden" name="address" value={{address}}>
+            <h5 style="display: inline-block;">
+                If you would like to filter trails for personal preference, 
+            </h5> <input type="submit" value="Calculate your fitness level" class="btn btn-sm btn-info">
+        </form>
+    {% endif %}
 
-<div class="card-header text-center">
+    <!-- TRAIL TABLE -->
     <h4>
-        Hiking Trails Within {{radius}} Miles of {{address}}
+        <b>Hiking Trails Within {{radius}} Miles of {{address}}</b>
     </h4>
     <h5>
         (Click on any trail to see more info)
@@ -186,7 +163,7 @@
                                             <!-- Length -->
                                             <td>{{ row[2] }}</td>
                                             <!-- Difficulty -->
-                                            <td>{{ row[3] }}</td>
+                                            <td title="out of 6 levels">Level {{ diff_dict[row[3]] }}</td>
                                             <!-- Rating -->
                                             <td>{{ row[4] }}</td>
                                             <!-- Low -->
