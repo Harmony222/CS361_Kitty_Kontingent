@@ -156,72 +156,76 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for row in trails_list %}
-                                        <tr data-toggle="modal" data-target="#id_{{ row[0] }}" title="Click for more info!">
-                                            <!-- Trail name -->
-                                            <td>{{ row[1] }}</td>
-                                            <!-- Length -->
-                                            <td>{{ row[2] }}</td>
-                                            <!-- Difficulty -->
-                                            <td title="out of 6 levels">Level {{ diff_dict[row[3]] }}</td>
-                                            <!-- Rating -->
-                                            <td>{{ row[4] }}</td>
-                                            <!-- Low -->
-                                            <td>{{ row[9] }}</td>
-                                            <!-- High -->
-                                            <td>{{ row[8] }}</td>
-                                            <!-- Location -->
-                                            <td>{{ row[5] }}</td>
+                                        {% if no_results %}
+                                        <tr> <td> <b> Sorry, no trails match your request! </b> </td> </tr>
+                                        {% else %}
+                                            {% for row in trails_list %}
+                                            <tr data-toggle="modal" data-target="#id_{{ row[0] }}" title="Click for more info!">
+                                                <!-- Trail name -->
+                                                <td>{{ row[1] }}</td>
+                                                <!-- Length -->
+                                                <td>{{ row[2] }}</td>
+                                                <!-- Difficulty -->
+                                                <td title="out of 6 levels">Level {{ diff_dict[row[3]] }}</td>
+                                                <!-- Rating -->
+                                                <td>{{ row[4] }}</td>
+                                                <!-- Low -->
+                                                <td>{{ row[9] }}</td>
+                                                <!-- High -->
+                                                <td>{{ row[8] }}</td>
+                                                <!-- Location -->
+                                                <td>{{ row[5] }}</td>
 
-                                            <!-- Modal for more trailinfo -->
-                                            <div class="modal fade" id="id_{{ row[0] }}" tabindex=" -1 " role="dialog" aria-labelledby="modalTrailNameTitle" aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                                                    <div class="modal-content">
-                                                        <!-- Modal Header with Trail Title and X (close) button -->
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="modalTrailNameTitle">
-                                                                <!-- Trail Title -->
-                                                                {{ row[1] }}
-                                                            </h5>
-                                                            <button type="button" class="close" data-dismiss="modal">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <!-- Modal body -->
-                                                        <div class="modal-body">
-                                                            <div class="row">
-                                                                <!-- Trail description -->
-                                                                <div class="col-sm-8">
-                                                                    {{ row[12] }}
+                                                <!-- Modal for more trailinfo -->
+                                                <div class="modal fade" id="id_{{ row[0] }}" tabindex=" -1 " role="dialog" aria-labelledby="modalTrailNameTitle" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                                        <div class="modal-content">
+                                                            <!-- Modal Header with Trail Title and X (close) button -->
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="modalTrailNameTitle">
+                                                                    <!-- Trail Title -->
+                                                                    {{ row[1] }}
+                                                                </h5>
+                                                                <button type="button" class="close" data-dismiss="modal">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <!-- Modal body -->
+                                                            <div class="modal-body">
+                                                                <div class="row">
+                                                                    <!-- Trail description -->
+                                                                    <div class="col-sm-8">
+                                                                        {{ row[12] }}
+                                                                    </div>
+                                                                    <!-- Trail picture -->
+                                                                    <div class="col-sm-4">
+                                                                        <img src="{{ row[7] }}" class="img-fluid">
+                                                                    </div>
                                                                 </div>
-                                                                <!-- Trail picture -->
-                                                                <div class="col-sm-4">
-                                                                    <img src="{{ row[7] }}" class="img-fluid">
+                                                                <div class="row">
+                                                                    <!-- Navigation Button -->
+                                                                    <div class="col-sm-4">
+                                                                        <a class="btn btn-primary btn-block" href="{{ row[13] }}" role="button" target="_blank" data-toggle="tooltip" title="Click to open new Google Maps tab">Navigate to Trailhead</a>
+                                                                    </div>
+                                                                    <!-- Gears Button -->
+                                                                    <div class="col-sm-4">
+                                                                        <a class="btn btn-primary btn-block" href="{{ row[14] }}" role="button" target="_blank" data-toggle="tooltip" title="Click to get Customized Gear list">Gear for Trail</a>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="row">
-                                                                <!-- Navigation Button -->
-                                                                <div class="col-sm-4">
-                                                                    <a class="btn btn-primary btn-block" href="{{ row[13] }}" role="button" target="_blank" data-toggle="tooltip" title="Click to open new Google Maps tab">Navigate to Trailhead</a>
-                                                                </div>
-                                                                <!-- Gears Button -->
-                                                                <div class="col-sm-4">
-                                                                    <a class="btn btn-primary btn-block" href="{{ row[14] }}" role="button" target="_blank" data-toggle="tooltip" title="Click to get Customized Gear list">Gear for Trail</a>
-                                                                </div>
-                                                                <div class="col-sm-4">
-                                                                </div>
+                                                            <div class="modal-footer">
+                                                                <!-- Close Button -->
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="tooltip" data-placement="left" title="Close window">Close</button>
                                                             </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <!-- Close Button -->
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="tooltip" data-placement="left" title="Close window">Close</button>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <!-- </td> -->
-                                        </tr>
-                                        {% endfor %}
+                                                <!-- </td> -->
+                                            </tr>
+                                            {% endfor %}
+                                        {% endif %}
                                     </tbody>
                                 </table>
                             </div>

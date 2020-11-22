@@ -24,6 +24,7 @@ login = LoginManager(app)
 # TODO: auto-populate drop-down selections for user on "fitness values" page if they had previously made slections
 # (and then the page was re-loaded or navigated away from)
 # TODO: save trail list results between pages?
+# TODO: check if user is logged in before allowing 'edit info'
 
 ## TRAIL LIST STRUCTURE RETURNED BY GET_TRAILS(LAT, LONG, RAD) - BY INDEX REFERENCE
 ## 0-id, 1-name, 2-length, 3-difficulty, 4-starVotes, 5-location, 6-url, 7-imgMedium 
@@ -79,6 +80,11 @@ def find_trails():
             user_fitness = False
         else:
             user_fitness = int(request.form['user_fitness'])
+
+        # check for no results
+        no_results=False
+        if len(all_trails_list) == 0:
+            no_results=True
         
         # check for filter or a cleared filter for original list
         if "filter-slider" not in request.form or "clear" in request.form:
@@ -86,7 +92,7 @@ def find_trails():
                                    trails_list=all_trails_list, radius=rad, address=addr, filtered=False,
                                    map_api_key=map_api_key, lat=lat, lon=long, locations=locations, 
                                    view_tab=active_tab, user_fitness=user_fitness, diff_dict=diff_dict,
-                                   new_addr=new_addr)
+                                   new_addr=new_addr, no_results=no_results)
 
         # filter trails
         else:
@@ -95,16 +101,19 @@ def find_trails():
             # filter trails on slider value
             trails_list = filter_trails(all_trails_list, request.form["filter-slider"], user_fitness)
             locations = trail_locations(trails_list)
+            if len(trails_list) == 0:
+                no_results=True
             return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails': True},
                                        trails_list=trails_list, radius=rad, address=addr, filtered=True,
                                        map_api_key=map_api_key, lat=lat, lon=long, locations=locations,
                                        view_tab=active_tab, user_fitness=user_fitness, diff_dict=diff_dict,
-                                       new_addr=new_addr)
+                                       new_addr=new_addr, no_results=no_results)
     # else render page asking for data
     else:
-        # save fitness calculation
-        if not isinstance(user_fitness, int):
+        # check for logged in user
+        if not current_user.is_authenticated:
             user_fitness = False
+
         if request.method == 'POST':
             user_fitness = calculate_fitness(request.form['days'], request.form['hours'], request.form['miles'], request.form['intensity'])
         return render_template('find_trails_get.html', title='Find Hiking Trails', active={'find_trails': True}, 
@@ -206,11 +215,11 @@ def display_info():
             curr_user = db.session.query(User).filter_by(username=current_user.username).first()
 
             # add form fields to the database for the current user
-            month = int(request.form.get('month')) or None
-            day = int(request.form.get('day')) or None
-            year = int(request.form.get('year')) or None
+            month = request.form.get('month') or None
+            day = request.form.get('day') or None
+            year = request.form.get('year') or None
             if month is not None and day is not None and year is not None:
-                birth_date = datetime.date(year, month, day)
+                birth_date = datetime.date(int(year), int(month), int(day))
                 curr_user.date_of_birth = birth_date
             gender = request.form.get('gender') or ""
             if gender == "Male":
