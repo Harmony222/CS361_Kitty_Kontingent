@@ -20,6 +20,7 @@ login = LoginManager(app)
 # TODO: save "radius" and "address" if navigated to from "find trails" page to "fitness values" page (and back again)
 # TODO: auto-populate drop-down selections for user on "fitness values" page if they had previously made slections
 # (and then the page was re-loaded or navigated away from)
+# TODO: save trail list results between pages?
 
 ## TRAIL LIST STRUCTURE RETURNED BY GET_TRAILS(LAT, LONG, RAD) - BY INDEX REFERENCE
 ## 0-id, 1-name, 2-length, 3-difficulty, 4-starVotes, 5-location, 6-url, 7-imgMedium 
@@ -52,7 +53,7 @@ def find_trails():
         min_length = request.form.get('min_length') or 0
         max_length = request.form.get('max_length') or False
         difficulty = request.form.get('difficulty') or False
-        if difficulty or (min_length > 0) or max_length:
+        if difficulty or (float(min_length) > 0) or max_length:
             all_trails_list = get_custom_trails(all_trails_list, min_length, max_length, difficulty)
         
         locations = trail_locations(all_trails_list)
