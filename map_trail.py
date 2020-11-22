@@ -12,6 +12,7 @@ api = 1
 def get_geocode(address):
     '''Returns a geocode for an address, which is a json that contains
     multiple values, including latitude and longitude'''
+    print(address)
     params = urllib.parse.urlencode({"address": address, "key": directions_api_key,})
     url = f"{GEOCODE_BASE_URL}?{params}"
     result = json.load(urllib.request.urlopen(url))
@@ -21,12 +22,13 @@ def get_geocode(address):
 
 def get_lat_long(address):
     '''Returns the latitude and longitude from an address'''
-    geocode_result = get_geocode(address=address)
+    print(address)
+    geocode_result = get_geocode(address)
     # if geocode_result:
     latitude = geocode_result[0]['geometry']['location']['lat']
     longitude = geocode_result[0]['geometry']['location']['lng']
     # else:
-    #     return None, None
+    # return None, None
     return latitude, longitude
 
 def get_string(latitude, longitude):
