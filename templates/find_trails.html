@@ -23,15 +23,28 @@
     // MAP UI SCRIPT
     function initMap() {
         const location = {
-            lat: {{ lat }},
-            lng: {{ lon }}};
+            lat: {
+                {
+                    lat
+                }
+            },
+            lng: {
+                {
+                    lon
+                }
+            }
+        };
         const map = new google.maps.Map(document.getElementById("map"), {
             zoom: 8,
             center: location,
         });
         setMarkers(map);
     }
-    let LOCATIONS = {{ locations | safe }};
+    let LOCATIONS = {
+        {
+            locations | safe
+        }
+    };
 
     function setMarkers(map) {
         const icons = {
@@ -145,7 +158,7 @@
                     <div class="container">
                         <div class="card bg-light text-dark border-dark">
                             <div>
-                                <table class="table table-striped sortable">
+                                <table class="table sortable table-hover">
                                     <thead>
                                         <tr>
                                             <th scope="col">Trail</th>
@@ -161,7 +174,7 @@
                                     </thead>
                                     <tbody>
                                         {% for row in trails_list %}
-                                        <tr data-toggle="modal" data-target="#id_{{ row[0] }}" title="click for more info!">
+                                        <tr data-toggle="modal" data-target="#id_{{ row[0] }}" title="Click for more info!">
                                             <td>{{ row[1] }}</td>
                                             <td>{{ row[2] }}</td>
                                             <td>{{ row[3] }}</td>
@@ -175,49 +188,49 @@
                                             <!-- <td><a href="{{ row[14] }}" target="_blank">Recommended Gear</a></td> -->
                                             <!-- <td><button type="button" class="btn btn-warning btn-padded btn-lg" data-toggle="modal" data-target="#exampleModalCenter"> trail info </button></td> -->
                                             <!-- <td> -->
-                                                <!-- Button trigger modal for more info -->
-                                                <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#id_{{ row[0] }}">
+                                            <!-- Button trigger modal for more info -->
+                                            <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#id_{{ row[0] }}">
                                                     Trail Info
                                                 </button> -->
 
-                                                <!-- Modal for more info -->
-                                                <div class="modal fade" id="id_{{ row[0] }}" tabindex=" -1 " role="dialog" aria-labelledby="modalTrailNameTitle" aria-hidden="true">
-                                                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="modalTrailNameTitle">
-                                                                    {{ row[1] }}
-                                                                </h5>
-                                                                <button type="button" class="close" data-dismiss="modal">
+                                            <!-- Modal for more info -->
+                                            <div class="modal fade" id="id_{{ row[0] }}" tabindex=" -1 " role="dialog" aria-labelledby="modalTrailNameTitle" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="modalTrailNameTitle">
+                                                                {{ row[1] }}
+                                                            </h5>
+                                                            <button type="button" class="close" data-dismiss="modal">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <div class="row">
-                                                                    <div class="col-sm-8">
-                                                                        {{ row[12] }}
-                                                                    </div>
-                                                                    <div class="col-sm-4">
-                                                                        <img src="{{ row[7] }}" class="img-fluid">
-                                                                    </div>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="row">
+                                                                <div class="col-sm-8">
+                                                                    {{ row[12] }}
                                                                 </div>
-                                                                <div class="row">
-                                                                    <div class="col-sm-4">
-                                                                        <a class="btn btn-primary btn-block" href="{{ row[13] }}" role="button" target="_blank">Navigate to Trailhead</a>
-                                                                    </div>
-                                                                    <div class="col-sm-4">
-                                                                        <a class="btn btn-primary btn-block" href="{{ row[14] }}" role="button" target="_blank">Gear for Trail</a>
-                                                                    </div>
-                                                                    <div class="col-sm-4">
-                                                                    </div>
+                                                                <div class="col-sm-4">
+                                                                    <img src="{{ row[7] }}" class="img-fluid">
                                                                 </div>
                                                             </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <div class="row">
+                                                                <div class="col-sm-4">
+                                                                    <a class="btn btn-primary btn-block" href="{{ row[13] }}" role="button" target="_blank">Navigate to Trailhead</a>
+                                                                </div>
+                                                                <div class="col-sm-4">
+                                                                    <a class="btn btn-primary btn-block" href="{{ row[14] }}" role="button" target="_blank">Gear for Trail</a>
+                                                                </div>
+                                                                <div class="col-sm-4">
+                                                                </div>
                                                             </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                                         </div>
                                                     </div>
                                                 </div>
+                                            </div>
                                             <!-- </td> -->
                                         </tr>
                                         {% endfor %}
