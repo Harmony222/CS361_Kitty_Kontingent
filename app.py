@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from gear_functions import get_weather_data, get_trail_data, gear_evaluation
 from trail_list_functions import get_trails, get_custom_trails
 from match_me import filter_trails, trail_locations, get_map_api_key, calculate_fitness
-from map_trail import get_lat_long
+from map_trail import get_lat_long, get_string
 # from forms import LoginForm, RegistrationForm
 import webbrowser
 from config import Config
@@ -65,8 +65,13 @@ def find_trails():
     if request.method == 'POST' and request.form['rad'] != 'False':
         map_api_key = get_map_api_key()
         rad, addr = request.form['rad'], request.form['address']
+        print(request.form['address'])
         lat, long = get_lat_long(addr)
 
+        # change addr to single string for jinja reference
+        new_addr = get_string(lat, long)
+        print(addr)
+        
         all_trails_list = get_trails(lat, long, rad)
 
         # Get optional search values and create new, custom list if any values are not None
@@ -89,7 +94,8 @@ def find_trails():
             return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails': True},
                                    trails_list=all_trails_list, radius=rad, address=addr, filtered=False,
                                    map_api_key=map_api_key, lat=lat, lon=long, locations=locations, 
-                                   view_tab=active_tab, user_fitness=user_fitness, diff_dict=diff_dict)
+                                   view_tab=active_tab, user_fitness=user_fitness, diff_dict=diff_dict,
+                                   new_addr=new_addr)
 
         # filter trails
         else:
@@ -101,7 +107,8 @@ def find_trails():
             return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails': True},
                                        trails_list=trails_list, radius=rad, address=addr, filtered=True,
                                        map_api_key=map_api_key, lat=lat, lon=long, locations=locations,
-                                       view_tab=active_tab, user_fitness=user_fitness, diff_dict=diff_dict)
+                                       view_tab=active_tab, user_fitness=user_fitness, diff_dict=diff_dict,
+                                       new_addr=new_addr)
     # else render page asking for data
     else:
         # save fitness calculation
