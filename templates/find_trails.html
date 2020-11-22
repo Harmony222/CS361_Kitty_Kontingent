@@ -23,28 +23,15 @@
     // MAP UI SCRIPT
     function initMap() {
         const location = {
-            lat: {
-                {
-                    lat
-                }
-            },
-            lng: {
-                {
-                    lon
-                }
-            }
-        };
+            lat: {{ lat }},
+            lng: {{ lon }}};
         const map = new google.maps.Map(document.getElementById("map"), {
             zoom: 8,
             center: location,
         });
         setMarkers(map);
     }
-    let LOCATIONS = {
-        {
-            locations | safe
-        }
-    };
+    let LOCATIONS = {{ locations | safe }};
 
     function setMarkers(map) {
         const icons = {
@@ -169,12 +156,12 @@
                                             <th scope="col">High(ft)</th>
                                             <th scope="col">Location</th>
                                             <!-- <th scope="col">Gear</th> -->
-                                            <th scope="col">Info</th>
+                                            <!-- <th scope="col">Info</th> -->
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {% for row in trails_list %}
-                                        <tr>
+                                        <tr data-toggle="modal" data-target="#id_{{ row[0] }}" title="click for more info!">
                                             <td>{{ row[1] }}</td>
                                             <td>{{ row[2] }}</td>
                                             <td>{{ row[3] }}</td>
@@ -187,11 +174,11 @@
                                             <td>{{ row[5] }}</td>
                                             <!-- <td><a href="{{ row[14] }}" target="_blank">Recommended Gear</a></td> -->
                                             <!-- <td><button type="button" class="btn btn-warning btn-padded btn-lg" data-toggle="modal" data-target="#exampleModalCenter"> trail info </button></td> -->
-                                            <td>
+                                            <!-- <td> -->
                                                 <!-- Button trigger modal for more info -->
-                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#id_{{ row[0] }}">
+                                                <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#id_{{ row[0] }}">
                                                     Trail Info
-                                                </button>
+                                                </button> -->
 
                                                 <!-- Modal for more info -->
                                                 <div class="modal fade" id="id_{{ row[0] }}" tabindex=" -1 " role="dialog" aria-labelledby="modalTrailNameTitle" aria-hidden="true">
@@ -231,7 +218,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </td>
+                                            <!-- </td> -->
                                         </tr>
                                         {% endfor %}
                                     </tbody>

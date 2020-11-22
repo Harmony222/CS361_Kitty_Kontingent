@@ -49,10 +49,10 @@ def find_trails():
         all_trails_list = get_trails(lat, long, rad)
 
         # Get optional search values and create new, custom list if any values are not None
-        min_length = request.form.get('min_length') or None
-        max_length = request.form.get('max_length') or None
-        difficulty = request.form.get('difficulty') or None
-        if (difficulty is not None) or ((min_length is not None) and (max_length is not None)):
+        min_length = request.form.get('min_length') or 0
+        max_length = request.form.get('max_length') or False
+        difficulty = request.form.get('difficulty') or False
+        if difficulty or (min_length > 0) or max_length:
             all_trails_list = get_custom_trails(all_trails_list, min_length, max_length, difficulty)
         
         locations = trail_locations(all_trails_list)

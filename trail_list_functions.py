@@ -32,10 +32,29 @@ def get_trails(lat, lon, dist):
 def get_custom_trails(all_trails_list, min_length, max_length, difficulty):
     '''Returns custom list of trails with optional search values'''
     
-    min_len, max_len = set_min_max_length(min_length, max_length)
-    custom_difficulty = set_custom_difficulty(difficulty)
+    if min_length > 0:
+        min_len = float(min_length)
+    
+    if max_length:
+         max_length = float(max_length)
+
+    if difficulty:
+        custom_difficulty = set_custom_difficulty(difficulty)
+        
     custom_trails_list = build_custom_trails_list(all_trails_list, min_len, max_len, custom_difficulty) 
 
+    return custom_trails_list
+
+def build_custom_trails_list(all_trails_list, min_len, max_len, custom_difficulty):
+    '''Returns list of custom trails filtered by length and/or custom_difficulty'''
+    
+    custom_trails_list = []
+    
+    for trail in all_trails_list:
+        cur_trail = set_trail_by_length(trail, min_len, max_len)
+        cur_trail_2 = set_trail_by_difficulty(cur_trail, trail, custom_difficulty)
+        add_to_custom_trails_list(custom_trails_list, cur_trail_2)
+    
     return custom_trails_list   
         
 
