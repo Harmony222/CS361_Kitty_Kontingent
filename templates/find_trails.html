@@ -1,18 +1,19 @@
-{% extends "layout.html" %} 
-{% block content %}
+{% extends "layout.html" %} {% block content %}
+
 <!-- CSS FORMATTING -->
-<link rel="stylesheet" href="{{ url_for('static', filename='css/find_trails_.css') }}" type="text/css"/>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/find_trails_.css') }}" type="text/css" />
 
 <!-- JS -->
 <script src="{{ url_for('static', filename='js/filter.js') }}"></script>
+
+<!-- Modal -->
+
 
 <!-- Doesn't work... :( -->
 <!-- <script src="{{ url_for('static', filename='js/map_view.js') }}"></script> -->
 
 <!-- TRAILHEAD MAP API -->
-<script
-    src="https://maps.googleapis.com/maps/api/js?key={{ map_api_key }}&callback=initMap&libraries=&v=weekly"
-    defer>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ map_api_key }}&callback=initMap&libraries=&v=weekly" defer>
 </script>
 
 <!-- SORT TABLE SCRIPT-->
@@ -21,33 +22,60 @@
 <script>
     // MAP UI SCRIPT
     function initMap() {
-        const location = { lat: {{ lat }}, lng: {{ lon }} };
+        const location = {
+            lat: {
+                {
+                    lat
+                }
+            },
+            lng: {
+                {
+                    lon
+                }
+            }
+        };
         const map = new google.maps.Map(document.getElementById("map"), {
             zoom: 8,
             center: location,
         });
         setMarkers(map);
     }
-    let LOCATIONS = {{ locations | safe }};
+    let LOCATIONS = {
+        {
+            locations | safe
+        }
+    };
+
     function setMarkers(map) {
         const icons = {
-            red: { icon: "http://maps.google.com/mapfiles/kml/paddle/red-circle.png", },
-            yellow: { icon: "http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png", },
-            green: { icon: "http://maps.google.com/mapfiles/kml/paddle/grn-circle.png", },
+            red: {
+                icon: "http://maps.google.com/mapfiles/kml/paddle/red-circle.png",
+            },
+            yellow: {
+                icon: "http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png",
+            },
+            green: {
+                icon: "http://maps.google.com/mapfiles/kml/paddle/grn-circle.png",
+            },
         };
-        let infoWindow = new google.maps.InfoWindow({ maxWidth: 250 });
+        let infoWindow = new google.maps.InfoWindow({
+            maxWidth: 250
+        });
         for (let i = 0; i < LOCATIONS.length; i++) {
             let trail = LOCATIONS[i];
-            let infoContent = `<h5>${trail[0]}</h5>`
-                + `<div><p>${trail[3]}</p></div>`
-                + `<div><p><strong>Length:</strong> ${trail[4]} miles</p></div>`
-                + `<div><p><strong>Rating:</strong> ${trail[5]} stars</p></div>`
-                + `<div><p><strong>Difficulty:</strong> ${trail[6]}</p></div>`
-                + `<div><p><strong>${trail[7]}</strong></p></div>`
-                + `<a href="${trail[8]}" target="_blank" title="get directions" role="button" class="btn btn-info btn-sm btn-marker">Get Directions</a>`
-                + `<a href="${trail[9]}" target="_blank" role="button" class="btn btn-outline-info btn-sm btn-marker">Recommended Gear</a>`;
+            let infoContent = `<h5>${trail[0]}</h5>` +
+                `<div><p>${trail[3]}</p></div>` +
+                `<div><p><strong>Length:</strong> ${trail[4]} miles</p></div>` +
+                `<div><p><strong>Rating:</strong> ${trail[5]} stars</p></div>` +
+                `<div><p><strong>Difficulty:</strong> ${trail[6]}</p></div>` +
+                `<div><p><strong>${trail[7]}</strong></p></div>` +
+                `<a href="${trail[8]}" target="_blank" title="get directions" role="button" class="btn btn-info btn-sm btn-marker">Get Directions</a>` +
+                `<a href="${trail[9]}" target="_blank" role="button" class="btn btn-outline-info btn-sm btn-marker">Recommended Gear</a>`;
             let marker = new google.maps.Marker({
-                position: { lat: parseFloat(trail[1]), lng: parseFloat(trail[2]) },
+                position: {
+                    lat: parseFloat(trail[1]),
+                    lng: parseFloat(trail[2])
+                },
                 map,
                 // icon: icons['red'].icon,
                 title: trail[0],
@@ -68,51 +96,49 @@
 <!-- FILTER TRAILS UI -->
 <!-- check if fitness has been gathered or not -->
 {% if user_fitness %}
-    <div id="filter-div">
-        <button id="filter-button" class="btn btn-lg btn-info" data-placement="right"
-                data-html="true" data-popover-content="#filter-popover" data-toggle="popover" onclick="toggleButton()">
+<div id="filter-div">
+    <button id="filter-button" class="btn btn-lg btn-info" data-placement="right" data-html="true" data-popover-content="#filter-popover" data-toggle="popover" onclick="toggleButton()">
                 {% if filtered %}
                     Clear or Change Filter
                 {% else %}
                     Filter Trails Just for You
                 {% endif %}
         </button>
-        <!-- Content for Popover -->
-        <div class="hidden" id="filter-popover">
-            <div id="popover-title">
+    <!-- Content for Popover -->
+    <div class="hidden" id="filter-popover">
+        <div id="popover-title">
             Choose how you want to feel from the hike (click or slide)
-            </div>
-            <div id="popover-content">
+        </div>
+        <div id="popover-content">
             <div id="popover-slider">
                 <form action="/find_trails" method="POST">
-                <label id="slider-label" for="slider-range">I want a hike that...</label>
-                <input id="filter-slider" name="filter-slider" type="range" class="custom-range" min="1" max="3"
-                oninput="$('#filter-slider-in').html(this.value)">
-                <label id="filter-slider-in" class="hidden">2</label>
-                <ul class="difficulty-list">
-                    <li>is easy and chill</li>
-                    <li>matches my fitness level</li>
-                    <li>challenges me!</li>
-                </ul>
-                <input type="hidden" name="rad" value={{radius}}>
-                <input type="hidden" name="address" value={{address}}>
-                <input type="hidden" name="user_fitness" value={{user_fitness}}>
-                <input type="hidden" name="active-tab" value="list" id="active-tab">
-                <button name="filter" type="submit" class="btn btn-sm btn-info">Save</button>
-                <button name="clear" type="submit" class="btn btn-sm btn-info">Clear Filter</button>
+                    <label id="slider-label" for="slider-range">I want a hike that...</label>
+                    <input id="filter-slider" name="filter-slider" type="range" class="custom-range" min="1" max="3" oninput="$('#filter-slider-in').html(this.value)">
+                    <label id="filter-slider-in" class="hidden">2</label>
+                    <ul class="difficulty-list">
+                        <li>is easy and chill</li>
+                        <li>matches my fitness level</li>
+                        <li>challenges me!</li>
+                    </ul>
+                    <input type="hidden" name="rad" value={{radius}}>
+                    <input type="hidden" name="address" value={{address}}>
+                    <input type="hidden" name="user_fitness" value={{user_fitness}}>
+                    <input type="hidden" name="active-tab" value="list" id="active-tab">
+                    <button name="filter" type="submit" class="btn btn-sm btn-info">Save</button>
+                    <button name="clear" type="submit" class="btn btn-sm btn-info">Clear Filter</button>
                 </form>
-            </div>
             </div>
         </div>
     </div>
+</div>
 {% else %}
-    <div class="container pt-5">
-        <form action="/fitness_values" title="Calculate your fitness to customize your trail results!">
-            <input type="hidden" name="rad" value={{radius}}>
-            <input type="hidden" name="address" value={{address}}>
-            <input type="submit" value="Calculate your fitness level" class="btn btn-lg btn-info">
-        </form>
-    </div>
+<div class="container pt-5">
+    <form action="/fitness_values" title="Calculate your fitness to customize your trail results!">
+        <input type="hidden" name="rad" value={{radius}}>
+        <input type="hidden" name="address" value={{address}}>
+        <input type="submit" value="Calculate your fitness level" class="btn btn-lg btn-info">
+    </form>
+</div>
 {% endif %}
 
 <div class="card-header text-center">
@@ -122,8 +148,8 @@
     <div class="map-list-pane">
         <nav>
             <div class="nav nav-tabs nav-justified" id="nav-tab" role="tablist">
-            <a class="nav-item nav-link {{ 'active' if view_tab == 'list' }}" id="list-view-tab" data-toggle="tab" href="#list-view" role="tab" aria-controls="list-view" aria-selected="true" onclick="$('#active-tab').val('list')">List View</a>
-            <a class="nav-item nav-link {{ 'active' if view_tab == 'map' }}" id="map-view-tab" data-toggle="tab" href="#map-view" role="tab" aria-controls="map-view" aria-selected="false" onclick="$('#active-tab').val('map')">Map View</a>
+                <a class="nav-item nav-link {{ 'active' if view_tab == 'list' }}" id="list-view-tab" data-toggle="tab" href="#list-view" role="tab" aria-controls="list-view" aria-selected="true" onclick="$('#active-tab').val('list')">List View</a>
+                <a class="nav-item nav-link {{ 'active' if view_tab == 'map' }}" id="map-view-tab" data-toggle="tab" href="#map-view" role="tab" aria-controls="map-view" aria-selected="false" onclick="$('#active-tab').val('map')">Map View</a>
             </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
@@ -142,14 +168,14 @@
                                             <th scope="col">Low(ft)</th>
                                             <th scope="col">High(ft)</th>
                                             <th scope="col">Location</th>
-                                            <th scope="col">Gear</th>
-                                            <th scope="col">info</th>
+                                            <!-- <th scope="col">Gear</th> -->
+                                            <th scope="col">Info</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {% for row in trails_list %}
                                         <tr>
-                                            <td><a href="{{ row[13] }}" target="_blank" title="get directions">{{ row[1] }}</a></td>
+                                            <td>{{ row[1] }}</td>
                                             <td>{{ row[2] }}</td>
                                             <td>{{ row[3] }}</td>
                                             <!-- star ratings -->
@@ -159,8 +185,53 @@
                                             <td>{{ row[9] }}</td>
                                             <td>{{ row[8] }}</td>
                                             <td>{{ row[5] }}</td>
-                                            <td><a href="{{ row[14] }}" target="_blank">Recommended Gear</a></td>
+                                            <!-- <td><a href="{{ row[14] }}" target="_blank">Recommended Gear</a></td> -->
                                             <!-- <td><button type="button" class="btn btn-warning btn-padded btn-lg" data-toggle="modal" data-target="#exampleModalCenter"> trail info </button></td> -->
+                                            <td>
+                                                <!-- Button trigger modal for more info -->
+                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#id_{{ row[0] }}">
+                                                    Trail Info
+                                                </button>
+
+                                                <!-- Modal for more info -->
+                                                <div class="modal fade" id="id_{{ row[0] }}" tabindex=" -1 " role="dialog " aria-labelledby="modalTrailNameTitle" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title " id="modalTrailNameTitle">
+                                                                    {{ row[1] }}
+                                                                </h5>
+                                                                <button type="button" class="close" data-dimiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="row">
+                                                                    <div class="col-sm-8">
+                                                                        {{ row[12] }}
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <img src="{{ row[7] }}" class="img-fluid">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-sm-4">
+                                                                        <a class="btn btn-primary btn-block" href="{{ row[13] }}" role="button" target="_blank">Navigate to Trailhead</a>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <a class="btn btn-primary btn-block" href="{{ row[14] }}" role="button" target="_blank">Gear for Trail</a>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>
@@ -178,21 +249,22 @@
 </div>
 {% endblock content %}
 
+
 <!-- Modal -->
-<!-- <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+<!-- <div class="modal fade " id="exampleModalCenter " tabindex="-1 " role="dialog " aria-labelledby="exampleModalCenterTitle " aria-hidden="true ">
+    <div class="modal-dialog modal-dialog-centered " role="document ">
+        <div class="modal-content ">
+            <div class="modal-header ">
+                <h5 class="modal-title " id="exampleModalLongTitle ">Modal title</h5>
+                <button type="button " class="close " data-dismiss="modal " aria-label="Close ">
+            <span aria-hidden="true ">&times;</span>
           </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body ">
                 ...
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <div class="modal-footer ">
+                <button type="button " class="btn btn-secondary " data-dismiss="modal ">Close</button>
             </div>
         </div>
     </div>
