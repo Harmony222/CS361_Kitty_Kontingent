@@ -14,6 +14,7 @@ googlemaps = "*"
 flask-sqlalchemy = "*"
 flask-migrate = "*"
 flask-wtf = "*"
+flask-login = "*"
 
 [requires]
 python_version = "3.8"

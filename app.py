@@ -103,7 +103,7 @@ def gear():
     if request.method == "GET" and request.args:
         trail_id = request.args["trail_id"]
     else:
-        trail_id = 7011192
+        trail_id = None
     trail_data = get_trail_data(trail_id)
     if trail_data:
         weather_data = get_weather_data(trail_data["latitude"], 
