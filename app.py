@@ -10,14 +10,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager, current_user, login_user, logout_user
 from models import *
-from flask.logging import create_logger # For logging
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
-LOG = create_logger(app)
 
 # TODO: save "radius" and "address" if navigated to from "find trails" page to "fitness values" page (and back again)
 # TODO: auto-populate drop-down selections for user on "fitness values" page if they had previously made slections
