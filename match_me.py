@@ -4,15 +4,31 @@ import requests
 import json
 
 # desired difficulty = feeling selection + fitness level
-difficulty_num = {
-    2: "green",
-    3: "greenBlue",
-    4: "blue",
-    5: "blueBlack",
-    6: "black",
-    7: "dblack"
-}
+# difficulty_num = {
+#     2: "green",
+#     3: "greenBlue",
+#     4: "blue",
+#     5: "blueBlack",
+#     6: "black",
+#     7: "dblack"
+# }
+# def filter_trails(trails_list, feeling, fitness):
+#     """
+#     Filters trails based on feeling selection and fitness level.
+#     Feelings are 1, 2, and 3 for "easy and chill", "match my fitness level"
+#     and "challenge me!". Fitness levels are 1-4.
+#     """
+#     filtered_trails = []
+#     filter_difficulty = difficulty_num[int(feeling) + int(fitness)]
 
+#     # filter trails - trail[3] is eg. "green"
+#     for trail in trails_list:
+#         if filter_difficulty == trail[3]:
+#             filtered_trails.append(trail)
+#     return filtered_trails
+
+# int representation of trail difficulty for feeling + fitness
+diff_dict = { "green": 0, "greenBlue": 1, "blue": 2, "blueBlack": 3, "black": 4, "dblack": 5}
 
 def filter_trails(trails_list, feeling, fitness):
     """
@@ -21,12 +37,20 @@ def filter_trails(trails_list, feeling, fitness):
     and "challenge me!". Fitness levels are 1-4.
     """
     filtered_trails = []
-    filter_difficulty = difficulty_num[int(feeling) + int(fitness)]
+    feel, fit = int(feeling), int(fitness)
 
     # filter trails - trail[3] is eg. "green"
     for trail in trails_list:
-        if filter_difficulty == trail[3]:
-            filtered_trails.append(trail)
+        if feel == 1:
+            if fit > diff_dict[trail[3]]:
+                filtered_trails.append(trail)
+        elif feel == 2:
+            if fit == diff_dict[trail[3]]:
+                filtered_trails.append(trail)
+        else:
+            if fit < diff_dict[trail[3]]:
+                filtered_trails.append(trail)
+
     return filtered_trails
 
 

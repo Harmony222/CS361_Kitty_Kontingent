@@ -3,16 +3,30 @@ from gear_functions import get_weather_data, get_trail_data, gear_evaluation
 from trail_list_functions import get_trails, get_custom_trails
 from match_me import filter_trails, trail_locations, get_map_api_key, calculate_fitness
 from map_trail import get_lat_long, get_string
-# from forms import LoginForm, RegistrationForm
-import webbrowser
-from config import Config
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager, current_user, login_user, logout_user
-from models import *
-import datetime
-import calendar
-from extensions import db
+from database_structures import *
+from config import Config
+import datetime, calendar
+# from extensions import db
+# from forms import LoginForm, RegistrationForm
+# import webbrowser, datetime, calendar
+# from flask_sqlalchemy import SQLAlchemy
+
+# TODO: PRIORITY - FIX ERROR FROM INVALID ADDRESS ENTERED
+# TODO: when "filter trails just for me" is used, it does not save the custom filter options 
+# (eg. length, difficulty) selected before - create variables to pass these back and forth from app.py and html
+# TODO: save "radius" and "address" if navigated to from "find trails" page to "fitness values" page 
+# (and back again)
+# TODO: auto-populate drop-down selections for user on "fitness values" page if they had previously made slections
+# (and then the page was re-loaded or navigated away from)
+# TODO: save trail list results between pages?
+# TODO: check if user is logged in before allowing 'edit info'
+# TODO: change lat/long printed on trails list page to adress string
+
+## TRAIL LIST STRUCTURE RETURNED BY GET_TRAILS(LAT, LONG, RAD) - BY INDEX REFERENCE
+## 0-id, 1-name, 2-length, 3-difficulty, 4-starVotes, 5-location, 6-url, 7-imgMedium 
+## 8-high, 9-low, 10-latitude, 11-longitude, 12-summary, 13-directions_url, 14-gear_url
 
 # Fix circular imports issue
 # https://stackoverflow.com/questions/42909816/can-i-avoid-circular-imports-in-flask-and-sqlalchemy
@@ -31,17 +45,6 @@ app = create_app(Config)
 # db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
-
-# TODO: save "radius" and "address" if navigated to from "find trails" page to "fitness values" page 
-# (and back again)
-# TODO: auto-populate drop-down selections for user on "fitness values" page if they had previously made slections
-# (and then the page was re-loaded or navigated away from)
-# TODO: save trail list results between pages?
-# TODO: check if user is logged in before allowing 'edit info'
-
-## TRAIL LIST STRUCTURE RETURNED BY GET_TRAILS(LAT, LONG, RAD) - BY INDEX REFERENCE
-## 0-id, 1-name, 2-length, 3-difficulty, 4-starVotes, 5-location, 6-url, 7-imgMedium 
-## 8-high, 9-low, 10-latitude, 11-longitude, 12-summary, 13-directions_url, 14-gear_url
 
 @login.user_loader
 def load_user(id):
