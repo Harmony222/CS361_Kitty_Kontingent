@@ -13,11 +13,8 @@ import datetime, calendar
 # import webbrowser, datetime, calendar
 # from flask_sqlalchemy import SQLAlchemy
 
-# TODO: PRIORITY - FIX ERROR FROM INVALID ADDRESS ENTERED
 # TODO: when "filter trails just for me" is used, it does not save the custom filter options 
 # (eg. length, difficulty) selected before - create variables to pass these back and forth from app.py and html
-# TODO: save "radius" and "address" if navigated to from "find trails" page to "fitness values" page 
-# (and back again)
 # TODO: auto-populate drop-down selections for user on "fitness values" page if they had previously made slections
 # (and then the page was re-loaded or navigated away from)
 # TODO: save trail list results between pages?
@@ -198,14 +195,20 @@ def fitness_values():
 @app.route('/my_info', methods=["GET"])
 def my_info():
     if request.method == 'GET':
-        return render_template('my_info.html', title="My Info", active={'my_info':True})
+        logged_in = False
+        if current_user.is_authenticated:
+            logged_in = True
+        return render_template('my_info.html', title="My Info", logged_in=logged_in, active={'my_info':True})
+
     elif request.method == 'POST':
        return render_template('display_info.html', title="My Info", active={'display_info':True})
 
 @app.route('/display_info', methods=["GET", "POST"])
 def display_info():
+    logged_in = False
     if request.method == 'GET':             # render the user's info
         if current_user.is_authenticated:
+            logged_in = True
             curr_user = db.session.query(User).filter_by(username=current_user.username).first()
             if curr_user.date_of_birth is not None:
                 year = curr_user.date_of_birth.year
@@ -256,8 +259,9 @@ def display_info():
 
             return render_template('display_info.html', title="My Info", active={'my_info':True}, username=curr_user.username, 
                                     month=month, day=day, year=year, gender=gender, height=height, weight=weight, 
-                                    address=address, address2=address2, user_fitness=user_fitness)
-        return render_template('display_info.html', title="My Info", active={'my_info':True})
+                                    address=address, address2=address2, user_fitness=user_fitness,logged_in=logged_in)
+        return render_template('display_info.html', title="My Info", active={'my_info':True},logged_in=logged_in)
+
     elif request.method == 'POST':          # Edit Info form was submitted, get the values and display them
         if current_user.is_authenticated:
             curr_user = db.session.query(User).filter_by(username=current_user.username).first()
