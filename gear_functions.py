@@ -184,9 +184,10 @@ class Use_Condition:
     Represents a use condition, each use condition has a description and
     has gear items that fall under that use condition. 
     """
-    def __init__(self, name, description):
+    def __init__(self, name, description, icon):
         self._name = name
         self._description = description
+        self._icon = icon
         self._gear = {}
     
     def set_gear(self, gear_list):
@@ -196,7 +197,7 @@ class Use_Condition:
     
     def get_use_condition(self):
         return {self._name : {"description" : self._description, 
-                "gear" : self._gear}}
+                "gear" : self._gear, "icon" : self._icon}}
 
     def print_use_condition(self):
         print(self._name, self._description, self._gear)
@@ -240,43 +241,43 @@ def build_gear_meta_data():
     microspikes = Gear_Item("microspikes/crampons", "gear")
 
 
-    freezing = Use_Condition("freezing_temp", "Temperature < 31 \u00b0F.")
+    freezing = Use_Condition("freezing_temp", "Temperature < 31 \u00b0F.", "fas fa-thermometer-empty")
     freezing.set_gear([warm_jacket, warm_boots, gloves, warm_hat, 
                        long_underwear, warm_socks, face_mask])
 
-    cold = Use_Condition("cold_temp", "Temperature 31-45 \u00b0F.")
+    cold = Use_Condition("cold_temp", "Temperature 31-45 \u00b0F.", "fas fa-thermometer-quarter")
     cold.set_gear([light_med_jacket, gloves, warm_hat, hiking_boots])
 
-    cool = Use_Condition("cool_temp", "Temperature 46-65 \u00b0F.")
+    cool = Use_Condition("cool_temp", "Temperature 46-65 \u00b0F.", "fas fa-thermometer-half")
     cool.set_gear([light_jacket, hiking_shoes])
     
-    moderate = Use_Condition("moderate_temp", "Temperature 66-80 \u00b0F.")
+    moderate = Use_Condition("moderate_temp", "Temperature 66-80 \u00b0F.", "fas fa-thermometer-three-quarters")
     moderate.set_gear([hiking_shoes, hiking_boots, moisture_wicking_clothing])
 
-    warm = Use_Condition("warm_temp", "Temperature 81-90 \u00b0F.")
+    warm = Use_Condition("warm_temp", "Temperature 81-90 \u00b0F.", "fas fa-thermometer-full")
     warm.set_gear([moisture_wicking_clothing, shorts, hiking_sandals])
 
-    hot = Use_Condition("hot_temp", "Temperature >91 \u00b0F.")
+    hot = Use_Condition("hot_temp", "Temperature >91 \u00b0F.", "fas fa-thermometer-full")
     hot.set_gear([moisture_wicking_clothing, shorts, hiking_sandals, sun_hat, sun_protecetion])
 
-    all_use = Use_Condition("all", "All hikers should bring this!")
+    all_use = Use_Condition("all", "All hikers should bring this!", "fas fa-hiking")
     all_use.set_gear([daypack, water, snacks, hiking_boots, hiking_shoes, 
                       map_gps, sun_protecetion, first_aid])
 
-    rain = Use_Condition("rain", "Chance of rain or snow!")
+    rain = Use_Condition("rain", "Chance of rain or snow!", "fas fa-cloud-showers-heavy")
     rain.set_gear([rain_jacket, rain_pants, waterproof_socks, waterproof_shoes, 
                    gaiters])
     
-    snow = Use_Condition("snow", "There is snow on the ground.")
-    snow.set_gear([snowshoes, face_mask, snow_goggles, gaiters, trekking_poles, microspikes])
+    snow = Use_Condition("snow", "There is snow on the ground.", "far fa-snowflake")
+    snow.set_gear([snowshoes, face_mask, snow_goggles, gaiters, microspikes])
 
-    medium_duration = Use_Condition("medium_duration", "This will be a medium-long hike.")
+    medium_duration = Use_Condition("medium_duration", "This will be a medium-long hike.", "fas fa-clock")
     medium_duration.set_gear([lunch, extra_water])
 
-    long_duration = Use_Condition("long_duration", "This will be a long hike.")
+    long_duration = Use_Condition("long_duration", "This will be a long hike.", "fas fa-clock")
     long_duration.set_gear([lunch, extra_water, extra_food])
 
-    steep = Use_Condition("steep", "Steep trail or high total elevation gain.")
+    steep = Use_Condition("steep", "Steep trail or high total elevation gain.", "fas fa-mountain")
     steep.set_gear([trekking_poles])
 
     use_conditions = {**freezing.get_use_condition(), **cold.get_use_condition(),
@@ -296,11 +297,11 @@ def add_gear_item(gear_dict, use_condition):
         category = use_condition["gear"][gear_item]["category"]
         if gear_item not in gear_dict[category]:
             # add gear item if not already in gear_dict
-            gear_dict[category].update({gear_item : [use_condition["description"]]})
+            gear_dict[category].update({gear_item : [[use_condition["description"], use_condition["icon"]]]})
         else:
             # if gear item already in gear_dict, add use condition description to
             # existing gear item
-            gear_dict[category][gear_item].append(use_condition["description"])
+            gear_dict[category][gear_item].append([use_condition["description"], use_condition["icon"]])
     return gear_dict
 
 def get_gear(attributes, gear_meta_data):
@@ -315,4 +316,6 @@ def get_gear(attributes, gear_meta_data):
         for use_condition in gear_meta_data:
             if attribute == use_condition:
                 gear_dict = add_gear_item(gear_dict, gear_meta_data[use_condition])
+    with open("gear_data2.json", "w") as write_file:
+        json.dump(gear_dict, write_file, indent=4)
     return gear_dict

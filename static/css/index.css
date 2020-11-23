@@ -235,3 +235,7 @@ height: 100%;
 #main_container div {
     margin-bottom: 4em;
 }
+
+.tooltip {
+  pointer-events: none;
+}

@@ -25,3 +25,8 @@
 .gear_category h5 {
   text-transform: capitalize;
 }
+
+/* https://stackoverflow.com/questions/14326724/twitter-bootstrap-tooltip-flickers-when-placed-on-top-of-button-but-works-fine */
+.tooltip {
+  pointer-events: none;
+}
