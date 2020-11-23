@@ -77,14 +77,15 @@ def find_trails():
     # if user has entered trail search location data
     if request.method == 'POST' and request.form['rad'] != 'False':
         rad, addr = request.form['rad'], request.form['address']
-        lat, long = get_lat_long(addr)    
-        all_trails_list = get_trails(lat, long, rad)
+        lat, long = get_lat_long(addr)   
 
         # change addr to single string for jinja reference, check if valid
         if lat:    
             new_addr = get_string(lat, long)
         else:
-            return redirect(url_for('find_trails'))
+            return redirect(url_for('find_trails')) 
+        # get unfiltered trails list
+        all_trails_list = get_trails(lat, long, rad)
 
         # Get optional search values and create new, custom list if any values are not None
         min_length = request.form.get('min_length') or 0

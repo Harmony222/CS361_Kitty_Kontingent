@@ -22,11 +22,12 @@ def get_geocode(address):
 def get_lat_long(address):
     '''Returns the latitude and longitude from an address'''
     geocode_result = get_geocode(address)
-    # if geocode_result:
-    latitude = geocode_result[0]['geometry']['location']['lat']
-    longitude = geocode_result[0]['geometry']['location']['lng']
-    # else:
-    # return None, None
+    if len(geocode_result) > 0:
+        latitude = geocode_result[0]['geometry']['location']['lat']
+        longitude = geocode_result[0]['geometry']['location']['lng']
+    else:
+        return False, False
+
     return latitude, longitude
 
 def get_string(latitude, longitude):
