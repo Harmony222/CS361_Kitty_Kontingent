@@ -2,15 +2,26 @@
 {% extends "layout.html" %}
 {% block content %}
   <!-- USER DATA FOR FITNESS CALCULATION -->
-<form class="container" action="/fitness_values" method="POST">
-  <h4> Calculate Your Fitness Level </h4>
+<form class="container pt-5" action="/fitness_values" method="POST">
+  {% if incomplete %}
+    <div style="display: inline-block;">
+      <h4 style="float: left;">Calculate Your Fitness Level</h4>
+      <h5 style="position: absolute; right: 20%; color: red;">You must fill out all 4 to re-calculate!</h5>
+    </div>
+  {% else %}
+    <h4> Calculate Your Fitness Level </h4>
+  {% endif %}
   <div class="form-row">
     <div class="form-group col-md-9">
       <label for="inputQ1">How many days a week are you physically active on average?</label>
     </div>
     <div class="form-group col-md-3">
-      <select id="inputQ1" class="form-control" name="days" required>
-        <option value="">Choose...</option>
+      {% if user_fitness %}
+        <select id="inputQ1" class="form-control" name="days">
+      {% else %}
+        <select id="inputQ1" class="form-control" name="days" required>
+      {% endif %}
+        <option disabled selected value>Choose...</option>
         <option value="0">0 days per week</option>
         <option value="1">1 day per week</option>
         <option value="2">2 days per week</option>
@@ -28,8 +39,12 @@
       <label for="inputQ2">On days when you are physically active, how many hours are you physically active on average?</label>
     </div>
     <div class="form-group col-md-3">
-      <select id="inputQ2" class="form-control" name="hours" required>
-        <option value="">Choose...</option>
+      {% if user_fitness %}
+        <select id="inputQ2" class="form-control" name="hours">
+      {% else %}
+        <select id="inputQ2" class="form-control" name="hours" required>
+      {% endif %}
+        <option disabled selected value>Choose...</option>
         <option value="0">0 hours per day</option>
         <option value="1">1 hour per day</option>
         <option value="2">2 hours per day</option>
@@ -44,8 +59,12 @@
       <label for="inputQ3">What is your intensity level when you go hiking?</label>
     </div>
     <div class="form-group col-md-3">
-      <select id="inputQ3" class="form-control" name="intensity" required>
-        <option value="">Choose...</option>
+      {% if user_fitness %}
+        <select id="inputQ3" class="form-control" name="intensity">
+      {% else %}
+        <select id="inputQ3" class="form-control" name="intensity" required>
+      {% endif %}
+        <option disabled selected value>Choose...</option>
         <option value="1">easy stroll</option>
         <option value="2">mild effort</option>
         <option value="3">moderate effort</option>
@@ -60,8 +79,12 @@
       <label for="inputQ4">How many miles do you go on a hike on average?</label>
     </div>
     <div class="form-group col-md-3">
-      <select id="inputQ4" class="form-control" name="miles" required>
-        <option value="">Choose...</option>
+      {% if user_fitness %}
+        <select id="inputQ4" class="form-control" name="miles">
+      {% else %}
+        <select id="inputQ4" class="form-control" name="miles" required>
+      {% endif %}
+        <option disabled selected value>Choose...</option>
         <option value="0">less then 1 mile</option>
         <option value="1">1-2 miles</option>
         <option value="2">2-3 miles</option>
@@ -73,12 +96,13 @@
   </div>
   <input type="hidden" name="rad" value={{radius}}>
   <input type="hidden" name="address" value={{address}}>
+  <input type="hidden" name="user_fitness" value={{user_fitness}}>
   {% if user_fitness %}
     <dl class="row">
       <dt class="col-sm-2">Fitness Level:</dt>
       <dd class="col-sm-2">{{user_fitness}} (out of 4)</dd>
     </dl>
-    <button type="submit" class="btn btn-primary" formaction="/find_trails">Find Personalized Trails</button>
+    <button type="submit" class="btn btn-primary" formaction="/find_trails" formmethod="POST">Find Personalized Trails</button>
     <button type="submit" class="btn btn-primary">Re-Calculate Fitness Level</button>
   {% else %}
     <button type="submit" class="btn btn-primary">Calculate Fitness Level</button>

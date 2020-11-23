@@ -98,7 +98,7 @@
                         <label id="filter-slider-in" class="hidden">2</label>
                         <ul class="difficulty-list">
                             <li>is easy and chill</li>
-                            <li>matches my fitness level</li>
+                            <li>matches my fitness level (<b>{{ user_fitness }}</b>)</li>
                             <li>challenges me!</li>
                         </ul>
                         <input type="hidden" name="rad" value={{radius}}>
@@ -113,12 +113,13 @@
         </div>
     </div>
     {% else %}
-        <form action="/fitness_values" title="Calculate your fitness to customize your trail results!" >
+        <form action="/fitness_values" title="Calculate your fitness to customize your trail results!" method="POST">
             <input type="hidden" name="rad" value={{radius}}>
             <input type="hidden" name="address" value={{address}}>
             <h5 style="display: inline-block;">
                 If you would like to filter trails for personal preference, 
-            </h5> <input type="submit" value="Calculate your fitness level" class="btn btn-sm btn-info">
+            </h5> <button type="submit" class="btn btn-sm btn-info" method="POST">Calculate your fitness level</button>
+            <!-- <input type="submit" value="Calculate your fitness level" class="btn btn-sm btn-info"> -->
         </form>
     {% endif %}
 

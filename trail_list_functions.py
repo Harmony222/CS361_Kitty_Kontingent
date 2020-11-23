@@ -1,7 +1,7 @@
-import json
-import requests
 from config import trails_api_key
 from map_trail import get_directions_url_trails
+import json
+import requests
 import math
 
 def get_trails(lat, lon, dist):

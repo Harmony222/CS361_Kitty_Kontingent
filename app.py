@@ -1,12 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from gear_functions import get_weather_data, get_trail_data, gear_evaluation
 from trail_list_functions import get_trails, get_custom_trails
-from match_me import filter_trails, trail_locations, get_map_api_key, calculate_fitness
+from match_me import filter_trails, trail_locations, calculate_fitness #,get_map_api_key
 from map_trail import get_lat_long, get_string
 from flask_migrate import Migrate
 from flask_login import LoginManager, current_user, login_user, logout_user
 from database_structures import *
-from config import Config
+from config import Config, map_api_key
 import datetime, calendar
 # from extensions import db
 # from forms import LoginForm, RegistrationForm
@@ -23,6 +23,7 @@ import datetime, calendar
 # TODO: save trail list results between pages?
 # TODO: check if user is logged in before allowing 'edit info'
 # TODO: change lat/long printed on trails list page to adress string
+# TODO: add "distance to trail" column? (suggested by client)
 
 ## TRAIL LIST STRUCTURE RETURNED BY GET_TRAILS(LAT, LONG, RAD) - BY INDEX REFERENCE
 ## 0-id, 1-name, 2-length, 3-difficulty, 4-starVotes, 5-location, 6-url, 7-imgMedium 
@@ -65,20 +66,25 @@ def find_trails():
     # convert difficulty string into difficulty level
     diff_dict = { "green": 0, "greenBlue": 1, "blue": 2, "blueBlack": 3, "black": 4, "dblack": 5}
 
-    # check for logged in user and get fitness
+    # check for logged in user and get fitness if it exists
     if current_user.is_authenticated:
         curr_user = db.session.query(User).filter_by(username=current_user.username).first()
-        user_fitness = curr_user.fitness_level
+        if curr_user.fitness_level is not None:
+            user_fitness = curr_user.fitness_level
+        else:
+            user_fitness = False
 
     # if user has entered trail search location data
     if request.method == 'POST' and request.form['rad'] != 'False':
-        map_api_key = get_map_api_key()
         rad, addr = request.form['rad'], request.form['address']
         lat, long = get_lat_long(addr)    
         all_trails_list = get_trails(lat, long, rad)
 
-        # change addr to single string for jinja reference
-        new_addr = get_string(lat, long)
+        # change addr to single string for jinja reference, check if valid
+        if lat:    
+            new_addr = get_string(lat, long)
+        else:
+            return redirect(url_for('find_trails'))
 
         # Get optional search values and create new, custom list if any values are not None
         min_length = request.form.get('min_length') or 0
@@ -92,6 +98,7 @@ def find_trails():
         if "active-tab" in request.form:
             active_tab = request.form['active-tab']
         
+        # fix string to bool, don't overwrite logged-in user
         if request.form['user_fitness'] == 'False':
             if not current_user.is_authenticated:
                 user_fitness = False
@@ -127,12 +134,17 @@ def find_trails():
                                        new_addr=new_addr, no_results=no_results)
     # else render page asking for data
     else:
-        # check for logged in user
+        # check for logged-in user
         if not current_user.is_authenticated:
-            user_fitness = False
+            # fix strings from forms
+            if 'user_fitness' in request.form:
+                if request.form['user_fitness'] == 'False':
+                    user_fitness = False
+                else:
+                    user_fitness = int(request.form['user_fitness'])
+            else:
+                user_fitness = False
 
-        if request.method == 'POST':
-            user_fitness = calculate_fitness(request.form['days'], request.form['hours'], request.form['miles'], request.form['intensity'])
         return render_template('find_trails_get.html', title='Find Hiking Trails', active={'find_trails': True}, 
                                 user_fitness=user_fitness)
 
@@ -156,13 +168,31 @@ def gear():
 
 @app.route('/fitness_values', methods=["GET", "POST"])
 def fitness_values():
-    user_fitness = radius = address = False
-    if request.method == 'POST':
-        user_fitness = calculate_fitness(request.form['days'], request.form['hours'], request.form['miles'], request.form['intensity'])
-    if 'rad' in request.form and request.form['rad'] != 'False':
-        radius, address = request.form['rad'], request.form['address']
+    # redirect to info page if logged in
+    if current_user.is_authenticated:
+        return redirect(url_for('display_info'))
+
+    # checks for data received by page
+    user_fitness = request.form.get('user_fitness') or False
+    radius = request.form.get('rad') or False
+    address = request.form.get('address') or False
+    incomplete = False
+
+    # directed to self after form filled, check if all values present
+    if 'days' in request.form or 'hours' in request.form or 'miles' in request.form or 'intensity' in request.form:
+        if 'days' in request.form and 'hours' in request.form and 'miles' in request.form and 'intensity' in request.form:
+            user_fitness = calculate_fitness(request.form['days'], request.form['hours'], request.form['miles'], request.form['intensity'])
+        else:
+            incomplete = True
+
+    # fix incomplete address being passed between pages
+    if address and address != 'False':
+        lat, long = get_lat_long(address)
+        if lat:    
+            address = get_string(lat, long)
+
     return render_template('fitness_values.html', title="Fitness Calculation", active={'fitness_values':True},
-                            user_fitness=user_fitness, radius=radius, address=address)
+                            user_fitness=user_fitness, radius=radius, address=address, incomplete=incomplete)
 
 @app.route('/my_info', methods=["GET"])
 def my_info():
