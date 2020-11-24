@@ -8,7 +8,7 @@ from flask_login import LoginManager, current_user, login_user, logout_user
 from database_structures import *
 from config import Config, map_api_key
 import datetime, calendar
-from datetime import date
+from datetime import date, datetime
 # from extensions import db
 # from forms import LoginForm, RegistrationForm
 # import webbrowser, datetime, calendar
@@ -149,9 +149,9 @@ def find_trails():
 
 @app.route('/gear', methods=["GET", "POST"])
 def gear():
-    # Get date from from if new date selected
+    # Get date from form if new date selected
     if request.method == "POST":
-        selected_date = request.form["date_form"]
+        selected_date = datetime.strptime(request.form["date_form"], "%Y-%m-%d").date()
     else:
         selected_date = date.today()
     # Get trail_id from query args

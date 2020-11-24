@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from config import trails_api_key, weather_api_key, historical_weather_api_key
 import requests
 import json
@@ -11,7 +11,17 @@ def get_weather_data(latitude, longitude, selected_date):
     latitude = round(latitude, 2)
     longitude = round(longitude, 2)
     today = date.today()
-    print(selected_date)
+    forecast_date = today + timedelta(days=14)
+    if selected_date <= forecast_date:
+        # Visual crossing API call for current and forecast weather is selected
+        # date is <= 14 days from today's date
+        # print("visual crossing api call")
+        pass
+    else:
+        # weather company API call for historical weather if selected date is 
+        # greater than 14 days from today's date
+        # print("historical api call")
+        pass
 
     url = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/weatherdata/forecast"
     params = {"locations":f"{latitude},{longitude}", "aggregateHours":"24", 
