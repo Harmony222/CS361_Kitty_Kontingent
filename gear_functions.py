@@ -1,18 +1,18 @@
-from datetime import datetime
-from config import trails_api_key, weather_api_key
+from datetime import datetime, date
+from config import trails_api_key, weather_api_key, historical_weather_api_key
 import requests
 import json
 
-# for file path fix
-from os.path import dirname, join
-current_dir = dirname(__file__)
 
-def get_weather_data(latitude, longitude):
+def get_weather_data(latitude, longitude, selected_date):
     """ 
     Gets current weather data from weather API based on given latitude/longitude.
     """
     latitude = round(latitude, 2)
     longitude = round(longitude, 2)
+    today = date.today()
+    print(selected_date)
+
     url = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/weatherdata/forecast"
     params = {"locations":f"{latitude},{longitude}", "aggregateHours":"24", 
               "unitGroup":"us", "shortColumnNames":"true", "contentType":"json", 
@@ -22,6 +22,7 @@ def get_weather_data(latitude, longitude):
     # with open("weather5.json", "w") as write_file:
     #     json.dump(data_json, write_file, indent=4)
     weather_data = {
+        "date"          :   selected_date,
         "temperature"   :   data_json["currentConditions"]["temp"],
         "max_temp"      :   data_json["values"][0]["maxt"],
         "min_temp"      :   data_json["values"][0]["mint"],

@@ -8,6 +8,7 @@ from flask_login import LoginManager, current_user, login_user, logout_user
 from database_structures import *
 from config import Config, map_api_key
 import datetime, calendar
+from datetime import date
 # from extensions import db
 # from forms import LoginForm, RegistrationForm
 # import webbrowser, datetime, calendar
@@ -146,16 +147,24 @@ def find_trails():
         return render_template('find_trails_get.html', title='Find Hiking Trails', active={'find_trails': True}, 
                                 user_fitness=user_fitness)
 
-@app.route('/gear', methods=["GET"])
+@app.route('/gear', methods=["GET", "POST"])
 def gear():
-    if request.method == "GET" and request.args:
-        trail_id = request.args["trail_id"]
+    # Get date from from if new date selected
+    if request.method == "POST":
+        selected_date = request.form["date_form"]
     else:
-        trail_id = None
+        selected_date = date.today()
+    # Get trail_id from query args
+    if request.method == "GET" or request.method == "POST":
+        if request.args:
+            trail_id = request.args["trail_id"]
+        else:
+            trail_id = None
     trail_data = get_trail_data(trail_id)
     if trail_data:
         weather_data = get_weather_data(trail_data["latitude"], 
-                                        trail_data["longitude"])
+                                        trail_data["longitude"],
+                                        selected_date)
         gear_data = gear_evaluation(trail_data, weather_data)
     else:
         weather_data, gear_data = None, None

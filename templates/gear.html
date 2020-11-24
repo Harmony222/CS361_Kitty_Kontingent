@@ -60,10 +60,11 @@
     </div>
 
 
-    <div class="col">
+    <div class="col-md">
       <div class="flex-md-row" id="weather_body">
-        <h5>Weather Conditions for <br><span class="text-info">{{ trail_data.location }}</span></h5>
+        <h5>Weather Conditions for <br><span class="text-success">{{ trail_data.location }}</span></h5>
         {% if weather_data %}
+        <h6>Date: <span class="text-success">{{ weather_data.date }}</span></h6>
         <table>
           <tr>
             <td>Current temp: {{ weather_data.temperature }} &#176F</td>
@@ -84,8 +85,21 @@
             <td>Sunset: {{ weather_data.sunset }}</td>
           </tr>
         </table>
-        {% endif %}
       </div>
+      <div class="flex-md-row" id="form_body">
+        <form method="post" id="new_date_form">
+          <div class="form-group">
+            <label for="date_form">Change date:</label>
+            <input type="date" class="form-control" name="date_form" min="{{ weather_data.date }}" required value="{{ weather_data.date }}">
+          </div>
+          <div class="form-group">
+            <input type="submit" value="Submit">
+          </div>
+        </form>
+
+      </div>
+        {% endif %}
+
     </div>
   </div>
   {% else %}
