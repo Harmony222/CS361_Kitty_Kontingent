@@ -316,6 +316,6 @@ def get_gear(attributes, gear_meta_data):
         for use_condition in gear_meta_data:
             if attribute == use_condition:
                 gear_dict = add_gear_item(gear_dict, gear_meta_data[use_condition])
-    with open("gear_data2.json", "w") as write_file:
-        json.dump(gear_dict, write_file, indent=4)
+    # with open("gear_data2.json", "w") as write_file:
+    #     json.dump(gear_dict, write_file, indent=4)
     return gear_dict
