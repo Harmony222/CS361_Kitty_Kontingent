@@ -1,54 +1,107 @@
 from datetime import datetime, date, timedelta
-from config import trails_api_key, weather_api_key, historical_weather_api_key
+from config import trails_api_key, weather_api_key, historical_weather_api_key, sun_api_key
 import requests
 import json
 
+def get_sun_info(latitude, longitude, selected_date):
+    """ Return sunrise and sunset times for lat/lon for selected date """
+    url = "https://api.ipgeolocation.io/astronomy"
+    params = {"apiKey":sun_api_key, "lat":latitude, "long":longitude,
+              "date":selected_date}
+    response = requests.get(url = url, params = params)
+    data_json = response.json()
+    sunrise = datetime.strptime(data_json["sunrise"], "%H:%M").strftime("%I:%M %p")
+    sunset = datetime.strptime(data_json["sunset"], "%H:%M").strftime("%I:%M %p")
+    return sunrise, sunset
 
+def get_weather_forecast(latitude, longitude, selected_date):
+    """ Gets weather data for days <= 14 days from today's date """
+    # Number of days from today to selected_date
+    forecast_days = (selected_date - date.today()).days + 1
+    # Visual Crossing forecast API call
+    url = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/weatherdata/forecast"
+    params = {"locations":f"{latitude},{longitude}", "aggregateHours":"24", 
+              "unitGroup":"us", "shortColumnNames":"true", "contentType":"json", 
+              "key":weather_api_key, "forecastDays":f"{forecast_days}"}
+    response = requests.get(url = url, params = params)
+    data_json = response.json()["locations"][f"{latitude},{longitude}"]
+    # Select forecast data for the selected day
+    forecast = data_json["values"][forecast_days - 1]
+    # get sunrise and sunset info from separate API call
+    sunrise, sunset = get_sun_info(latitude, longitude, selected_date)
+    weather_data = {
+        "date"          :   selected_date,
+        "conditions"    :   forecast["conditions"] or None,
+        "temperature"   :   forecast["temp"] or None,
+        "max_temp"      :   forecast["maxt"] or None,
+        "min_temp"      :   forecast["mint"] or None,
+        "wind_speed"    :   forecast["wspd"] or None,
+        "wind_direction":   forecast["wdir"] or None,
+        "humidity"      :   forecast["humidity"] or None,
+        "prob_of_precip":   forecast["pop"] or None,
+        "precip"        :   None,
+        "snow_depth"    :   forecast["snowdepth"] or None,
+        "snow_accum"    :   None,
+        "cloud_cover"   :   forecast["cloudcover"] or None,
+        "sunrise"       :   sunrise or None,
+        "sunset"        :   sunset or None
+    }
+    return weather_data
+
+def get_historical_weather(latitude, longitude, selected_date):
+    """ 
+    Get historical weather data if selected date > 14 days from todays' date
+    """
+    url = "https://api.weather.com/v3/wx/almanac/daily/5day"
+    params = {"geocode":f"{latitude},{longitude}", "units":"e",
+              "startDay":selected_date.day, "startMonth":selected_date.month,
+              "format":"json", "apiKey":historical_weather_api_key}
+    response = requests.get(url = url, params = params)
+    data_json = response.json()
+    sunrise, sunset = get_sun_info(latitude, longitude, selected_date)
+    weather_data = {
+        "date"          :   selected_date,
+        "conditions"    :   None,
+        "temperature"   :   data_json["temperatureMean"][0] or None,
+        "max_temp"      :   data_json["temperatureAverageMax"][0] or None,
+        "min_temp"      :   data_json["temperatureAverageMin"][0] or None,
+        "wind_speed"    :   None,
+        "wind_direction":   None,
+        "humidity"      :   None,
+        "prob_of_precip":   None,
+        "precip"        :   data_json["precipitationAverage"][0] or None,
+        "snow_depth"    :   None,
+        "snow_accum"    :   data_json["snowAccumulationAverage"][0] or None,
+        "cloud_cover"   :   None,
+        "sunrise"       :   sunrise or None,
+        "sunset"        :   sunset or None
+    }
+    # precipitation accumulation <= 0.1 not considered significant
+    if weather_data["precip"] <= 0.1:
+        weather_data["precip"] = 0
+    return weather_data
+    
 def get_weather_data(latitude, longitude, selected_date):
     """ 
     Gets current weather data from weather API based on given latitude/longitude.
+    Get forecast weather data if selected date <= 14 days from today, otherwise
+    get historical weather data.
     """
     latitude = round(latitude, 2)
     longitude = round(longitude, 2)
     today = date.today()
     forecast_date = today + timedelta(days=14)
     if selected_date <= forecast_date:
-        # Visual crossing API call for current and forecast weather is selected
-        # date is <= 14 days from today's date
-        # print("visual crossing api call")
-        pass
+        # Use Visual Crossing API call for current and forecast weather is 
+        # selected date is <= 14 days from today's date
+        weather_data = get_weather_forecast(latitude, longitude, selected_date)
+        historical = False
     else:
-        # weather company API call for historical weather if selected date is 
-        # greater than 14 days from today's date
-        # print("historical api call")
-        pass
-
-    url = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/weatherdata/forecast"
-    params = {"locations":f"{latitude},{longitude}", "aggregateHours":"24", 
-              "unitGroup":"us", "shortColumnNames":"true", "contentType":"json", 
-              "key":weather_api_key, "forecastDays":"1"}
-    response = requests.get(url = url, params = params)
-    data_json = response.json()["locations"][f"{latitude},{longitude}"]
-    # with open("weather5.json", "w") as write_file:
-    #     json.dump(data_json, write_file, indent=4)
-    weather_data = {
-        "date"          :   selected_date,
-        "temperature"   :   data_json["currentConditions"]["temp"],
-        "max_temp"      :   data_json["values"][0]["maxt"],
-        "min_temp"      :   data_json["values"][0]["mint"],
-        "wind_speed"    :   data_json["currentConditions"]["wspd"],
-        "wind_direction":   data_json["currentConditions"]["wdir"],
-        "humidity"      :   data_json["currentConditions"]["humidity"],
-        "prob_of_precip":   data_json["values"][0]["pop"],
-        "snow_depth"    :   data_json["values"][0]["snowdepth"],
-        "cloud_cover"   :   data_json["values"][0]["cloudcover"],
-        "conditions"    :   data_json["values"][0]["conditions"],
-        "sunrise"       :   data_json["currentConditions"]["sunrise"][11:16],
-        "sunset"        :   data_json["currentConditions"]["sunset"][11:16]
-    }
-    # print(weather_data)
-    return weather_data
-# get_weather_data(41.72,-74.23)
+        # Use Weather Company API call for historical weather if selected date
+        # is greater than 14 days from today's date
+        weather_data = get_historical_weather(latitude, longitude, selected_date)
+        historical = True
+    return weather_data, historical
 
 def get_trail_data(trail_id):
     """
@@ -108,13 +161,15 @@ def evaluate_temperature(temperature):
         return "hot_temp"
 
 def evaluate_precipitation(weather_data):
-    if weather_data["prob_of_precip"] and weather_data["prob_of_precip"] > 0:
+    if (weather_data["prob_of_precip"] and weather_data["prob_of_precip"] > 0) or \
+                (weather_data["precip"] and weather_data["precip"] > 0.1):
         return "rain"
     else: 
         return None
 
 def evaluate_snow(weather_data):
-    if weather_data["snow_depth"] and weather_data["snow_depth"] > 0:
+    if (weather_data["snow_depth"] and weather_data["snow_depth"] > 0) or \
+                (weather_data["snow_accum"] and weather_data["snow_accum"] > 0):
         return "snow"
     else:
         return None
@@ -122,8 +177,8 @@ def evaluate_snow(weather_data):
 def evaluate_length(hiking_time):
     """
     Evaluates trail length based on distance and elevation. 
-    A hiking time > 3 hours is considered "medium"
-    A hiking time > 6 hours is considered "long" 
+    A hiking time > 3 hours is considered "medium_duration"
+    A hiking time > 6 hours is considered "long_duration" 
     """
     if hiking_time > 360:
         return "long_duration"

@@ -1,5 +1,13 @@
-#gear_body, #weather_body, #form_body {
+#gear_body, #weather_body{
   padding: 20px;
+}
+
+#form_body {
+  padding: 0px 20px;
+}
+
+#form_body > div {
+  padding-left: 0;
 }
 
 #trail_body {
@@ -9,7 +17,8 @@
 #trail_title {
   margin-bottom: 0.4rem;
 }
-#trail_summary {
+
+#trail_summary, .weather_conditions {
   font-style: italic;
   font-size: 1.2rem;
 }
@@ -29,4 +38,8 @@
 /* https://stackoverflow.com/questions/14326724/twitter-bootstrap-tooltip-flickers-when-placed-on-top-of-button-but-works-fine */
 .tooltip {
   pointer-events: none;
+}
+
+#weather_data {
+  margin-top: 0.3rem;
 }

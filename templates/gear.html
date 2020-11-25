@@ -62,40 +62,77 @@
 
     <div class="col-md">
       <div class="flex-md-row" id="weather_body">
+        {% if historical %}
+        <h5><span class="text-success">Historical</span><br>Weather Conditions for <br><span class="text-success">{{ trail_data.location }}</span></h5>
+        {% else %}
         <h5>Weather Conditions for <br><span class="text-success">{{ trail_data.location }}</span></h5>
+        {% endif %}
         {% if weather_data %}
         <h6>Date: <span class="text-success">{{ weather_data.date }}</span></h6>
         <table>
+          {% if historical %}
+            {% if weather_data.precip %}
+              <tr>
+                <td class="weather_conditions">Expect rain conditions</td>
+              </tr>
+            {% endif %}
+            {% if weather_data.snow_accum %}
+              <tr>
+                <td class="weather_conditions">Expect snow conditions</td>
+              </tr>
+            {% endif %}
+          {% else %}
+            {% if weather_data.conditions %}
+            <tr>
+              <td class="weather_conditions">{{ weather_data.conditions }} </td>
+            </tr>
+            {% endif %}
+          {% endif %}
+          </table>
+          <table id="weather_data">
           <tr>
-            <td>Current temp: {{ weather_data.temperature }} &#176F</td>
+            <td>Temp (avg): {{ weather_data.temperature }} &#176F</td>
           </tr>
+          <tr>
+            <td>Temp (min/max): {{ weather_data.min_temp }}/{{ weather_data.max_temp }} &#176F</td>
+          </tr>
+          {% if historical %}
+          {% else %}
           <tr>
             <td>Chance of rain/snow: {{ weather_data.prob_of_precip }} %</td>
           </tr>
+            {% if weather_data.snow_depth %}
+              <tr>
+                <td>Expect snow on the ground</td>
+              </tr>
+            {% endif %}
           <tr>
             <td>Humidity: {{ weather_data.humidity }} %</td>
           </tr>
           <tr>
             <td>Wind: {{ weather_data.wind_speed }} mph </td>
           </tr>
+          {% endif %}
           <tr>
             <td>Sunrise: {{ weather_data.sunrise }} </td>
           </tr>
           <tr>
-            <td>Sunset: {{ weather_data.sunset }}</td>
+            <td>Sunset:  {{ weather_data.sunset }} </td>
           </tr>
         </table>
       </div>
       <div class="flex-md-row" id="form_body">
-        <form method="post" id="new_date_form">
-          <div class="form-group">
-            <label for="date_form">Change date:</label>
-            <input type="date" class="form-control" name="date_form" min="{{ weather_data.date }}" required value="{{ weather_data.date }}">
-          </div>
-          <div class="form-group">
-            <input type="submit" value="Submit">
-          </div>
-        </form>
+        <div class="col-md-10">
+          <form method="post" id="new_date_form">
+            <div class="form-group">
+              <label for="date_form">Change date:</label>
+              <input type="date" class="form-control" name="date_form" min="{{ weather_data.date }}" required value="{{ weather_data.date }}">
+            </div>
+            <div class="form-group">
+              <input type="submit" value="Submit">
+            </div>
+          </form>
+        </div>
 
       </div>
         {% endif %}

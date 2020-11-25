@@ -16,3 +16,6 @@ weather5.json
 .gitignore
 gear_data2.json
 app.db
+weather_current.json
+weather_forecast.json
+weather_historical.json

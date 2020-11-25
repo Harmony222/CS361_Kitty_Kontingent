@@ -162,16 +162,20 @@ def gear():
             trail_id = None
     trail_data = get_trail_data(trail_id)
     if trail_data:
-        weather_data = get_weather_data(trail_data["latitude"], 
-                                        trail_data["longitude"],
-                                        selected_date)
+        # weather_data in python dict format, historical is True or False
+        # depending on if weather data is from historical API call or not
+        weather_data, historical = get_weather_data(trail_data["latitude"], 
+                                                    trail_data["longitude"],
+                                                    selected_date)
         gear_data = gear_evaluation(trail_data, weather_data)
     else:
-        weather_data, gear_data = None, None
+        weather_data, historical, gear_data = None, None, None
     return render_template('gear.html', title='Find Hiking Gear', 
-                            active={'gear':True}, weather_data=weather_data,
-                            trail_data=trail_data, 
-                            gear_data=gear_data)
+                                        active={'gear':True}, 
+                                        weather_data=weather_data,
+                                        historical=historical,
+                                        trail_data=trail_data, 
+                                        gear_data=gear_data)
 
 @app.route('/fitness_values', methods=["GET", "POST"])
 def fitness_values():
