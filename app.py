@@ -8,11 +8,7 @@ from flask_login import LoginManager, current_user, login_user, logout_user
 from database_structures import *
 from config import Config, map_api_key
 import datetime, calendar
-from datetime import date, datetime
-# from extensions import db
-# from forms import LoginForm, RegistrationForm
-# import webbrowser, datetime, calendar
-# from flask_sqlalchemy import SQLAlchemy
+from datetime import date
 
 # TODO: when "filter trails just for me" is used, it does not save the custom filter options 
 # (eg. length, difficulty) selected before - create variables to pass these back and forth from app.py and html
@@ -24,6 +20,7 @@ from datetime import date, datetime
 # TODO: add "distance to trail" column? (suggested by client)
 # TODO: update User class to include city, state, zip, and country
 # TODO: create external database in Heroku
+# TODO: change My Info to My Fitness and remove Get Fitness Level tab
 
 ## TRAIL LIST STRUCTURE RETURNED BY GET_TRAILS(LAT, LONG, RAD) - BY INDEX REFERENCE
 ## 0-id, 1-name, 2-length, 3-difficulty, 4-starVotes, 5-location, 6-url, 7-imgMedium 
@@ -41,9 +38,6 @@ def create_app(config_object=Config):
     return app
 
 app = create_app(Config)
-# app = Flask(__name__)
-# app.config.from_object(Config)
-# db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
 
@@ -153,7 +147,7 @@ def find_trails():
 def gear():
     # Get date from form if new date selected
     if request.method == "POST":
-        selected_date = datetime.strptime(request.form["date_form"], "%Y-%m-%d").date()
+        selected_date = datetime.datetime.strptime(request.form["date_form"], "%Y-%m-%d").date()
     else:
         selected_date = date.today()
     # Get trail_id from query args
@@ -207,7 +201,7 @@ def fitness_values():
     return render_template('fitness_values.html', title="Fitness Calculation", active={'fitness_values':True},
                             user_fitness=user_fitness, radius=radius, address=address, incomplete=incomplete)
 
-@app.route('/my_info', methods=["GET"])
+@app.route('/my_info', methods=["GET", "POST"])
 def my_info():
     if request.method == 'GET':
         logged_in = False
@@ -215,10 +209,51 @@ def my_info():
             logged_in = True
         return render_template('my_info.html', title="My Info", logged_in=logged_in, active={'my_info':True})
 
-    elif request.method == 'POST':
-       return render_template('display_info.html', title="My Info", active={'display_info':True})
+    elif request.method == 'POST':          # Edit Info form was submitted, get the values and go back to the display_info page
+        if current_user.is_authenticated:
+            curr_user = db.session.query(User).filter_by(username=current_user.username).first()
 
-@app.route('/display_info', methods=["GET", "POST"])
+            # add form fields to the database for the current user
+            month = request.form.get('month') or None
+            day = request.form.get('day') or None
+            year = request.form.get('year') or None
+            if month is not None and day is not None and year is not None:
+                birth_date = datetime.date(int(year), int(month), int(day))
+                curr_user.date_of_birth = birth_date
+            gender = request.form.get('gender') or ""
+            if gender == "Male":
+                curr_user.gender = "m"
+            elif gender == "Female":
+                curr_user.gender = "f"
+            else:
+                curr_user.gender = ""
+            if request.form.get('height'):
+                curr_user.height = int(request.form.get('height'))
+            else:
+                curr_user.height = None
+            if request.form.get('weight'):
+                curr_user.weight = int(request.form.get('weight'))
+            else:
+                curr_user.weight = None
+            curr_user.address = request.form.get('address') or ""
+            curr_user.address2 = request.form.get('address2') or ""
+
+    #        city = request.form.get('city') or ""
+    #        state = request.form.get('state') or ""
+    #        zip_code = request.form.get('zip') or ""
+    #        country = request.form.get('country') or ""
+            days = int(request.form['days'])
+            hours = int(request.form['hours'])
+            intensity = int(request.form['intensity'])
+            miles = int(request.form['miles'])
+
+            level = calculate_fitness(request.form['days'], request.form['hours'], request.form['miles'], request.form['intensity'])
+            curr_user.fitness_level = level
+            db.session.commit()
+
+        return redirect(url_for('display_info'))
+
+@app.route('/display_info', methods=["GET"])
 def display_info():
     logged_in = False
     if request.method == 'GET':             # render the user's info
@@ -276,50 +311,6 @@ def display_info():
                                     month=month, day=day, year=year, gender=gender, height=height, weight=weight, 
                                     address=address, address2=address2, user_fitness=user_fitness,logged_in=logged_in)
         return render_template('display_info.html', title="My Info", active={'my_info':True},logged_in=logged_in)
-
-    elif request.method == 'POST':          # Edit Info form was submitted, get the values and display them
-        if current_user.is_authenticated:
-            curr_user = db.session.query(User).filter_by(username=current_user.username).first()
-
-            # add form fields to the database for the current user
-            month = request.form.get('month') or None
-            day = request.form.get('day') or None
-            year = request.form.get('year') or None
-            if month is not None and day is not None and year is not None:
-                birth_date = datetime.date(int(year), int(month), int(day))
-                curr_user.date_of_birth = birth_date
-            gender = request.form.get('gender') or ""
-            if gender == "Male":
-                curr_user.gender = "m"
-            elif gender == "Female":
-                curr_user.gender = "f"
-            else:
-                curr_user.gender = ""
-            if request.form.get('height'):
-                curr_user.height = int(request.form.get('height'))
-            else:
-                curr_user.height = None
-            if request.form.get('weight'):
-                curr_user.weight = int(request.form.get('weight'))
-            else:
-                curr_user.weight = None
-            curr_user.address = request.form.get('address') or ""
-            curr_user.address2 = request.form.get('address2') or ""
-
-    #        city = request.form.get('city') or ""
-    #        state = request.form.get('state') or ""
-    #        zip_code = request.form.get('zip') or ""
-    #        country = request.form.get('country') or ""
-            days = int(request.form['days'])
-            hours = int(request.form['hours'])
-            intensity = int(request.form['intensity'])
-            miles = int(request.form['miles'])
-
-            level = calculate_fitness(request.form['days'], request.form['hours'], request.form['miles'], request.form['intensity'])
-            curr_user.fitness_level = level
-            db.session.commit()
-
-        return redirect(url_for('display_info'))
 
 @app.route('/signin', methods=["GET", "POST"])
 def signin():
