@@ -22,6 +22,8 @@ from datetime import date, datetime
 # TODO: check if user is logged in before allowing 'edit info'
 # TODO: change lat/long printed on trails list page to adress string
 # TODO: add "distance to trail" column? (suggested by client)
+# TODO: update User class to include city, state, zip, and country
+# TODO: create external database in Heroku
 
 ## TRAIL LIST STRUCTURE RETURNED BY GET_TRAILS(LAT, LONG, RAD) - BY INDEX REFERENCE
 ## 0-id, 1-name, 2-length, 3-difficulty, 4-starVotes, 5-location, 6-url, 7-imgMedium 
