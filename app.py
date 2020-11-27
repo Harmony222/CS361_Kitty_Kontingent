@@ -20,7 +20,6 @@ from datetime import date
 # TODO: add "distance to trail" column? (suggested by client)
 # TODO: update User class to include city, state, zip, and country
 # TODO: create external database in Heroku
-# TODO: change My Info to My Fitness and remove Get Fitness Level tab
 
 ## TRAIL LIST STRUCTURE RETURNED BY GET_TRAILS(LAT, LONG, RAD) - BY INDEX REFERENCE
 ## 0-id, 1-name, 2-length, 3-difficulty, 4-starVotes, 5-location, 6-url, 7-imgMedium 
@@ -198,16 +197,16 @@ def fitness_values():
         if lat:    
             address = get_string(lat, long)
 
-    return render_template('fitness_values.html', title="Fitness Calculation", active={'fitness_values':True},
+    return render_template('fitness_values.html', title="My Fitness", active={'my_fitness':True},
                             user_fitness=user_fitness, radius=radius, address=address, incomplete=incomplete)
 
-@app.route('/my_info', methods=["GET", "POST"])
-def my_info():
+@app.route('/edit_info', methods=["GET", "POST"])
+def edit_info():
     if request.method == 'GET':
         logged_in = False
         if current_user.is_authenticated:
             logged_in = True
-        return render_template('my_info.html', title="My Info", logged_in=logged_in, active={'my_info':True})
+        return render_template('edit_info.html', title="Edit Info", logged_in=logged_in, active={'my_fitness':True})
 
     elif request.method == 'POST':          # Edit Info form was submitted, get the values and go back to the display_info page
         if current_user.is_authenticated:
@@ -307,10 +306,10 @@ def display_info():
             elif level == 4:
                 user_fitness = "very high"
 
-            return render_template('display_info.html', title="My Info", active={'my_info':True}, username=curr_user.username, 
+            return render_template('display_info.html', title="My Fitness", active={'my_fitness':True}, username=curr_user.username, 
                                     month=month, day=day, year=year, gender=gender, height=height, weight=weight, 
                                     address=address, address2=address2, user_fitness=user_fitness,logged_in=logged_in)
-        return render_template('display_info.html', title="My Info", active={'my_info':True},logged_in=logged_in)
+        return render_template('display_info.html', title="My Fitness", active={'my_fitness':True},logged_in=logged_in)
 
 @app.route('/signin', methods=["GET", "POST"])
 def signin():

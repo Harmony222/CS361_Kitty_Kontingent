@@ -31,9 +31,6 @@
         <li class="nav-item">
           <a class="nav-link {% if active.find_trails %}active{% endif %}" href="/find_trails">Find Hiking Trails</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link {% if active.fitness_values %}active{% endif %}" href="/fitness_values">Get Fitness Level</a>
-        </li>
       </ul>
       <ul class="navbar-nav ml-auto">
         {% if current_user.is_anonymous %}
@@ -41,10 +38,16 @@
         <li class="nav-item">
           <span class="nav-link" style="color: lightseagreen;">Hi, {{ current_user.username }}!</span>
         </li>
-         {% endif %}
+        {% endif %}
+        {% if current_user.is_anonymous %}
         <li class="nav-item">
-          <a class="nav-link {% if active.my_info %}active{% endif %}" href="/display_info">My Info</a>
+          <a class="nav-link {% if active.my_fitness %}active{% endif %}" href="/fitness_values">My Fitness</a>
         </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link {% if active.my_fitness %}active{% endif %}" href="/display_info">My Fitness</a>
+        </li>
+        {% endif %}
         <li class="nav-item">
           {% if current_user.is_anonymous %}
           <a class="nav-link {% if active.signin %}active{% endif %}" href="/signin">Sign In</a>
