@@ -7,6 +7,20 @@
   })
 </script>
 <style>
+  html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow-x: hidden;
+  }
+  .background {
+    background-image: url("../static/img/fabrizio-conti-xPFhK0MGsyw-unsplash.jpg");
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
   dt {
     text-align: right;
   }
@@ -16,6 +30,7 @@
   }
 </style>
 
+<div class="background">
 {% if logged_in %}
   <h4>My Fitness</h4>
   <dl class="row">
@@ -86,4 +101,5 @@
     </form>
   </div>
 {% endif %}
+</div>
 {% endblock content %}
