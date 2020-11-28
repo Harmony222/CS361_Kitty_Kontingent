@@ -18,7 +18,6 @@ from datetime import date
 # TODO: check if user is logged in before allowing 'edit info'
 # TODO: change lat/long printed on trails list page to adress string
 # TODO: add "distance to trail" column? (suggested by client)
-# TODO: update User class to include city, state, zip, and country
 # TODO: create external database in Heroku
 
 ## TRAIL LIST STRUCTURE RETURNED BY GET_TRAILS(LAT, LONG, RAD) - BY INDEX REFERENCE
@@ -236,11 +235,10 @@ def edit_info():
                 curr_user.weight = None
             curr_user.address = request.form.get('address') or ""
             curr_user.address2 = request.form.get('address2') or ""
-
-    #        city = request.form.get('city') or ""
-    #        state = request.form.get('state') or ""
-    #        zip_code = request.form.get('zip') or ""
-    #        country = request.form.get('country') or ""
+            curr_user.city = request.form.get('city') or ""
+            curr_user.state = request.form.get('state') or ""
+            curr_user.zip_code = request.form.get('zip') or ""
+            curr_user.country = request.form.get('country') or ""
             days = int(request.form['days'])
             hours = int(request.form['hours'])
             intensity = int(request.form['intensity'])
@@ -255,7 +253,7 @@ def edit_info():
 @app.route('/display_info', methods=["GET"])
 def display_info():
     logged_in = False
-    if request.method == 'GET':             # render the user's info
+    if request.method == 'GET':             # render the user's info on the My Fitness page
         if current_user.is_authenticated:
             logged_in = True
             curr_user = db.session.query(User).filter_by(username=current_user.username).first()
@@ -293,6 +291,22 @@ def display_info():
                 address2 = curr_user.address2
             else:
                 address2 = ""
+            if curr_user.city is not None:
+                city = curr_user.city
+            else:
+                city = ""
+            if curr_user.state is not None:
+                state = curr_user.state
+            else:
+                state = ""
+            if curr_user.zip_code is not None:
+                zip_code = curr_user.zip_code
+            else:
+                zip_code = ""
+            if curr_user.country is not None:
+                country = curr_user.country
+            else:
+                country = ""
 
             # create names for fitness levels
             level = curr_user.fitness_level
@@ -306,10 +320,11 @@ def display_info():
             elif level == 4:
                 user_fitness = "very high"
 
-            return render_template('display_info.html', title="My Fitness", active={'my_fitness':True}, username=curr_user.username, 
-                                    month=month, day=day, year=year, gender=gender, height=height, weight=weight, 
-                                    address=address, address2=address2, user_fitness=user_fitness,logged_in=logged_in)
-        return render_template('display_info.html', title="My Fitness", active={'my_fitness':True},logged_in=logged_in)
+            return render_template('display_info.html', title="My Fitness", active={'my_fitness':True}, username=curr_user.username,
+                                    month=month, day=day, year=year, gender=gender, height=height, weight=weight,
+                                    address=address, address2=address2, city=city, state=state, zip=zip_code, country=country,
+                                    user_fitness=user_fitness, logged_in=logged_in)
+        return render_template('display_info.html', title="My Fitness", active={'my_fitness':True}, logged_in=logged_in)
 
 @app.route('/signin', methods=["GET", "POST"])
 def signin():

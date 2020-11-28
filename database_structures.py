@@ -26,6 +26,10 @@ class User(UserMixin, db.Model):
     weight = db.Column(db.Integer)
     address = db.Column(db.String(64))
     address2 = db.Column(db.String(64))
+    city = db.Column(db.String(32))
+    state = db.Column(db.String(32))
+    zip_code = db.Column(db.String(16))
+    country = db.Column(db.String(32))
     fitness_level = db.Column(db.Integer)
     password_hash = db.Column(db.String(128))
 
