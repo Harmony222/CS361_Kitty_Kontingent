@@ -6,9 +6,18 @@
     $('[data-toggle="tooltip"]').tooltip()
   })
 </script>
+<style>
+  dt {
+    text-align: right;
+  }
+  dd button {
+    float: right;
+    white-space: nowrap;
+  }
+</style>
 
 {% if logged_in %}
-  <h4>My Info</h4>
+  <h4>My Fitness</h4>
   <dl class="row">
     <dd class="col-sm-4"></dd>
     <dt class="col-sm-2">Username</dt>
@@ -63,16 +72,17 @@
     <dd class="col-sm-2" data-toggle="tooltip" data-placement="right" title="Fitness level is based on the average number of hours per week you are physically active, in order to get a base level. This level is then adjusted based on your intensity when hiking and the average length of each hike.">{{user_fitness}}</dd>
     <dd class="col-sm-4"></dd>
 
-    <dd class="col-sm-4"></dd>
-    <button type="submit" onclick="window.location='/edit_info'" class="btn btn-primary col-sm-1" data-toggle="tooltip" data-placement="right" title="Edit your info to get trails personalized based on your location and physical fitness level.">Edit Info</button>
-    <dd class="col-sm-7"></dd>
+    <dd class="col-sm-6">
+      <button type="submit" onclick="window.location='/edit_info'" class="btn btn-info" data-toggle="tooltip" data-placement="right" title="Edit your info to get trails personalized based on your location and physical fitness level.">Edit Info</button>
+    </dd>
+    <dd class="col-sm-6"></dd>
   </dl>
   </div>
 {% else %}
   <div class="card-header text-center">
     <form action="/signup">
       <h4> Create an account to save your info!</h4>
-      <button type="submit" class="btn btn-primary" formaction="/signup">Create an account</button>
+      <button type="submit" class="btn btn-warning" formaction="/signup">Create an account</button>
     </form>
   </div>
 {% endif %}

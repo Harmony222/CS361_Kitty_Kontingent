@@ -102,10 +102,10 @@
       <dt class="col-sm-2">Fitness Level:</dt>
       <dd class="col-sm-2">{{user_fitness}} (out of 4)</dd>
     </dl>
-    <button type="submit" class="btn btn-primary" formaction="/find_trails" formmethod="POST">Find Personalized Trails</button>
-    <button type="submit" class="btn btn-primary">Re-Calculate Fitness Level</button>
+    <button type="submit" class="btn btn-info" formaction="/find_trails" formmethod="POST">Find Personalized Trails</button>
+    <button type="submit" class="btn btn-info">Re-Calculate Fitness Level</button>
   {% else %}
-    <button type="submit" class="btn btn-primary">Calculate Fitness Level</button>
+    <button type="submit" class="btn btn-info">Calculate Fitness Level</button>
   {% endif %}
 </form>
 {% endblock content %}
