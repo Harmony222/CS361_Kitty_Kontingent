@@ -32,19 +32,19 @@ def get_weather_forecast(latitude, longitude, selected_date):
     weather_data = {
         "date"          :   selected_date,
         "conditions"    :   forecast["conditions"] or None,
-        "temperature"   :   forecast["temp"] or None,
-        "max_temp"      :   forecast["maxt"] or None,
-        "min_temp"      :   forecast["mint"] or None,
-        "wind_speed"    :   forecast["wspd"] or None,
-        "wind_direction":   forecast["wdir"] or None,
-        "humidity"      :   forecast["humidity"] or None,
-        "prob_of_precip":   forecast["pop"] or None,
+        "temperature"   :   forecast["temp"],
+        "max_temp"      :   forecast["maxt"],
+        "min_temp"      :   forecast["mint"],
+        "wind_speed"    :   forecast["wspd"],
+        "wind_direction":   forecast["wdir"],
+        "humidity"      :   forecast["humidity"],
+        "prob_of_precip":   forecast["pop"],
         "precip"        :   None,
-        "snow_depth"    :   forecast["snowdepth"] or None,
+        "snow_depth"    :   forecast["snowdepth"],
         "snow_accum"    :   None,
-        "cloud_cover"   :   forecast["cloudcover"] or None,
-        "sunrise"       :   sunrise or None,
-        "sunset"        :   sunset or None
+        "cloud_cover"   :   forecast["cloudcover"],
+        "sunrise"       :   sunrise,
+        "sunset"        :   sunset
     }
     return weather_data
 
@@ -62,16 +62,16 @@ def get_historical_weather(latitude, longitude, selected_date):
     weather_data = {
         "date"          :   selected_date,
         "conditions"    :   None,
-        "temperature"   :   data_json["temperatureMean"][0] or None,
-        "max_temp"      :   data_json["temperatureAverageMax"][0] or None,
-        "min_temp"      :   data_json["temperatureAverageMin"][0] or None,
+        "temperature"   :   data_json["temperatureMean"][0],
+        "max_temp"      :   data_json["temperatureAverageMax"][0],
+        "min_temp"      :   data_json["temperatureAverageMin"][0],
         "wind_speed"    :   None,
         "wind_direction":   None,
         "humidity"      :   None,
         "prob_of_precip":   None,
-        "precip"        :   data_json["precipitationAverage"][0] or None,
+        "precip"        :   data_json["precipitationAverage"][0],
         "snow_depth"    :   None,
-        "snow_accum"    :   data_json["snowAccumulationAverage"][0] or None,
+        "snow_accum"    :   data_json["snowAccumulationAverage"][0],
         "cloud_cover"   :   None,
         "sunrise"       :   sunrise or None,
         "sunset"        :   sunset or None
