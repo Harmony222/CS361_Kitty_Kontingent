@@ -12,10 +12,10 @@ from datetime import date
 
 # TODO: when "filter trails just for me" is used, it does not save the custom filter options 
 # (eg. length, difficulty) selected before - create variables to pass these back and forth from app.py and html
-# TODO: auto-populate drop-down selections for user on "fitness values" page if they had previously made slections
+# TODO: auto-populate drop-down selections for user on "fitness values" page if they had previously made selections
 # (and then the page was re-loaded or navigated away from)
 # TODO: save trail list results between pages?
-# TODO: change lat/long printed on trails list page to adress string
+# TODO: change lat/long printed on trails list page to address string
 # TODO: add "distance to trail" column? (suggested by client)
 # TODO: create external database in Heroku
 
@@ -136,9 +136,23 @@ def find_trails():
                     user_fitness = int(request.form['user_fitness'])
             else:
                 user_fitness = False
+        # if user is logged in, prepopulate address field with user's address
+        else:
+            if curr_user.address is not None and curr_user.city is not None and curr_user.state is not None and curr_user.zip_code is not None:
+                addr = curr_user.address + ", " + curr_user.city + ", " + curr_user.state + " " + curr_user.zip_code
+            elif curr_user.address is not None and curr_user.city is not None and curr_user.state is not None:
+                addr = curr_user.address + ", " + curr_user.city + ", " + curr_user.state
+            elif curr_user.city is not None and curr_user.state is not None:
+                addr = curr_user.city + ", " + curr_user.state
+            elif curr_user.city is not None and curr_user.country is not None:
+                addr = curr_user.city + ", " + curr_user.country
+            elif curr_user.country is not None:
+                addr = curr_user.country
+            else:
+                addr = ""
 
         return render_template('find_trails_get.html', title='Find Hiking Trails', active={'find_trails': True}, 
-                                user_fitness=user_fitness)
+                                user_fitness=user_fitness, address=addr)
 
 @app.route('/gear', methods=["GET", "POST"])
 def gear():

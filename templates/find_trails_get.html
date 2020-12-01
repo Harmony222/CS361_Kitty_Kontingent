@@ -30,7 +30,11 @@
                         <!-- Form Address -->
                         <div class="form-group">
                             <label for="address">Address:</label>
+                            {% if address %}
+                            <input class="form-control form-control-lg" type="text" name="address" value="{{address}}" required>
+                            {% else %}
                             <input class="form-control form-control-lg" type="text" name="address" placeholder="e.g. Seattle, WA or 47.6,-122.33" required>
+                            {% endif %}
                         </div>
                         <!-- Form Radius -->
                         <div class="form-group">
