@@ -15,7 +15,6 @@ from datetime import date
 # TODO: auto-populate drop-down selections for user on "fitness values" page if they had previously made slections
 # (and then the page was re-loaded or navigated away from)
 # TODO: save trail list results between pages?
-# TODO: check if user is logged in before allowing 'edit info'
 # TODO: change lat/long printed on trails list page to adress string
 # TODO: add "distance to trail" column? (suggested by client)
 # TODO: create external database in Heroku
