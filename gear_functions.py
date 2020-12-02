@@ -14,6 +14,14 @@ def get_sun_info(latitude, longitude, selected_date):
     sunset = datetime.strptime(data_json["sunset"], "%H:%M").strftime("%I:%M %p")
     return sunrise, sunset
 
+def convert_wind_direction(wdir):
+    """ Convert wind direction in degrees to cardinal direction """
+    cardinal_directions = ["N", "NNE", "NE", "ENE", "E", "ESE", 
+                           "SE", "SSE", "S", "SSW", "SW", "WSW", 
+                           "W", "WNW", "NW", "NNW", "N"]
+    index = int(round(wdir / 22.5, 0))
+    return cardinal_directions[index]
+
 def get_weather_forecast(latitude, longitude, selected_date):
     """ Gets weather data for days <= 14 days from today's date """
     # Number of days from today to selected_date
@@ -29,6 +37,8 @@ def get_weather_forecast(latitude, longitude, selected_date):
     forecast = data_json["values"][forecast_days - 1]
     # get sunrise and sunset info from separate API call
     sunrise, sunset = get_sun_info(latitude, longitude, selected_date)
+    # convert from degree wind direction to cardinal direction
+    wind_direction = convert_wind_direction(forecast["wdir"])
     weather_data = {
         "date"          :   selected_date,
         "conditions"    :   forecast["conditions"] or None,
@@ -36,7 +46,7 @@ def get_weather_forecast(latitude, longitude, selected_date):
         "max_temp"      :   forecast["maxt"],
         "min_temp"      :   forecast["mint"],
         "wind_speed"    :   forecast["wspd"],
-        "wind_direction":   forecast["wdir"],
+        "wind_direction":   wind_direction,
         "humidity"      :   forecast["humidity"],
         "prob_of_precip":   forecast["pop"],
         "precip"        :   None,
@@ -134,10 +144,12 @@ def gear_evaluation(trail_data, weather_data):
     snow_attribute = evaluate_snow(weather_data)
     length_attribute = evaluate_length(trail_data["hiking_time"])
     elevation_attribute = evaluate_elevation(trail_data["grade"], trail_data["ascent"])
+    wind_attribute = evaluate_wind(weather_data["wind_speed"])
     # attributes are categories that define the trail and weather conditions
     # they are used to match up the trail/weather info with gear
     attributes = ["all", temperature_attribute, precipitation_attribute,
-                  snow_attribute, length_attribute, elevation_attribute]
+                  snow_attribute, length_attribute, elevation_attribute,
+                  wind_attribute]
     gear_meta_data = build_gear_meta_data()
     gear_dict = get_gear(attributes, gear_meta_data)
     return gear_dict
@@ -161,6 +173,12 @@ def evaluate_temperature(temperature):
         return "hot_temp"
 
 def evaluate_precipitation(weather_data):
+    """
+    Rain is considered possible when:
+    1. If forecast weather and propability of precipitation is > 0
+    2. If historical weather and precipitation accumulation in the past has
+    been > 0.1
+    """
     if (weather_data["prob_of_precip"] and weather_data["prob_of_precip"] > 0) or \
                 (weather_data["precip"] and weather_data["precip"] > 0.1):
         return "rain"
@@ -168,6 +186,11 @@ def evaluate_precipitation(weather_data):
         return None
 
 def evaluate_snow(weather_data):
+    """ 
+    Snow is possible when:
+    1. If forecast weather and there is snow on the ground
+    2. If historical weather and there is a history of any snow accumulation
+    """
     if (weather_data["snow_depth"] and weather_data["snow_depth"] > 0) or \
                 (weather_data["snow_accum"] and weather_data["snow_accum"] > 0):
         return "snow"
@@ -186,7 +209,6 @@ def evaluate_length(hiking_time):
         return "medium_duration"
     else:
         return None
-
 
 def calculate_hiking_time(length, elevation_change):
     """
@@ -223,7 +245,10 @@ def calculate_grade(length, ascent):
         grade = 0
     return round(grade * 100, 1)
 
-
+def evaluate_wind(wind_speed):
+    """ Evaluate wind conditions. """
+    if wind_speed and wind_speed > 19:
+        return "wind"
 
 
 """
@@ -305,6 +330,7 @@ def build_gear_meta_data():
     face_mask = Gear_Item("face mask/balaclava", "clothing")
     snow_goggles = Gear_Item("snow goggles", "other")
     microspikes = Gear_Item("microspikes/crampons", "gear")
+    windbreaker = Gear_Item("windbreaker", "clothing")
 
 
     freezing = Use_Condition("freezing_temp", "Temperature < 31 \u00b0F.", "fas fa-thermometer-empty")
@@ -335,7 +361,7 @@ def build_gear_meta_data():
                    gaiters])
     
     snow = Use_Condition("snow", "There is snow on the ground.", "far fa-snowflake")
-    snow.set_gear([snowshoes, face_mask, snow_goggles, gaiters, microspikes])
+    snow.set_gear([snowshoes, face_mask, snow_goggles, gaiters, microspikes, trekking_poles])
 
     medium_duration = Use_Condition("medium_duration", "This will be a medium-long hike.", "fas fa-clock")
     medium_duration.set_gear([lunch, extra_water])
@@ -346,12 +372,16 @@ def build_gear_meta_data():
     steep = Use_Condition("steep", "Steep trail or high total elevation gain.", "fas fa-mountain")
     steep.set_gear([trekking_poles])
 
+    wind = Use_Condition("wind", "Its going to be windy!", "fas fa-wind")
+    wind.set_gear([trekking_poles, windbreaker, face_mask])
+
     use_conditions = {**freezing.get_use_condition(), **cold.get_use_condition(),
                       **cool.get_use_condition(), **moderate.get_use_condition(),
                       **warm.get_use_condition(), **hot.get_use_condition(),
                       **all_use.get_use_condition(), **rain.get_use_condition(),
                       **snow.get_use_condition(), **medium_duration.get_use_condition(),
-                      **long_duration.get_use_condition(), **steep.get_use_condition()}
+                      **long_duration.get_use_condition(), **steep.get_use_condition(),
+                      **wind.get_use_condition()}
     return use_conditions
 
 
