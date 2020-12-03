@@ -21,11 +21,18 @@ align-content: center;
 }
 
 .card{
-height: 390px;
+height: 400px;
 margin-top: auto;
 margin-bottom: auto;
 width: 400px;
 background-color: rgba(0,0,0,0.5) !important;
+}
+
+.error-msg{
+background-color: #FFC312;
+border-color: #FFC312;
+color: black;
+padding: 5px;
 }
 
 .social_icon span{
@@ -99,11 +106,11 @@ margin-left: 4px;
 		<div class="card">
 			<div class="card-header">
 				<h3>Sign In</h3>
-				<div class="d-flex justify-content-end social_icon">
+<!--				<div class="d-flex justify-content-end social_icon">
 					<span><i class="fab fa-facebook-square"></i></span>
 					<span><i class="fab fa-google-plus-square"></i></span>
 					<span><i class="fab fa-twitter-square"></i></span>
-				</div>
+				</div>	-->
 			</div>
 			<div class="card-body">
 				<form action="" method="post" novalidate>
@@ -135,11 +142,12 @@ margin-left: 4px;
 						{{ form.submit(value="Login", class="btn float-right login_btn") }}
 					</div>
 				</form>
+				<br><br>
 				{% with messages = get_flashed_messages() %}
         		{% if messages %}
         		<ul>
-            		{% for message in messages %}
-            		<p style="background-color: white;">{{ message }}</p>
+					{% for message in messages %}
+					<div class="alert alert-warning error-msg" role="alert">{{ message }}</div>
             		{% endfor %}
         		</ul>
         		{% endif %}
@@ -149,9 +157,9 @@ margin-left: 4px;
 				<div class="d-flex justify-content-center links">
 					Don't have an account?<a href="{{ url_for('signup') }}">Sign Up</a>
 				</div>
-				<div class="d-flex justify-content-center">
+<!--				<div class="d-flex justify-content-center">
 					<a href="#">Forgot your password?</a>
-				</div>
+				</div>	-->
 			</div>
 		</div>
 	</div>
