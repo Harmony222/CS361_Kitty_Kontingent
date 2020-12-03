@@ -23,7 +23,7 @@ from datetime import date
 
 ## TRAIL LIST STRUCTURE RETURNED BY GET_TRAILS(LAT, LONG, RAD) - BY INDEX REFERENCE
 ## 0-id, 1-name, 2-length, 3-difficulty, 4-starVotes, 5-location, 6-url, 7-imgMedium
-## 8-high, 9-low, 10-latitude, 11-longitude, 12-summary, 13-directions_url, 14-gear_url
+## 8-high, 9-low, 10-latitude, 11-longitude, 12-summary, 13-directions_url, 14-gear_url, 15-addr
 
 
 # Fix circular imports issue
@@ -79,12 +79,6 @@ def find_trails():
         rad, addr = request.form['rad'], request.form['address']
         lat, long = get_lat_long(addr)   
 
-        # change addr to single string for jinja reference, check if valid
-        if lat:    
-            new_addr = get_string(lat, long)
-        else:
-            return redirect(url_for('find_trails')) 
-        # get unfiltered trails list
         all_trails_list = get_trails(lat, long, rad)
 
         # Get optional search values and create new, custom list if any values are not None
@@ -116,8 +110,7 @@ def find_trails():
             return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails': True},
                                    trails_list=all_trails_list, radius=rad, address=addr, filtered=False,
                                    map_api_key=map_api_key, lat=lat, lon=long, locations=locations, 
-                                   view_tab=active_tab, user_fitness=user_fitness, diff_dict=diff_dict,
-                                   new_addr=new_addr, no_results=no_results)
+                                   view_tab=active_tab, user_fitness=user_fitness, diff_dict=diff_dict, no_results=no_results)                       
 
         # filter trails
         else:
@@ -131,8 +124,7 @@ def find_trails():
             return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails': True},
                                    trails_list=trails_list, radius=rad, address=addr, filtered=True,
                                    map_api_key=map_api_key, lat=lat, lon=long, locations=locations,
-                                   view_tab=active_tab, user_fitness=user_fitness, diff_dict=diff_dict,
-                                   new_addr=new_addr, no_results=no_results)
+                                   view_tab=active_tab, user_fitness=user_fitness, diff_dict=diff_dict, no_results=no_results)
 
     # else render page asking for data
     else:
@@ -214,12 +206,6 @@ def fitness_values():
             user_fitness = calculate_fitness(request.form['days'], request.form['hours'], request.form['miles'], request.form['intensity'])
         else:
             incomplete = True
-
-    # fix incomplete address being passed between pages
-    if address and address != 'False':
-        lat, long = get_lat_long(address)
-        if lat:    
-            address = get_string(lat, long)
 
     return render_template('fitness_values.html', title="My Fitness", active={'my_fitness': True},
                            user_fitness=user_fitness, radius=radius, address=address, incomplete=incomplete)
