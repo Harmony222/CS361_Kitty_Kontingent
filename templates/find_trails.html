@@ -42,17 +42,18 @@
             yellow: { icon: "http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png", },
             green: { icon: "http://maps.google.com/mapfiles/kml/paddle/grn-circle.png", },
         };
-        let infoWindow = new google.maps.InfoWindow({ maxWidth: 250 });
+        let infoWindow = new google.maps.InfoWindow({ maxWidth: 400 });
         for (let i = 0; i < LOCATIONS.length; i++) {
             let trail = LOCATIONS[i];
             let infoContent = `<h5>${trail[0]}</h5>`
+                + `<img src="${trail[10]}" style="max-width: 300px; max-height: 300px;">`
                 + `<div><p>${trail[3]}</p></div>`
                 + `<div><p><strong>Length:</strong> ${trail[4]} miles</p></div>`
                 + `<div><p><strong>Rating:</strong> ${trail[5]} stars</p></div>`
                 + `<div><p><strong>Difficulty:</strong> ${trail[6]}</p></div>`
                 + `<div><p><strong>${trail[7]}</strong></p></div>`
-                + `<a href="${trail[8]}" target="_blank" title="get directions" role="button" class="btn btn-info btn-sm btn-marker">Get Directions</a>`
-                + `<a href="${trail[9]}" target="_blank" role="button" class="btn btn-outline-info btn-sm btn-marker">Recommended Gear</a>`;
+                + `<a href="${trail[8]}" target="_blank" role="button" class="btn btn-info btn-sm btn-marker" title="Click to open new Google Maps tab">Navigate to Trailhead</a>`
+                + `<a href="${trail[9]}" target="_blank" role="button" class="btn btn-outline-info btn-sm btn-marker" title="Click to get Customized Gear list">Gear for Trail</a>`;
             let marker = new google.maps.Marker({
                 position: { lat: parseFloat(trail[1]), lng: parseFloat(trail[2]) },
                 map,
@@ -206,11 +207,11 @@
                                                                 <div class="row">
                                                                     <!-- Navigation Button -->
                                                                     <div class="col-sm-4">
-                                                                        <a class="btn btn-primary btn-block" href="{{ row[13] }}" role="button" target="_blank" data-toggle="tooltip" title="Click to open new Google Maps tab">Navigate to Trailhead</a>
+                                                                        <a class="btn btn-info btn-block" href="{{ row[13] }}" role="button" target="_blank" data-toggle="tooltip" title="Click to open new Google Maps tab">Navigate to Trailhead</a>
                                                                     </div>
                                                                     <!-- Gears Button -->
                                                                     <div class="col-sm-4">
-                                                                        <a class="btn btn-primary btn-block" href="{{ row[14] }}" role="button" target="_blank" data-toggle="tooltip" title="Click to get Customized Gear list">Gear for Trail</a>
+                                                                        <a class="btn btn-info btn-block" href="{{ row[14] }}" role="button" target="_blank" data-toggle="tooltip" title="Click to get Customized Gear list">Gear for Trail</a>
                                                                     </div>
                                                                     <div class="col-sm-4">
                                                                     </div>

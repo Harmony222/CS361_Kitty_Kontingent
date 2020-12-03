@@ -18,15 +18,19 @@ from datetime import date
 # TODO: change lat/long printed on trails list page to address string
 # TODO: add "distance to trail" column? (suggested by client)
 # TODO: create external database in Heroku
+# TODO: dynamically update map pins for filter instead of reloading page
+# TODO: change map pin colors based on difficulty
 
 ## TRAIL LIST STRUCTURE RETURNED BY GET_TRAILS(LAT, LONG, RAD) - BY INDEX REFERENCE
-## 0-id, 1-name, 2-length, 3-difficulty, 4-starVotes, 5-location, 6-url, 7-imgMedium 
+## 0-id, 1-name, 2-length, 3-difficulty, 4-starVotes, 5-location, 6-url, 7-imgMedium
 ## 8-high, 9-low, 10-latitude, 11-longitude, 12-summary, 13-directions_url, 14-gear_url
+
 
 # Fix circular imports issue
 # https://stackoverflow.com/questions/42909816/can-i-avoid-circular-imports-in-flask-and-sqlalchemy
 def register_extensions(app):
     db.init_app(app)
+
 
 def create_app(config_object=Config):
     app = Flask(__name__)
@@ -34,28 +38,32 @@ def create_app(config_object=Config):
     register_extensions(app)
     return app
 
+
 app = create_app(Config)
 migrate = Migrate(app, db)
 login = LoginManager(app)
+
 
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
 
+
 @app.shell_context_processor
 def make_shell_context():
     return {'db': db, 'User': User}
 
+
 @app.route('/')
 def index():
-    return render_template('index.html', active={'index':True})
+    return render_template('index.html', active={'index': True})
 
 
-@app.route('/find_trails', methods= ['GET', 'POST'])
+@app.route('/find_trails', methods=['GET', 'POST'])
 def find_trails():
-    '''find trails page to display table with trail data'''
+    """find trails page to display table with trail data"""
     # convert difficulty string into difficulty level
-    diff_dict = { "green": 0, "greenBlue": 1, "blue": 2, "blueBlack": 3, "black": 4, "dblack": 5}
+    diff_dict = {"green": 0, "greenBlue": 1, "blue": 2, "blueBlack": 3, "black": 4, "dblack": 5}
 
     # check for logged in user and get fitness if it exists
     if current_user.is_authenticated:
@@ -84,12 +92,12 @@ def find_trails():
         difficulty = request.form.get('difficulty') or False
         if difficulty or (float(min_length) > 0) or max_length:
             all_trails_list = get_custom_trails(all_trails_list, min_length, max_length, difficulty)
-        
+
         locations = trail_locations(all_trails_list)
         active_tab = 'list'
         if "active-tab" in request.form:
             active_tab = request.form['active-tab']
-        
+
         # fix string to bool, don't overwrite logged-in user
         if request.form['user_fitness'] == 'False':
             if not current_user.is_authenticated:
@@ -101,7 +109,7 @@ def find_trails():
         no_results=False
         if len(all_trails_list) == 0:
             no_results=True
-        
+
         # check for filter or a cleared filter for original list
         if "filter-slider" not in request.form or "clear" in request.form:
             return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails': True},
@@ -118,12 +126,13 @@ def find_trails():
             trails_list = filter_trails(all_trails_list, request.form["filter-slider"], user_fitness)
             locations = trail_locations(trails_list)
             if len(trails_list) == 0:
-                no_results=True
+                no_results = True
             return render_template('find_trails.html', title='Find Hiking Trails', active={'find_trails': True},
-                                       trails_list=trails_list, radius=rad, address=addr, filtered=True,
-                                       map_api_key=map_api_key, lat=lat, lon=long, locations=locations,
-                                       view_tab=active_tab, user_fitness=user_fitness, diff_dict=diff_dict,
-                                       new_addr=new_addr, no_results=no_results)
+                                   trails_list=trails_list, radius=rad, address=addr, filtered=True,
+                                   map_api_key=map_api_key, lat=lat, lon=long, locations=locations,
+                                   view_tab=active_tab, user_fitness=user_fitness, diff_dict=diff_dict,
+                                   new_addr=new_addr, no_results=no_results)
+
     # else render page asking for data
     else:
         # check for logged-in user
@@ -136,7 +145,7 @@ def find_trails():
                     user_fitness = int(request.form['user_fitness'])
             else:
                 user_fitness = False
-        # if user is logged in, prepopulate address field with user's address
+        # if user is logged in, pre-populate address field with user's address
         else:
             if curr_user.address is not None and curr_user.city is not None and curr_user.state is not None and curr_user.zip_code is not None:
                 addr = curr_user.address + ", " + curr_user.city + ", " + curr_user.state + " " + curr_user.zip_code
@@ -151,8 +160,9 @@ def find_trails():
             else:
                 addr = ""
 
-        return render_template('find_trails_get.html', title='Find Hiking Trails', active={'find_trails': True}, 
-                                user_fitness=user_fitness, address=addr)
+        return render_template('find_trails_get.html', title='Find Hiking Trails', active={'find_trails': True},
+                               user_fitness=user_fitness, address=addr)
+
 
 @app.route('/gear', methods=["GET", "POST"])
 def gear():
@@ -184,6 +194,7 @@ def gear():
                                         trail_data=trail_data, 
                                         gear_data=gear_data)
 
+
 @app.route('/fitness_values', methods=["GET", "POST"])
 def fitness_values():
     # redirect to info page if logged in
@@ -209,8 +220,9 @@ def fitness_values():
         if lat:    
             address = get_string(lat, long)
 
-    return render_template('fitness_values.html', title="My Fitness", active={'my_fitness':True},
-                            user_fitness=user_fitness, radius=radius, address=address, incomplete=incomplete)
+    return render_template('fitness_values.html', title="My Fitness", active={'my_fitness': True},
+                           user_fitness=user_fitness, radius=radius, address=address, incomplete=incomplete)
+
 
 @app.route('/edit_info', methods=["GET", "POST"])
 def edit_info():
@@ -220,7 +232,7 @@ def edit_info():
             logged_in = True
         return render_template('edit_info.html', title="Edit Info", logged_in=logged_in, active={'my_fitness':True})
 
-    elif request.method == 'POST':          # Edit Info form was submitted, get the values and go back to the display_info page
+    elif request.method == 'POST':  # Edit Info form was submitted, get the values and go back to the display_info page
         if current_user.is_authenticated:
             curr_user = db.session.query(User).filter_by(username=current_user.username).first()
 
@@ -262,6 +274,7 @@ def edit_info():
             db.session.commit()
 
         return redirect(url_for('display_info'))
+
 
 @app.route('/display_info', methods=["GET"])
 def display_info():
@@ -333,11 +346,15 @@ def display_info():
             elif level == 4:
                 user_fitness = "very high"
 
-            return render_template('display_info.html', title="My Fitness", active={'my_fitness':True}, username=curr_user.username,
-                                    month=month, day=day, year=year, gender=gender, height=height, weight=weight,
-                                    address=address, address2=address2, city=city, state=state, zip=zip_code, country=country,
-                                    user_fitness=user_fitness, logged_in=logged_in)
-        return render_template('display_info.html', title="My Fitness", active={'my_fitness':True}, logged_in=logged_in)
+            return render_template('display_info.html', title="My Fitness", active={'my_fitness': True},
+                                   username=curr_user.username, month=month, day=day, year=year, gender=gender,
+                                   height=height, weight=weight, address=address, address2=address2, city=city,
+                                   state=state, zip=zip_code, country=country, user_fitness=user_fitness,
+                                   logged_in=logged_in)
+
+        return render_template('display_info.html', title="My Fitness", active={'my_fitness': True},
+                               logged_in=logged_in)
+
 
 @app.route('/signin', methods=["GET", "POST"])
 def signin():
@@ -351,7 +368,8 @@ def signin():
             return redirect(url_for('signin'))
         login_user(user, remember=form.remember_me.data)
         return redirect(url_for('display_info'))
-    return render_template('signin.html', title="Sign In / Sign Up", active={'signin':True}, form=form)
+    return render_template('signin.html', title="Sign In / Sign Up", active={'signin': True}, form=form)
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -365,7 +383,8 @@ def signup():
         db.session.commit()
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('signin'))
-    return render_template('signup.html', title="Sign In / Sign Up", active={'signin':True}, form=form)
+    return render_template('signup.html', title="Sign In / Sign Up", active={'signin': True}, form=form)
+
 
 @app.route('/signout')
 def signout():
@@ -374,4 +393,4 @@ def signout():
 
 
 if __name__ == '__main__':
-   app.run(debug=True)
+    app.run(debug=True)
