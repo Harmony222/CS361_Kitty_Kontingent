@@ -64,6 +64,7 @@ def find_trails():
     """find trails page to display table with trail data"""
     # convert difficulty string into difficulty level
     diff_dict = {"green": 0, "greenBlue": 1, "blue": 2, "blueBlack": 3, "black": 4, "dblack": 5}
+    addr = "" # Initialize variable used in return
 
     # check for logged in user and get fitness if it exists
     if current_user.is_authenticated:
