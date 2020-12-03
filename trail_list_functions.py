@@ -18,11 +18,12 @@ def get_trails(lat, lon, dist):
     for trail in trails:
         # Get directions url
         directions_url = get_directions_url_trails(lat, lon, trail['latitude'], trail['longitude'])
-        gear_url = "/gear?trail_id=" + str(trail["id"])        
+        gear_url = "/gear?trail_id=" + str(trail["id"])
+        summary = get_trail_summary(trail['summary']) # Checks if trail summary needs to be changed        
         # sets with trail info appended to list
         trails_list.append((trail["id"], trail['name'], trail['length'], trail['difficulty'], trail['stars'],
                             trail['location'], trail['url'], trail['imgMedium'], trail['high'], trail['low'],
-                            trail['latitude'], trail['longitude'], trail['summary'], directions_url, gear_url))
+                            trail['latitude'], trail['longitude'], summary, directions_url, gear_url))
     
     return trails_list
 
@@ -60,3 +61,14 @@ def set_custom_difficulty(difficulty):
         custom_difficulty = ['black', 'dblack']
     
     return custom_difficulty
+
+def get_trail_summary(old_summary):
+    '''Returns new trail summary if change needed. Otherwise, return old_summary'''
+
+    new_summary = old_summary
+
+    # If old summary is "Needs summary" or is empty, change to newline
+    if old_summary == 'Needs Summary' or old_summary == '':
+        new_summary = '\n'
+
+    return new_summary
