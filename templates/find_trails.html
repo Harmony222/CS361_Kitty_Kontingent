@@ -26,31 +26,14 @@
 <script>
     // MAP UI SCRIPT
     function initMap() {
-        const location = {
-            lat: {
-                {
-                    lat
-                }
-            },
-            lng: {
-                {
-                    lon
-                }
-            }
-        };
+        const location = { lat: {{ lat }}, lng: {{ lon }} };
         const map = new google.maps.Map(document.getElementById("map"), {
             zoom: 8,
             center: location,
         });
         setMarkers(map);
     }
-
-    let LOCATIONS = {
-        {
-            locations | safe
-        }
-    };
-
+    let LOCATIONS = {{ locations | safe }};
     function setMarkers(map) {
         const icons = {
             red: {
@@ -63,12 +46,11 @@
                 icon: "http://maps.google.com/mapfiles/kml/paddle/grn-circle.png",
             },
         };
-        let infoWindow = new google.maps.InfoWindow({
-            maxWidth: 400
-        });
+        let infoWindow = new google.maps.InfoWindow({ maxWidth: 400 });
         for (let i = 0; i < LOCATIONS.length; i++) {
             let trail = LOCATIONS[i];
-            let infoContent = `<h5>${trail[0]}</h5>` +
+            let infoContent =
+                `<h5>${trail[0]}</h5>`+
                 `<img src="${trail[10]}" style="max-width: 300px; max-height: 300px;">` +
                 `<div><p>${trail[3]}</p></div>` +
                 `<div><p><strong>Length:</strong> ${trail[4]} miles</p></div>` +
@@ -92,7 +74,6 @@
             });
         }
     }
-
     // records which tab is active on page load, list or map
     $(function() {
         if ($("#map-view").attr("class").includes("active")) $('#active-tab').val('map');
