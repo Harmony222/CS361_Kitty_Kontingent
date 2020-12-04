@@ -153,19 +153,19 @@ def find_trails():
                 user_fitness = False
 
         # if user is logged in, pre-populate address field with user's address
-        else:
-            if curr_user.address is not None and curr_user.city is not None and curr_user.state is not None and curr_user.zip_code is not None:
-                addr = curr_user.address + ", " + curr_user.city + ", " + curr_user.state + " " + curr_user.zip_code
-            elif curr_user.address is not None and curr_user.city is not None and curr_user.state is not None:
-                addr = curr_user.address + ", " + curr_user.city + ", " + curr_user.state
-            elif curr_user.city is not None and curr_user.state is not None:
-                addr = curr_user.city + ", " + curr_user.state
-            elif curr_user.city is not None and curr_user.country is not None:
-                addr = curr_user.city + ", " + curr_user.country
-            elif curr_user.country is not None:
-                addr = curr_user.country
-            else:
-                addr = ""
+        # else:
+        #     if curr_user.address is not None and curr_user.city is not None and curr_user.state is not None and curr_user.zip_code is not None:
+        #         addr = curr_user.address + ", " + curr_user.city + ", " + curr_user.state + " " + curr_user.zip_code
+        #     elif curr_user.address is not None and curr_user.city is not None and curr_user.state is not None:
+        #         addr = curr_user.address + ", " + curr_user.city + ", " + curr_user.state
+        #     elif curr_user.city is not None and curr_user.state is not None:
+        #         addr = curr_user.city + ", " + curr_user.state
+        #     elif curr_user.city is not None and curr_user.country is not None:
+        #         addr = curr_user.city + ", " + curr_user.country
+        #     elif curr_user.country is not None:
+        #         addr = curr_user.country
+        #     else:
+        #         addr = False
 
         return render_template('find_trails_get.html', title='Find Hiking Trails', active={'find_trails': True},
                                user_fitness=user_fitness, address=addr)
