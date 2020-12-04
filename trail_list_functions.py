@@ -14,8 +14,13 @@ def get_trails(lat, lon, dist):
     base_url = "https://www.hikingproject.com/data/get-trails?lat=" + str(lat) \
                 + "&lon=" + str(lon) + "&maxDistance=" + str(dist) + "&key=" + trails_api_key + "&maxResults=100"
     
-    # dict of trail dicts and empty list for returned trails
-    trails, trails_list = requests.get(base_url).json()['trails'], []
+    # check for results, get dict of trail dicts if there are any
+    req = requests.get(base_url).json()
+    trails_list = []
+    if 'trails' in req:
+        trails = requests.get(base_url).json()['trails']
+    else:
+        return trails_list
 
     # get desired trail info from dicts and create trails list
     for trail in trails:
