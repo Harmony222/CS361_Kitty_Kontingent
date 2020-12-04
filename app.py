@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from gear_functions import get_weather_data, get_trail_data, gear_evaluation
 from trail_list_functions import get_trails, get_custom_trails
-from match_me import filter_trails, trail_locations, calculate_fitness #,get_map_api_key
+from match_me import filter_trails, trail_locations, calculate_fitness
 from map_trail import get_lat_long, get_string
 from flask_migrate import Migrate
 from flask_login import LoginManager, current_user, login_user, logout_user
@@ -20,10 +20,12 @@ from datetime import date
 # TODO: create external database in Heroku
 # TODO: dynamically update map pins for filter instead of reloading page
 # TODO: change map pin colors based on difficulty
+# TODO: create functions for: populating address with logged user info, adding form fields to database,
+# (make function for all instances of needing user info to send to template renderings)
 
 ## TRAIL LIST STRUCTURE RETURNED BY GET_TRAILS(LAT, LONG, RAD) - BY INDEX REFERENCE
 ## 0-id, 1-name, 2-length, 3-difficulty, 4-starVotes, 5-location, 6-url, 7-imgMedium
-## 8-high, 9-low, 10-latitude, 11-longitude, 12-summary, 13-directions_url, 14-gear_url, 15-addr
+## 8-high, 9-low, 10-latitude, 11-longitude, 12-summary, 13-directions_url, 14-gear_url, 15-distance
 
 
 # Fix circular imports issue
@@ -78,13 +80,14 @@ def find_trails():
     if request.method == 'POST' and request.form['rad'] != 'False':
         rad, addr = request.form['rad'], request.form['address']
         lat, long = get_lat_long(addr)   
-
         all_trails_list = get_trails(lat, long, rad)
 
         # Get optional search values and create new, custom list if any values are not None
         min_length = request.form.get('min_length') or 0
         max_length = request.form.get('max_length') or False
         difficulty = request.form.get('difficulty') or False
+
+        # check for custom filter options
         if difficulty or (float(min_length) > 0) or max_length:
             all_trails_list = get_custom_trails(all_trails_list, min_length, max_length, difficulty)
 
@@ -138,6 +141,7 @@ def find_trails():
                     user_fitness = int(request.form['user_fitness'])
             else:
                 user_fitness = False
+
         # if user is logged in, pre-populate address field with user's address
         else:
             if curr_user.address is not None and curr_user.city is not None and curr_user.state is not None and curr_user.zip_code is not None:
