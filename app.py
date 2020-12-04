@@ -12,15 +12,15 @@ from datetime import date
 
 # TODO: when "filter trails just for me" is used, it does not save the custom filter options 
 # (eg. length, difficulty) selected before - create variables to pass these back and forth from app.py and html
-# TODO: auto-populate drop-down selections for user on "fitness values" page if they had previously made selections
-# (and then the page was re-loaded or navigated away from)
-# TODO: save trail list results between pages?
-# TODO: change lat/long printed on trails list page to address string
-# TODO: add "distance to trail" column? (suggested by client)
 # TODO: create external database in Heroku
 # TODO: change map pin colors based on difficulty
 # TODO: create functions for: populating address with logged user info, adding form fields to database,
 # (make function for all instances of needing user info to send to template renderings)
+# TODO: Consistent formatting for trail photos in pop-up modals
+# TODO: Change "difficulty" in map-feature from colors to levels to be consistent with list
+# TODO: add user reminder that if they want to save their fitness level they need to create an account
+# TODO: Add a "your level: #" notice in the header?
+# TODO: Once a date is selected for weather prediction, all earlier dates are greyed-out
 
 ## TRAIL LIST STRUCTURE RETURNED BY GET_TRAILS(LAT, LONG, RAD) - BY INDEX REFERENCE
 ## 0-id, 1-name, 2-length, 3-difficulty, 4-starVotes, 5-location, 6-url, 7-imgMedium
