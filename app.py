@@ -128,7 +128,7 @@ def find_trails():
                                    view_tab=active_tab, user_fitness=user_fitness, diff_dict=diff_dict, no_results=no_results)
 
     # dynamically change pins on map when using filter slider
-    elif request.method == "GET":
+    elif request.method == "GET" and request.args.get("fitness") is not None and request.args.get("difficulty") is not None:
         user_fitness = request.args.get("fitness")
         difficulty = request.args.get("difficulty")
         # filter trails on slider value
