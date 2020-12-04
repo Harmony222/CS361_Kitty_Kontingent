@@ -15,6 +15,7 @@
 
 <!-- Doesn't work... :( -->
 <!-- <script src="{{ url_for('static', filename='js/map_view.js') }}"></script> -->
+<!-- <meta id="map-data" data-lat="{{lat}}" data-lon="{{lon}}" data-loc="{{ locations | safe }}"> -->
 
 <!-- TRAILHEAD MAP API -->
 <script src="https://maps.googleapis.com/maps/api/js?key={{ map_api_key }}&callback=initMap&libraries=&v=weekly" defer>
@@ -25,32 +26,45 @@
 
 <script>
     // MAP UI SCRIPT
+    let LOCATIONS = {{ locations | safe }};
+    let map;
+    let markers = [];
     function initMap() {
         const location = { lat: {{ lat }}, lng: {{ lon }} };
-        const map = new google.maps.Map(document.getElementById("map"), {
+        map = new google.maps.Map(document.getElementById("map"), {
             zoom: 8,
             center: location,
         });
-        setMarkers(map);
+        setMarkers(map, LOCATIONS);
     }
-    let LOCATIONS = {{ locations | safe }};
-    function setMarkers(map) {
+    function addMarker(trail) {
+        let marker = new google.maps.Marker({
+            position: {
+                lat: parseFloat(trail[1]),
+                lng: parseFloat(trail[2])
+            },
+            map,
+            // icon: icons['red'].icon,
+            title: trail[0],
+        });
+        markers.push(marker);
+    }
+    function setMapOnAll(map) {
+        for (let i = 0; i < markers.length; i++) {
+            markers[i].setMap(map);
+        }
+    }
+    function setMarkers(map, locations) {
         const icons = {
-            red: {
-                icon: "http://maps.google.com/mapfiles/kml/paddle/red-circle.png",
-            },
-            yellow: {
-                icon: "http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png",
-            },
-            green: {
-                icon: "http://maps.google.com/mapfiles/kml/paddle/grn-circle.png",
-            },
+            red: { icon: "http://maps.google.com/mapfiles/kml/paddle/red-circle.png" },
+            yellow: { icon: "http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png" },
+            green: { icon: "http://maps.google.com/mapfiles/kml/paddle/grn-circle.png" },
         };
         let infoWindow = new google.maps.InfoWindow({ maxWidth: 400 });
-        for (let i = 0; i < LOCATIONS.length; i++) {
-            let trail = LOCATIONS[i];
+        for (let i = 0; i < locations.length; i++) {
+            let trail = locations[i];
             let infoContent =
-                `<h5>${trail[0]}</h5>`+
+                `<h5>${trail[0]}</h5>` +
                 `<img src="${trail[10]}" style="max-width: 300px; max-height: 300px;">` +
                 `<div><p>${trail[3]}</p></div>` +
                 `<div><p><strong>Length:</strong> ${trail[4]} miles</p></div>` +
@@ -58,7 +72,7 @@
                 `<div><p><strong>Difficulty:</strong> ${trail[6]}</p></div>` +
                 `<div><p><strong>${trail[7]}</strong></p></div>` +
                 `<a href="${trail[8]}" target="_blank" role="button" class="btn btn-info btn-sm btn-marker" title="Click to open new Google Maps tab">Navigate to Trailhead</a>` +
-                `<a href="${trail[9]}" target="_blank" role="button" class="btn btn-outline-info btn-sm btn-marker" title="Click to get Customized Gear list">Gear for Trail</a>`;
+                `<a href="${trail[9]}" target="_blank" role="button" class="btn btn-info btn-sm btn-marker" title="Click to get Customized Gear list">Gear for Trail</a>`;
             let marker = new google.maps.Marker({
                 position: {
                     lat: parseFloat(trail[1]),
@@ -68,10 +82,28 @@
                 // icon: icons['red'].icon,
                 title: trail[0],
             });
+            markers.push(marker);
+            marker.setMap(map);
             marker.addListener("click", () => {
                 infoWindow.setContent(infoContent);
                 infoWindow.open(map, marker);
             });
+        }
+    }
+    // changes map pins when filter slider is changed
+    function filterMap(difficulty) {
+        let fitness = {{ user_fitness }};
+        let url = "/find_trails?difficulty=" + difficulty + "&fitness=" + fitness;
+        let params = {"difficulty": difficulty, "fitness": fitness}
+        const Http = new XMLHttpRequest();
+        Http.open("GET", url, params);
+        Http.send();
+        Http.onreadystatechange = () => {
+            let locations = JSON.parse(Http.response);
+            // delete markers
+            setMapOnAll(null);
+            markers = [];
+            setMarkers(map, locations);  // place new markers
         }
     }
     // records which tab is active on page load, list or map
@@ -87,12 +119,12 @@
     {% if user_fitness %}
     <div id="filter-div">
         <button id="filter-button" class="btn btn-md btn-info" data-placement="right" data-html="true" data-popover-content="#filter-popover" data-toggle="popover" onclick="toggleButton()">
-                    {% if filtered %}
-                        Clear or Change Filter
-                    {% else %}
-                        Filter Trails Just for You
-                    {% endif %}
-            </button>
+            {% if filtered %}
+                Clear or Change Filter
+            {% else %}
+                Filter Trails Just for You
+            {% endif %}
+        </button>
         <!-- Content for Popover -->
         <div class="hidden" id="filter-popover">
             <div id="popover-title">
@@ -102,17 +134,17 @@
                 <div id="popover-slider">
                     <form action="/find_trails" method="POST">
                         <label id="slider-label" for="slider-range">I want a hike that...</label>
-                        <input id="filter-slider" name="filter-slider" type="range" class="custom-range" min="1" max="3" oninput="$('#filter-slider-in').html(this.value)">
+                        <input id="filter-slider" name="filter-slider" type="range" class="custom-range" min="1" max="3" oninput="$('#filter-slider-in').html(this.value)" onchange="filterMap(this.value)">
                         <label id="filter-slider-in" class="hidden">2</label>
                         <ul class="difficulty-list">
                             <li>is easy and chill</li>
                             <li>matches my fitness level (<b>{{ user_fitness }}</b>)</li>
                             <li>challenges me!</li>
                         </ul>
-                        <input type="hidden" name="rad" value={{radius}}>
-                        <!-- <input type="hidden" name="address" value={{new_addr}}> -->
-                        <input type="hidden" name="address" value="{{address}}">
-                        <input type="hidden" name="user_fitness" value={{user_fitness}}>
+                        <input type="hidden" name="rad" value={{ radius }}>
+                        <!-- <input type="hidden" name="address" value={{ new_addr }}> -->
+                        <input type="hidden" name="address" value="{{ address }}">
+                        <input type="hidden" name="user_fitness" value={{ user_fitness }}>
                         <input type="hidden" name="active-tab" value="list" id="active-tab">
                         <button name="filter" type="submit" class="btn btn-sm btn-info">Save</button>
                         <button name="clear" type="submit" class="btn btn-sm btn-info">Clear Filter</button>
@@ -123,8 +155,8 @@
     </div>
     {% else %}
     <form action="/fitness_values" title="Calculate your fitness to customize your trail results!" method="POST">
-        <input type="hidden" name="rad" value={{radius}}>
-        <input type="hidden" name="address" value="{{address}}">
+        <input type="hidden" name="rad" value={{ radius }}>
+        <input type="hidden" name="address" value="{{ address }}">
         <h5 style="display: inline-block;">
             If you would like to filter trails for personal preference,
         </h5> <button type="submit" class="btn btn-sm btn-info" method="POST">Calculate your fitness level</button>
@@ -134,7 +166,7 @@
 
     <!-- TRAIL TABLE -->
     <h4>
-        <b>Hiking Trails Within {{radius}} Miles of {{address}}</b>
+        <b>Hiking Trails Within {{ radius }} Miles of {{ address }}</b>
     </h4>
     <h5>
         (Click on any trail to see more info)
