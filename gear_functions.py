@@ -40,6 +40,7 @@ def get_weather_forecast(latitude, longitude, selected_date):
     # convert from degree wind direction to cardinal direction
     wind_direction = convert_wind_direction(forecast["wdir"])
     weather_data = {
+        "today"         :   date.today(),
         "date"          :   selected_date,
         "conditions"    :   forecast["conditions"] or None,
         "temperature"   :   forecast["temp"],
@@ -70,6 +71,7 @@ def get_historical_weather(latitude, longitude, selected_date):
     data_json = response.json()
     sunrise, sunset = get_sun_info(latitude, longitude, selected_date)
     weather_data = {
+        "today"         :   date.today(),
         "date"          :   selected_date,
         "conditions"    :   None,
         "temperature"   :   data_json["temperatureMean"][0],
