@@ -18,7 +18,6 @@ from datetime import date
 # TODO: change lat/long printed on trails list page to address string
 # TODO: add "distance to trail" column? (suggested by client)
 # TODO: create external database in Heroku
-# TODO: dynamically update map pins for filter instead of reloading page
 # TODO: change map pin colors based on difficulty
 
 ## TRAIL LIST STRUCTURE RETURNED BY GET_TRAILS(LAT, LONG, RAD) - BY INDEX REFERENCE
@@ -59,12 +58,14 @@ def index():
     return render_template('index.html', active={'index': True})
 
 
+all_trails_list = []
 @app.route('/find_trails', methods=['GET', 'POST'])
 def find_trails():
     """find trails page to display table with trail data"""
     # convert difficulty string into difficulty level
     diff_dict = {"green": 0, "greenBlue": 1, "blue": 2, "blueBlack": 3, "black": 4, "dblack": 5}
-    addr = "" # Initialize variable used in return
+    addr = ""  # Initialize variable used in return
+    global all_trails_list
 
     # check for logged in user and get fitness if it exists
     if current_user.is_authenticated:
@@ -101,9 +102,9 @@ def find_trails():
             user_fitness = int(request.form['user_fitness'])
 
         # check for no results
-        no_results=False
+        no_results = False
         if len(all_trails_list) == 0:
-            no_results=True
+            no_results = True
 
         # check for filter or a cleared filter for original list
         if "filter-slider" not in request.form or "clear" in request.form:
@@ -125,6 +126,15 @@ def find_trails():
                                    trails_list=trails_list, radius=rad, address=addr, filtered=True,
                                    map_api_key=map_api_key, lat=lat, lon=long, locations=locations,
                                    view_tab=active_tab, user_fitness=user_fitness, diff_dict=diff_dict, no_results=no_results)
+
+    # dynamically change pins on map when using filter slider
+    elif request.method == "GET":
+        user_fitness = request.args.get("fitness")
+        difficulty = request.args.get("difficulty")
+        # filter trails on slider value
+        trails_list = filter_trails(all_trails_list, difficulty, user_fitness)
+        filtered_trails = trail_locations(trails_list)
+        return filtered_trails
 
     # else render page asking for data
     else:
