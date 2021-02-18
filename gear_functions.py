@@ -63,27 +63,29 @@ def get_historical_weather(latitude, longitude, selected_date):
     """ 
     Get historical weather data if selected date > 14 days from todays' date
     """
-    url = "https://api.weather.com/v3/wx/almanac/daily/5day"
-    params = {"geocode":f"{latitude},{longitude}", "units":"e",
-              "startDay":selected_date.day, "startMonth":selected_date.month,
-              "format":"json", "apiKey":historical_weather_api_key}
+    selected_date = selected_date - timedelta(days=365) 
+    url = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/weatherdata/history"
+    params = {"aggregateHours":"24", "location":f"{latitude},{longitude}", 
+              "unitGroup":"us", "startDateTime":selected_date, 
+              "endDateTime":selected_date, "contentType":"json", 
+              "key":weather_api_key}
     response = requests.get(url = url, params = params)
-    data_json = response.json()
+    data_json = response.json()["locations"][f"{latitude},{longitude}"]
     sunrise, sunset = get_sun_info(latitude, longitude, selected_date)
     weather_data = {
         "today"         :   date.today(),
         "date"          :   selected_date,
         "conditions"    :   None,
-        "temperature"   :   data_json["temperatureMean"][0],
-        "max_temp"      :   data_json["temperatureAverageMax"][0],
-        "min_temp"      :   data_json["temperatureAverageMin"][0],
+        "temperature"   :   data_json["values"][0]["temp"],
+        "max_temp"      :   data_json["values"][0]["maxt"],
+        "min_temp"      :   data_json["values"][0]["mint"],
         "wind_speed"    :   None,
         "wind_direction":   None,
         "humidity"      :   None,
         "prob_of_precip":   None,
-        "precip"        :   data_json["precipitationAverage"][0],
+        "precip"        :   data_json["values"][0]["precip"],
         "snow_depth"    :   None,
-        "snow_accum"    :   data_json["snowAccumulationAverage"][0],
+        "snow_accum"    :   data_json["values"][0]["snowdepth"],
         "cloud_cover"   :   None,
         "sunrise"       :   sunrise or None,
         "sunset"        :   sunset or None

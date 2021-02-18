@@ -19,3 +19,4 @@ app.db
 weather_current.json
 weather_forecast.json
 weather_historical.json
+weather6.json
