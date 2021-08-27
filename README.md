@@ -1,7 +1,5 @@
 # CS361_Kitty_Kontingent - Hiking Trails
 
-# See the app here: https://kitty-kontingent.herokuapp.com/
-
 
 Client request: “Hiking Trails Just For You”. I’m cool with either a web or mobile app. You as a team can choose. 
 For those of you who are the outdoor activity lovers, you know, hiking is one of the best activities that we can 
